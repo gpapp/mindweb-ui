@@ -1,0 +1,92 @@
+<div ui-content-for="title">
+    <span>MindWeb - Files</span>
+</div>
+
+<div class="scrollable" ui-state="searchBar" ng-controller="fileController">
+    <div class="scrollable-content">
+        <div class="section">
+            <input
+                    ng-if="Ui.active('searchBar')"
+                    type="search"
+                    class="form-control scrollable-header"
+                    placeholder="Search.."/>
+
+            <div class="panel-group"
+                 ui-state='myAccordion'
+                 ui-default='1'>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" ui-set="{'myAccordion': 1}">
+                        <h4 class="panel-title">
+                            Recent files
+                        </h4>
+                    </div>
+                    <div ui-if="myAccordion == 1">
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <a ng-repeat="item in recentFiles | orderBy:'-date'" href="#"
+                                   class="list-group-item file-group-item">
+                                    <i class="fa fa-file"></i>
+                                    <span class="fileName">{{ item.fileName }}</span>
+                                    <span class="fileDate">{{ item.date }}</span>
+                                </a>
+                            </div>
+                            <div class="list-group">
+                                <a ng-repeat="item in names" href="#" class="list-group-item file-group-item">
+                                    <i class="fa fa-file"></i>
+                                    <span class="fileName">{{ item.Name }}</span>
+                                    <span class="fileDate">{{ item.Country }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" ui-set="{'myAccordion': 2}">
+
+                        <h4 class="panel-title">
+                            All files
+                        </h4>
+                    </div>
+                    <div ui-if="myAccordion == 2">
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <a ng-repeat="item in allFiles | orderBy:'fileName'" href="#"
+                                   class="list-group-item file-group-item">
+                                    <i class="fa fa-file"></i>
+                                    {{ item.fileName }} {{ item.date }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" ui-set="{'myAccordion': 3}">
+
+                        <h4 class="panel-title">
+                            Shared with me
+                        </h4>
+                    </div>
+                    <div ui-if="myAccordion == 3">
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <a ng-repeat="item in sharedFiles | orderBy:'fileName'" href="#"
+                                   class="list-group-item file-group-item">
+                                    <i class="fa fa-file"></i>
+                                    {{ item.fileName }} {{ item.date }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn btn-default">Create new</div>
+        </div>
+    </div>
+    <a class="btn btn-block btn-lg btn-primary scrollable-footer" ui-toggle='searchBar'>
+        <i class="fa fa-search"></i>
+        <span ui-hide="searchBar">Show</span>
+        <span ui-show="searchBar">Hide</span>
+        Search Bar
+    </a>
+</div>
