@@ -6,7 +6,8 @@
   "license": "All rights reserved",
   "private": true,
   "dependencies": {
-    "angular": "1.4.x",
+    "angular": "~1.4.x",
+    "angular-animate": "~1.4.x",
     "angular-bootstrap": "~0.13.x",
     "angular-loader": "1.4.x",
     "angular-mocks": "~1.4.x",

@@ -1,0 +1,16 @@
+<div class="loginDialog">
+    <form ng-submit="LoginModalCtrl.submit(_email, _password)">
+        <table>
+            <tr>
+                <th>Username:</th>
+                <td><input type="email" ng-model="_email"/></td>
+            </tr>
+            <tr>
+                <th>Password:</th>
+                <td><input type="password" ng-model="_password"/></td>
+            </tr>
+        </table>
+        <button>Submit</button>
+        <button ng-click="LoginModalCtrl.cancel()">Cancel</button>
+    </form>
+</div>
