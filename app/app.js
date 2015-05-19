@@ -2,7 +2,6 @@ angular.module('MindWebUi', [
     'MindWebUi.login',
     'MindWebUi.user',
     'MindWebUi.user.service',
-    'ngAnimate',
     'ui.router',
     'mobile-angular-ui'
 ])
