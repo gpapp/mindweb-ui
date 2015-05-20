@@ -2,33 +2,33 @@ angular.module('MindWebUi.user', [
     'ui.router'
 ])
     .config(['$stateProvider', '$urlRouterProvider',
-    function ($stateProvider, $urlRouterProvider) {
-        $stateProvider
-            .state('user', {
-                abstract: true,
-                url: '/user',
-                template: '<section ui-view></section>',
-                data: {
-                    requireLogin: true // this property will apply to all children of 'app'
-                }
-            })
-            .state('user.files', {
-                url: '/files',
-                templateUrl: 'app/user/files.html'
-            })
-            .state('user.options', {
-                url: '/options',
-                templateUrl: 'app/user/options.html'
-            })
-            .state('user.logout', {
-                url: '/logout',
-                controller: ['$state', '$rootScope', function ($state, $rootScope) {
-                    delete $rootScope.currentUser;
-                    $state.go('home');
-                }]
-            });
-    }
-])
+        function ($stateProvider, $urlRouterProvider) {
+            $stateProvider
+                .state('user', {
+                    abstract: true,
+                    url: '/user',
+                    template: '<section ui-view></section>',
+                    data: {
+                        requireLogin: true // this property will apply to all children of 'app'
+                    }
+                })
+                .state('user.files', {
+                    url: '/files',
+                    templateUrl: 'app/user/files.html'
+                })
+                .state('user.options', {
+                    url: '/options',
+                    templateUrl: 'app/user/options.html'
+                })
+                .state('user.logout', {
+                    url: '/logout',
+                    controller: ['$state', '$rootScope', function ($state, $rootScope) {
+                        delete $rootScope.currentUser;
+                        $state.go('home');
+                    }]
+                });
+        }
+    ])
     .controller('homeController', function ($rootScope, $scope) {
 
         $rootScope.$on("$routeChangeStart", function () {

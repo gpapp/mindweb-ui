@@ -24,7 +24,7 @@
                     <div ui-if="myAccordion == 1">
                         <div class="panel-body">
                             <div class="list-group">
-                                <a ng-repeat="item in recentFiles | orderBy:'-date'" href="#"
+                                <a ng-repeat="item in recentFiles | orderBy:'-date'" href="#/viewer/{{item.id}}"
                                    class="list-group-item file-group-item">
                                     <i class="fa fa-file"></i>
                                     <span class="fileName">{{ item.fileName }}</span>
@@ -51,7 +51,7 @@
                     <div ui-if="myAccordion == 2">
                         <div class="panel-body">
                             <div class="list-group">
-                                <a ng-repeat="item in allFiles | orderBy:'fileName'" href="#"
+                                <a ng-repeat="item in allFiles | orderBy:'fileName'" href="#/viewer/{{item.id}}"
                                    class="list-group-item file-group-item">
                                     <i class="fa fa-file"></i>
                                     {{ item.fileName }} {{ item.date }}
@@ -70,7 +70,7 @@
                     <div ui-if="myAccordion == 3">
                         <div class="panel-body">
                             <div class="list-group">
-                                <a ng-repeat="item in sharedFiles | orderBy:'fileName'" href="#"
+                                <a ng-repeat="item in sharedFiles | orderBy:'fileName'" href="#/viewer/{{item.id}}"
                                    class="list-group-item file-group-item">
                                     <i class="fa fa-file"></i>
                                     {{ item.fileName }} {{ item.date }}

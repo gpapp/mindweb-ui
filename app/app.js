@@ -2,6 +2,7 @@ angular.module('MindWebUi', [
     'MindWebUi.login',
     'MindWebUi.user',
     'MindWebUi.user.service',
+    'MindWebUi.viewer',
     'ui.router',
     'mobile-angular-ui'
 ])
