@@ -1,1 +1,25 @@
-detail
+<div class="panel">
+    <div class="panel-heading" ng-click="Ui.turnOff('detailPanel')">
+        Hide details <span class="pull-right fa fa-close"></span>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-5 control-label" for="id">ID</label>
+
+                <div id="id" class="col-md-7"><input class="form-control" ng-model="node.id"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-5 control-label" for="text">Text</label>
+
+                <div id="text" class="col-md-7"><input class="form-control" ng-model="node.text"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-5 control-label" for="content">Content</label>
+
+                <div id="content" class="col-md-7"><textarea class="form-control" ng-model="node.content"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -14,7 +14,8 @@ angular.module('MindWebUi.login', [
             var instance = $modal.open({
                 templateUrl: 'app/login/loginModal.html',
                 controller: 'LoginModalCtrl',
-                controllerAs: 'LoginModalCtrl'
+                controllerAs: 'LoginModalCtrl',
+                size: 'md'
             });
 
             return instance.result.then(assignCurrentUser);

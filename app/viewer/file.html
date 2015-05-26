@@ -1,1 +1,9 @@
-content
+<div class="panel">
+    <div class="panel-body"
+         ng-swipe-left='Ui.turnOn("detailPanel")'
+         ng-swipe-right='Ui.turnOff("detailPanel")'>
+        <div class="list-group">
+            <div ng-init="node=nodes" ng-include="'/app/viewer/nodeItemRenderer.html'"></div>
+        </div>
+    </div>
+</div>

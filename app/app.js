@@ -58,7 +58,7 @@ angular.module('MindWebUi', [
 )
     .run(function ($rootScope) {
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-            var requireLogin = toState.data.requireLogin;
+            var requireLogin = angular.isDefined(toState.data) && angular.isDefined(toState.data.requireLogin) && toState.data.requireLogin;
 
             if (requireLogin && typeof $rootScope.currentUser === 'undefined') {
                 event.preventDefault();
@@ -68,7 +68,7 @@ angular.module('MindWebUi', [
     })
     .run(function ($rootScope, $state, loginModal) {
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-            var requireLogin = toState.data.requireLogin;
+            var requireLogin = angular.isDefined(toState.data) && angular.isDefined(toState.data.requireLogin) && toState.data.requireLogin;
 
             if (requireLogin && typeof $rootScope.currentUser === 'undefined') {
                 event.preventDefault();
@@ -94,7 +94,7 @@ angular.module('MindWebUi', [
             })
             .state('about', {
                 url: '/about',
-                templateUrl: 'app/user/about.html'
+                templateUrl: 'app/about.html'
             })
     });
 

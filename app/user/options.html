@@ -1,16 +1,38 @@
-<div class="scrollable">
-    <div class="scrollable-content">
-        <div class="list-group text-center">
-            <div class="list-group-item list-group-item-home">
+<section>
+    <div class="scrollable">
+        <div class="scrollable-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">User data</div>
+                <div class="panel-body">
+                    <div class="list-group">
+                        <div class="list-group-item list-group-item-home">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="control-label col-sm-5">User name</div>
+                                    <div class="col-sm-7 ">
+                                        <input class="form-control disabled" value="{{currentUser.name}}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="control-label col-sm-5">User email</div>
+                                    <div class="col-sm-7">
+                                        <input class="form-control" type="email" value="{{currentUser.email}}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button class="btn btn-default" type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="list-group-item list-group-item-home media">
-                <div class="media-body">
-                    <form>
-                        <div class="">User name</div>
-                        <input value="{{currentUser.name}}">
-                    </form>
+            <div class="panel panel-default">
+                <div class="panel-heading">Display options</div>
+                <div class="list-group-item list-group-item-home">
                 </div>
             </div>
         </div>
-    </div>
-</div>
+</section>

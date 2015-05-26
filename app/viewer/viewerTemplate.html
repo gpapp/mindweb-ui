@@ -1,21 +1,12 @@
 <div ui-content-for="title">
     <span>MindWeb - File</span>
-    <i class="fa fa-info-circle" ui-toggle="detailPanel"></i>
 </div>
 
-<div class="scrollable" ui-state="detailPanel" ng-swipe-left='Ui.turnOn("detailPane")'
-     ng-swipe-right='Ui.turnOff("detailPane")'>
-    <div class="scrollable-content">
-        <div class="panel">
-            <div class="section">
-                <section ui-view></section>
-            </div>
-        </div>
+<div id="viewerTable">
+    <div id="nodePane" ui-class="{'detailOpen': detailPanel}">
+        <section ui-view></section>
     </div>
-    <div class="scrollable sidebar-right pull-right" id="detailPanel">
-        <span ui-hide="detailPanel">Show</span>
-        <span ui-show="detailPanel">Hide</span>
-        Details
+    <div id="detailPane" ui-state="detailPanel" ui-if="detailPanel">
         <section ui-view="detail"></section>
     </div>
 </div>
