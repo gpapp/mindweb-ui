@@ -11,13 +11,13 @@
     "karma": "~0.12.x"
   },
   "scripts": {
-    "postinstall": "bower install",
-    "prestart": "npm install",
+    "postinstall": "bower install --allow-root",
+    "prestart": "npm install --unsafe-perm",
     "start": "http-server -p 2003 -c-1",
-    "pretest": "npm install",
+    "pretest": "npm install --unsafe-perm",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js  --single-run",
-    "preupdate-webdriver": "npm install",
+    "preupdate-webdriver": "npm install --unsafe-perm",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
     "protractor": "protractor e2e-tests/protractor.conf.js",
