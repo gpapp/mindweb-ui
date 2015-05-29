@@ -1,8 +1,9 @@
 angular.module('MindWebUi.user', [
+    'MindWebUi.user.service',
     'ui.router'
 ])
-    .config(['$stateProvider', '$urlRouterProvider',
-        function ($stateProvider, $urlRouterProvider) {
+    .config(['$stateProvider',
+        function ($stateProvider) {
             $stateProvider
                 .state('user', {
                     abstract: true,
@@ -22,34 +23,19 @@ angular.module('MindWebUi.user', [
                 })
                 .state('user.logout', {
                     url: '/logout',
-                    controller: ['$state', '$rootScope', function ($state, $rootScope) {
-                        delete $rootScope.currentUser;
-                        $state.go('home');
-                    }]
+                    controller: 'logoutController'
                 });
         }
     ])
     .controller('homeController', function ($rootScope, $scope) {
-
-        $rootScope.$on("$routeChangeStart", function () {
-            $rootScope.loading = true;
-        });
-
-        $rootScope.$on("$routeChangeSuccess", function () {
-            $rootScope.loading = false;
-        });
-
         $scope.userAgent = navigator.userAgent;
     })
+    .controller('logoutController', function ($state, $rootScope, UsersApi) {
+        delete $rootScope.currentUser;
+        UsersApi.logout();
+        $state.go('home');
+    })
     .controller('fileController', function ($rootScope, $scope, $http) {
-        $rootScope.$on("$routeChangeStart", function () {
-            $rootScope.loading = true;
-        });
-
-        $rootScope.$on("$routeChangeSuccess", function () {
-            $rootScope.loading = false;
-        });
-
         $http.get("http://www.w3schools.com/angular/customers.php")
             .success(function (response) {
                 $scope.names = response.records;

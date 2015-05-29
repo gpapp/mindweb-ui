@@ -3,7 +3,7 @@ angular.module('MindWebUi.login', [
     'ui.bootstrap.tpls',
     'MindWebUi.user.service'
 ])
-    .service('loginModal', function ($modal, $rootScope) {
+    .service('loginModal', function ($modal, $rootScope, UsersApi) {
 
         function assignCurrentUser(user) {
             $rootScope.currentUser = user;
@@ -11,6 +11,8 @@ angular.module('MindWebUi.login', [
         }
 
         return function () {
+            UsersApi.lookup().then(assignCurrentUser);
+
             var instance = $modal.open({
                 templateUrl: 'app/login/loginModal.html',
                 controller: 'LoginModalCtrl',

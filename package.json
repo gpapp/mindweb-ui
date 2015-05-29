@@ -5,7 +5,6 @@
   "version": "0.0.1",
   "homepage": "http://dev.itworks.hu/MindWeb/ui",
   "license": "All rights reserved",
-  "private": true,
   "dependencies": {
     "bower": "1.4.x",
     "http-server": "~0.8.x",
