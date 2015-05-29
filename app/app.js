@@ -40,12 +40,12 @@ angular.module('MindWebUi', [
                 }
             };
         });
-
     })
 
     .run(
-    ['$rootScope', '$state', '$stateParams',
-        function ($rootScope, $state, $stateParams) {
+    ['$rootScope', '$state', '$stateParams', 'UsersApi',
+        function ($rootScope, $state, $stateParams,UsersApi) {
+            $rootScope.brokerURL = 'http://localhost:8080';
 
             // It's very handy to add references to $state and $stateParams to the $rootScope
             // so that you can access them from any scope within your applications.For example,
@@ -53,19 +53,21 @@ angular.module('MindWebUi', [
             // to active whenever 'contacts.list' or one of its decendents is active.
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
-        }
-    ]
-)
-    .run(function ($rootScope) {
-        $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-            var requireLogin = angular.isDefined(toState.data) && angular.isDefined(toState.data.requireLogin) && toState.data.requireLogin;
 
-            if (requireLogin && typeof $rootScope.currentUser === 'undefined') {
-                event.preventDefault();
-                // get me a login modal!
+            $rootScope.$on("$routeChangeStart", function () {
+                $rootScope.loading = true;
+            });
+            $rootScope.$on("$routeChangeSuccess", function () {
+                $rootScope.loading = false;
+            });
+
+            UsersApi.lookup().then(function (user) {
+                $rootScope.currentUser = user;
+            });
+
             }
-        });
-    })
+    ])
+
     .run(function ($rootScope, $state, loginModal) {
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var requireLogin = angular.isDefined(toState.data) && angular.isDefined(toState.data.requireLogin) && toState.data.requireLogin;

@@ -1,13 +1,17 @@
 <div class="list-group-item">
     <div class="list-group-item-heading">
-        <span ng-click="refreshDetail(node);Ui.turnOn('detailPanel')">{{node.text}}</span>
+        <span ng-click="refreshDetail(node);Ui.turnOn('detailPanel')">{{node.attributes.TEXT}}</span>
+        <div ng-repeat="node in node.children | filter:{name:'icon'}">{{node.attributes.BUILTIN}}</div>
         <i class="fa fa fa-lg pull-right" ng-if='node.nodes' ng-class="nodeIcon(node)"
            ng-click="nodeToggleOpen(node)"></i>
     </div>
-    <div class="list-group-item-text">{{node.content}}</div>
+    <div class="list-group-item-text">
+        <div ng-repeat="node in node.children | filter:{name:'richcontent'}">{{node.value}}</div>
+        {{node.attributes}}
+    </div>
 </div>
 
-<div class="indent" ng-if="node.open">
-    <div ng-repeat="node in node.nodes" ng-include="'/app/viewer/nodeItemRenderer.html'"></div>
+<div class="indent">
+    <div ng-repeat="node in node.children | filter:{name:'node'}" ng-include="'/app/viewer/nodeItemRenderer.html'"></div>
 </div>
 
