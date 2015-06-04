@@ -28,12 +28,8 @@ angular.module('MindWebUi.user.service', [
     function _login(email, password) {
         var d = $q.defer();
         setTimeout(function () {
-            var authURL = $rootScope.brokerURL+'/authenticate/'+email;
-            $http.get(authURL)
-            .success (function (data) {
-                // TODO: get session id from the returned cookie and set it to the _PATH_ /
-                // TODO: only when really needed!!!
-                $cookies.put('mindweb_session',data.sessionId);
+            var authURL = $rootScope.brokerURL+'/login';
+            $http.get(authURL).success (function (data) {
                 d.resolve(data);
             })
             .error (function (data) {

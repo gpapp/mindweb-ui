@@ -1,8 +1,8 @@
 {
-  "name": "webmind-ui",
+  "name": "mindweb-ui",
   "private": true,
-  "description": "User interface for WebMind application",
-  "version": "0.0.1",
+  "description": "User interface for MindWeb application",
+  "version": "0.0.2",
   "homepage": "http://dev.itworks.hu/MindWeb/ui",
   "license": "All rights reserved",
   "dependencies": {
