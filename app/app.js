@@ -1,7 +1,6 @@
 angular.module('MindWebUi', [
     'MindWebUi.login',
     'MindWebUi.user',
-    'MindWebUi.user.service',
     'MindWebUi.viewer',
     'ui.router',
     'mobile-angular-ui'
@@ -45,8 +44,6 @@ angular.module('MindWebUi', [
     .run(
     ['$rootScope', '$state', '$stateParams', 'UsersApi',
         function ($rootScope, $state, $stateParams,UsersApi) {
-            $rootScope.brokerURL = 'http://localhost:8080';
-
             // It's very handy to add references to $state and $stateParams to the $rootScope
             // so that you can access them from any scope within your applications.For example,
             // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>

@@ -23,14 +23,5 @@ angular.module('MindWebUi.login', [
             return instance.result.then(assignCurrentUser);
         };
     })
-    .controller('LoginModalCtrl', function ($scope, UsersApi) {
-
-        this.cancel = $scope.$dismiss;
-
-        this.submit = function (email, password) {
-            UsersApi.login(email, password).then(function (user) {
-                $scope.$close(user);
-            });
-        };
-
+    .controller('LoginModalCtrl', function () {
     });

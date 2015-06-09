@@ -2,7 +2,7 @@
     <span>MindWeb - Files</span>
 </div>
 
-<div class="scrollable" ui-state="searchBar" ng-controller="fileController">
+<div class="scrollable" ui-state="searchBar">
     <div class="scrollable-content">
         <div class="section">
             <input
@@ -14,7 +14,6 @@
             <div class="panel-group"
                  ui-state='myAccordion'
                  ui-default='1'>
-
                 <div class="panel panel-default">
                     <div class="panel-heading" ui-set="{'myAccordion': 1}">
                         <h4 class="panel-title">
@@ -24,18 +23,11 @@
                     <div ui-if="myAccordion == 1">
                         <div class="panel-body">
                             <div class="list-group">
-                                <a ng-repeat="item in recentFiles | orderBy:'-date'" href="#/viewer/{{item.id}}"
+                                <a ng-repeat="item in files | orderBy:'-date'" href="#/viewer/{{item.id}}"
                                    class="list-group-item file-group-item">
                                     <i class="fa fa-file"></i>
                                     <span class="fileName">{{ item.fileName }}</span>
                                     <span class="fileDate">{{ item.date }}</span>
-                                </a>
-                            </div>
-                            <div class="list-group">
-                                <a ng-repeat="item in names" href="#" class="list-group-item file-group-item">
-                                    <i class="fa fa-file"></i>
-                                    <span class="fileName">{{ item.Name }}</span>
-                                    <span class="fileDate">{{ item.Country }}</span>
                                 </a>
                             </div>
                         </div>
@@ -51,7 +43,7 @@
                     <div ui-if="myAccordion == 2">
                         <div class="panel-body">
                             <div class="list-group">
-                                <a ng-repeat="item in allFiles | orderBy:'fileName'" href="#/viewer/{{item.id}}"
+                                <a ng-repeat="item in files | orderBy:'fileName'" href="#/viewer/{{item.id}}"
                                    class="list-group-item file-group-item">
                                     <i class="fa fa-file"></i>
                                     {{ item.fileName }} {{ item.date }}
@@ -79,8 +71,29 @@
                         </div>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading panel-primary" ui-set="{'myAccordion': 4}">
+                        <h4 class="panel-title">
+                            Actions
+                        </h4>
+                    </div>
+                    <div ui-if="myAccordion == 4">
+                        <div class="panel-body">
+                            <form name="fileForm">
+                                <div class="btn btn-default" ng-click="fileCreate()">Create new</div>
+                                <ngf-select class="btn btn-default" ngf-select="" ng-model="files" ngf-multiple="true" ngf-accept="" ng-model-rejected="rejFiles" >Upload files</ngf-select>
+                                <ngf-drop ngf-drop="" ngf-select="" ng-model="files" ng-model-rejected="rejFiles"
+                                     ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
+                                     class="drop-box" ngf-multiple="true" ngf-allow-dir="true" ngf-accept="'image/*,application/mm'" ngf-drop-available="dropAvailable">
+                                    <div ng-hide="dropAvailable">File Drop not available</div>
+                                    <div ng-show="dropAvailable">Drop Files</div>
+                                    <div>click to select</div>
+                                </ngf-drop>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="btn btn-default">Create new</div>
         </div>
     </div>
     <a class="btn btn-block btn-lg btn-primary scrollable-footer" ui-toggle='searchBar'>

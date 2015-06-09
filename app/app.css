@@ -168,6 +168,9 @@ input.scrollable-header {
         height: 100%;
     }
 }
+.img-avatar {
+    border-radius: 50%;
+}
 
 /* override clashes from bootstrap and mobile-angular-ui */
 .navbar {
