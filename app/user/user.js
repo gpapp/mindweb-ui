@@ -1,5 +1,6 @@
 angular.module('MindWebUi.user', [
     'MindWebUi.user.service',
+    'ngFileUpload',
     'ui.router'
 ])
     .config(['$stateProvider',
@@ -15,43 +16,95 @@ angular.module('MindWebUi.user', [
                 })
                 .state('user.files', {
                     url: '/files',
-                    templateUrl: 'app/user/files.html'
+                    templateUrl: 'app/user/files.html',
+                    controller: 'fileController'
                 })
                 .state('user.options', {
                     url: '/options',
                     templateUrl: 'app/user/options.html'
                 })
+                .state('user.login', {
+                    url: '/login',
+                    controller: function ($state, $modal) {
+                        var instance = $modal.open({
+                            templateUrl: 'app/login/loginModal.html',
+                            controller: 'LoginModalCtrl',
+                            controllerAs: 'LoginModalCtrl',
+                            size: 'md'
+                        })
+                            .then(function () {
+                                $state.go('user.files')
+                            });
+                    }
+                })
                 .state('user.logout', {
                     url: '/logout',
-                    controller: 'logoutController'
+                    controller: function ($state, $rootScope, UsersApi) {
+                        delete $rootScope.currentUser;
+                        UsersApi.logout();
+                        $state.go('home');
+                    }
                 });
         }
     ])
-    .controller('homeController', function ($rootScope, $scope) {
-        $scope.userAgent = navigator.userAgent;
-    })
-    .controller('logoutController', function ($state, $rootScope, UsersApi) {
-        delete $rootScope.currentUser;
-        UsersApi.logout();
-        $state.go('home');
-    })
-    .controller('fileController', function ($rootScope, $scope, $http) {
-        $http.get("http://www.w3schools.com/angular/customers.php")
+    .controller('fileController', function ($rootScope, $scope, $http, $modal, $state, Upload) {
+        $http.get("/storage/files")
             .success(function (response) {
-                $scope.names = response.records;
+                $scope.files = response;
             });
 
-        $scope.recentFiles = [{id: '2', fileName: '2.mm', date: '2015-05-10'},
-            {id: '1', fileName: '1.mm', date: '2015-05-15'}];
+        //$http.get("/storage/sharedfiles")
+        //    .success(function (response) {
+        //        $scope.sharedFiles = response;
+        //    });
 
-        $scope.allFiles = [{id: '1', fileName: '1.mm', date: '2015-05-15'},
-            {id: '5', fileName: '5.mm', date: '2015-05-15'},
-            {id: '3', fileName: '3.mm', date: '2015-05-15'},
-            {id: '4', fileName: '4.mm', date: '2015-05-15'},
-            {id: '2', fileName: '2.mm', date: '2015-05-15'},
-            {id: '6', fileName: '6.mm', date: '2015-05-15'}];
+        $scope.$watch('files', function () {
+            $scope.upload($scope.files);
+        });
 
-        $scope.sharedFiles =
-            [{id: 's1', fileName: 's1.mm', date: '2015-05-15'},
-                {id: '5', fileName: 's2.mm', date: '2015-05-15'}];
-    });
+        $scope.upload = function (files) {
+            if (files && files.length) {
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    Upload.upload({
+                        url: 'https://mindweb.itworks.hu/storage/file',
+                        method: 'POST',
+                        fields: {'username': $scope.username},
+                        file: file
+                    }).progress(function (evt) {
+                        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                        console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+                    }).success(function (data, status, headers, config) {
+                        console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+                    });
+                }
+            }
+        };
+
+        $scope.fileCreate = function () {
+            var instance = $modal.open(
+                {
+                    templateUrl: 'app/user/fileCreateModal.html',
+                    size: 'md',
+                    controller: 'fileCreateController'
+                });
+            instance.result
+                .then(function (result) {
+                    //TODO add file creation call here
+                    $scope.files.push(result);
+                    $state.go('user.files');
+                });
+        }
+    })
+    .controller('fileCreateController', function ($rootScope, $scope, $modalInstance, $http) {
+        $scope.fileName;
+        $scope.fileDescription;
+
+        $scope.submit = function () {
+            $modalInstance.close({fileName:$scope.fileName, description:$scope.fileDescription});
+        };
+        $scope.cancel = function () {
+            $modalInstance.dismiss();
+        };
+    })
+;

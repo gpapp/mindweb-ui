@@ -22,6 +22,8 @@
     <script src="app/lib/angular-cookies/angular-cookies.min.js"></script>
     <script src="app/lib/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="app/lib/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
+    <script src="app/lib/ng-file-upload-shim/ng-file-upload-shim.min.js"></script>
+    <script src="app/lib/ng-file-upload/ng-file-upload.min.js"></script>
 
     <script src="app/app.js"></script>
 
@@ -56,11 +58,11 @@
         </div>
         <div class="btn-group pull-right" ui-yield-to="navbarAction">
             <div class="btn-group" ng-hide="currentUser===undefined">
-                <a href="#/user/options" class="btn btn-navbar"><i class="fa fa-user"></i> {{currentUser.name}}</a>
+                <a href="#/user/options" class="btn btn-navbar"><img class="img-avatar" ng-src="{{currentUser.avatarUrl}}"/> {{currentUser.name}}</a>
                 <a href="#/user/logout" class="btn btn-navbar"><i class="fa fa-sign-out"></i> Logout</a>
             </div>
             <div class="btn-group" ng-show="currentUser===undefined">
-                <a href="#/user/files" class="btn btn-navbar"><i class="fa fa-sign-in"></i> Login</a>
+                <a href="#/user/login" class="btn btn-navbar"><i class="fa fa-sign-in"></i> Login</a>
             </div>
         </div>
     </div>

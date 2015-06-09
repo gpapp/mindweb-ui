@@ -1,0 +1,27 @@
+<div role="dialog">
+    <form enctype="multipart/form-data" role="form">
+        <div class="modal-header">
+            <h4 class="modal-title">Create file</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-horizontal" role="form">
+                <div class="form-group">
+                    <div class="control-label col-sm-5">File name</div>
+                    <div class="col-sm-7 ">
+                        <input class="form-control disabled" ng-bind="fileName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-sm-5">File description</div>
+                    <div class="col-sm-7 ">
+                        <input type="file" class="form-control disabled" ng-bind="fileContent">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="btn btn-primary" ng-click="submit()">Submit</div>
+            <div class="btn" ng-click="cancel()">Cancel</div>
+        </div>
+    </form>
+</div>
