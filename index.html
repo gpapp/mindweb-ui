@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="app/lib/mobile-angular-ui/dist/css/mobile-angular-ui-desktop.min.css"/>
     <link rel="stylesheet" href="app/lib/mobile-angular-ui/dist/css/mobile-angular-ui-hover.min.css"/>
 
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!--link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"-->
 
     <link rel="stylesheet" href="app/app.css"/>
 
@@ -28,12 +28,13 @@
     <script src="app/app.js"></script>
 
     <!-- Modules -->
-    <script src="app/login/loginModal.js"></script>
     <script src="app/user/user.js"></script>
+    <script src="app/files/files.js"></script>
     <script src="app/viewer/viewer.js"></script>
 
     <!-- Service factories -->
     <script src="app/service/userService.js"></script>
+    <script src="app/service/fileService.js"></script>
 </head>
 
 <body ng-app="MindWebUi">
@@ -43,7 +44,9 @@
      ui-track-as-search-param='true'
      class="sidebar sidebar-left"></div>
 
-<div class="app" ng-swipe-right='Ui.turnOn("uiSidebarLeft")' ng-swipe-left='Ui.turnOff("uiSidebarLeft")'>
+<div class="app"
+     ng-swipe-right='Ui.turnOn("uiSidebarLeft")'
+     ng-swipe-left='Ui.turnOff("uiSidebarLeft")'>
 
     <!-- Navbars -->
 
@@ -62,7 +65,7 @@
                 <a href="#/user/logout" class="btn btn-navbar"><i class="fa fa-sign-out"></i> Logout</a>
             </div>
             <div class="btn-group" ng-show="currentUser===undefined">
-                <a href="#/user/login" class="btn btn-navbar"><i class="fa fa-sign-in"></i> Login</a>
+                <div class="btn btn-navbar" ui-turn-on="loginModal"><i class="fa fa-sign-in"></i> Login</div>
             </div>
         </div>
     </div>
@@ -76,9 +79,29 @@
             <section ui-view></section>
         </div>
     </div>
-
 </div>
 <!-- ~ .app -->
-<div ui-yield-to="modals"></div>
+<div ui-yield-to="modals">
+    <div class="modal" ui-if="loginModal" ui-state='loginModal'>
+        <div class="modal-backdrop"></div>
+        <div class="modal-dialog loginDialog" role="dialog">
+            <div class="modal-header">
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <a class="list-group-item" href="/auth/google">Login with Google account</a>
+                    <a class="list-group-item" href="/auth/twitter">Login with Twitter account</a>
+                    <a class="list-group-item" href="/auth/linkedin">Login with LinkedIn account</a>
+                    <a class="list-group-item" href="/auth/facebook">Login with Facebook account</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button ui-turn-off="loginModal" class="btn btn-default">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

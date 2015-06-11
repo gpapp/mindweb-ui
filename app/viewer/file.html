@@ -1,9 +1,32 @@
+<script type="text/ng-template"  id="tree_item_renderer">
+
+    <div class="list-group-item">
+        <div class="list-group-item-heading">
+            <span ng-repeat="node in node.nodes | filter:{name:'icon'}"><img ng-src="/images/icons/{{node.attributes.BUILTIN}}.png"/></span>
+            <span ng-click="refreshDetail(node);Ui.turnOn('detailPanel')">{{node.attributes.TEXT}}</span>
+            <i class="fa fa fa-lg pull-right" ng-class="nodeIcon(node)"
+               ng-click="nodeToggleOpen(node)"></i>
+        </div>
+        <div class="list-group-item-text">
+            <div ng-repeat="node in node.nodes | filter:{name:'richcontent'}">{{node.value}}</div>
+        </div>
+    </div>
+
+    <div class="indent" ng-class="node.open?'':'hidden'">
+        <div ng-repeat="cnode in node.nodes | filter:{name:'node'}">
+            <div ng-include="'tree_item_renderer'" onload="node=cnode"></div>
+        </div>
+    </div>
+</script>
+
 <div class="panel">
     <div class="panel-body"
          ng-swipe-left='Ui.turnOn("detailPanel")'
          ng-swipe-right='Ui.turnOff("detailPanel")'>
         <div class="list-group">
-            <div ng-init="node=nodes| filter:{name:'map'}" ng-include="'/app/viewer/nodeItemRenderer.html'"></div>
+            <div ng-repeat="cnode in nodes.nodes | filter:{name:'node'}">
+                <div ng-include="'tree_item_renderer'" onload="node=cnode"></div>
+            </div>
         </div>
     </div>
 </div>
