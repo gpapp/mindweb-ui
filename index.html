@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="app/app.css"/>
 
     <script src="app/lib/angular/angular.min.js"></script>
+    <script src="app/lib/angular-animate/angular-animate.min.js"></script>
     <script src="app/lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="app/lib/angular-cookies/angular-cookies.min.js"></script>
     <script src="app/lib/angular-ui-router/release/angular-ui-router.min.js"></script>
@@ -25,6 +26,14 @@
     <script src="app/lib/mobile-angular-ui/dist/js/mobile-angular-ui.gestures.min.js"></script>
     <script src="app/lib/ng-file-upload-shim/ng-file-upload-shim.min.js"></script>
     <script src="app/lib/ng-file-upload/ng-file-upload.min.js"></script>
+
+    <!--Markdown editor dependencies -->
+    <script src="app/lib/showdown/compressed/Showdown.min.js"></script>
+    <script src="app/lib/showdown/compressed/extensions/github.min.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+    <link href="https://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet">
+    <script src="app/lib/showdown/compressed/extensions/prettify.min.js"></script>
+    <script src="app/lib/angular-markdown/angular.markdown.js"></script>
 
     <script src="app/app.js"></script>
 
@@ -65,10 +74,10 @@
                 <a href="#/user/options" class="btn btn-navbar">
                     <img class="img-avatar" ng-src="{{currentUser.avatarUrl}}"/>
                     <span class="hidden-sm">{{currentUser.name}}</span></a>
-                <a href="#/user/logout" class="btn btn-navbar"><i class="fa fa-sign-out"></i> Logout</a>
+                <a href="#/user/logout" class="btn btn-navbar"><i class="fa fa-2x fa-fw fa-sign-out"></i>Logout</a>
             </div>
             <div class="btn-group" ng-show="currentUser===undefined">
-                <div class="btn btn-navbar" ui-turn-on="loginModal"><i class="fa fa-sign-in"></i> Login</div>
+                <div class="btn btn-navbar" ui-turn-on="loginModal"><i class="fa fa-2x fa-fw fa-sign-in"></i>Login</div>
             </div>
         </div>
     </div>

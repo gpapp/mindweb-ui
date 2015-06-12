@@ -5,7 +5,7 @@
   "homepage": "http://dev.itworks.hu/MindWeb/ui",
   "license": "All rights reserved",
   "private": true,
-  "dependencies":{
+  "dependencies": {
     "angular": "~1.4.0",
     "angular-animate": "~1.4.0",
     "angular-bootstrap": "~0.13.x",
@@ -16,6 +16,7 @@
     "mobile-angular-ui": "~1.2.x",
     "html5-boilerplate": "~5.2.0",
     "ng-file-upload": "~5.0.3",
-    "ng-file-upload-shim": "~5.0.3"
+    "ng-file-upload-shim": "~5.0.3",
+    "angular-markdown": "~0.0.1"
   }
 }

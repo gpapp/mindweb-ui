@@ -2,13 +2,15 @@
 
     <div class="list-group-item">
         <div class="list-group-item-heading">
-            <span ng-repeat="node in node.nodes | filter:{name:'icon'}"><img ng-src="/images/icons/{{node.attributes.BUILTIN}}.png"/></span>
-            <span ng-click="refreshDetail(node);Ui.turnOn('detailPanel')">{{node.attributes.TEXT}}</span>
+            <span ng-repeat="node in node.nodes | filter:{name:'icon'}">
+                <img ng-src="/images/icons/{{node.attributes.BUILTIN}}.png"/>
+            </span>
+            <span ng-click="Ui.turnOn('detailPanel');refreshDetail(node)">{{node.attributes.TEXT}}</span>
             <i class="fa fa fa-lg pull-right" ng-class="nodeIcon(node)"
                ng-click="nodeToggleOpen(node)"></i>
         </div>
-        <div class="list-group-item-text">
-            <div ng-repeat="node in node.nodes | filter:{name:'richcontent'}">{{node.value}}</div>
+        <div class="list-group-item-text" ng-if="detailMarkdown(node)">
+            <markdown ng-model="node.detailMarkdown"></markdown>
         </div>
     </div>
 

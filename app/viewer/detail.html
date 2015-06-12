@@ -1,26 +1,101 @@
-<div class="panel">
-    <div class="panel-heading" ng-click="Ui.turnOff('detailPanel')">
+
+<div class="panel panel-primary">
+    <div class="panel-heading panel-title" ng-click="Ui.turnOff('detailPanel')">
         Hide details <span class="pull-right fa fa-close"></span>
     </div>
     <div class="panel-body">
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label class="col-md-5 control-label" for="id">ID</label>
-
-                <div id="id" class="col-md-7"><input class="form-control" ng-model="node.id"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading panel-title">
+                Text
             </div>
-            <div class="form-group">
-                <label class="col-md-5 control-label" for="text">Text</label>
-
-                <div id="text" class="col-md-7"><input class="form-control" ng-model="node.text"></div>
+            <div class="panel-body">
+                <textarea id="text" class="form-control" rows="5" ng-model="node.attributes.TEXT"></textarea>
             </div>
-            <div class="form-group">
-                <label class="col-md-5 control-label" for="content">Content</label>
+        </div>
 
-                <div id="content" class="col-md-7"><textarea class="form-control" ng-model="node.content"></textarea>
+        <div class="panel panel-default" ui-state="nodeDetailPanel" ng-init="nodeDetailPanel=false">
+            <div class="panel-heading panel-title">
+                Details
+                <a class="pull-right" ui-toggle="nodeDetailPanel">
+                    <i class="fa fa-chevron-down" ui-hide="nodeDetailPanel"></i>
+                    <i class="fa fa-chevron-up" ui-show="nodeDetailPanel"></i>
+                </a>
+            </div>
+            <div class="panel-body" ng-if="Ui.active('nodeDetailPanel')" ng-set="nodeDetailTabActive">
+                <tabset>
+                    <tab heading="Formatted">
+                        <markdown class="tab-content" ng-model="node.detailMarkdown" extensions="github, prettify"></markdown>
+                    </tab>
+                    <tab heading="Code">
+                        <textarea class="tab-pane form-control" rows="5" ng-model="node.detailMarkdown" ></textarea>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+
+        <div class="panel panel-default" ui-state="iconPanel">
+            <div class="panel-heading panel-title">
+                <i class="fa fa-stack fa-picture-o"></i>Icons
+                <a class="pull-right" ui-toggle="iconPanel">
+                    <i class="fa fa-chevron-down" ui-hide="iconPanel"></i>
+                    <i class="fa fa-chevron-up" ui-show="iconPanel"></i>
+                </a>
+            </div>
+            <div class="panel-body" ng-if="Ui.active('iconPanel')">
+                <div class="table">
+                    <div class="row">
+                        <div class="col-xs-2 text-center" ng-repeat="attr in node.nodes | filter : {name:'icon'}">
+                            <img class=" mw-detail-icon" ng-src="/images/icons/{{attr.attributes.BUILTIN}}.png"/>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </form>
-        {{node}}
+        </div>
+
+        <div class="panel panel-default" ui-state="attributePanel">
+            <div class="panel-heading panel-title">
+                <i class="fa fa-stack fa-list"></i>Attributes
+                <a class="pull-right" ui-toggle="attributePanel">
+                    <i class="fa fa-chevron-down" ui-hide="attributePanel"></i>
+                    <i class="fa fa-chevron-up" ui-show="attributePanel"></i>
+                </a>
+            </div>
+            <div class="panel-body" ng-if="Ui.active('attributePanel')">
+                <div class="form">
+                    <div class="table table-bordered">
+                        <div class="row">
+                            <div class="col-sm-4 header">Name</div>
+                            <div class="col-sm-8 header">Value</div>
+                        </div>
+                        <div class="row" ng-repeat="attr in node.nodes | filter : {name:'attribute'}">
+                            <div class="col-sm-4" ng-bind="attr.attributes.NAME"></div>
+                            <div class="col-sm-8" ng-bind="attr.attributes.VALUE"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--- DEBUG --->
+        {{node.attributes.LOCALIZED_STYLE_REF}}
+        {{node.attributes.POSITION}}
+        <div ng-repeat="cnode in node.keys">
+            {{key}}:{{cnode}}
+        </div>
+        <div class="list-group">
+            <div class="list-group-item">{{node.name}}</div>
+            <div class="list-group-item">{{node.attributes}}</div>
+            <div class="list-group" ng-repeat="cnode in node.nodes|filter :{name:'!node'}:{name:'!attribute'}|filter:{name:'!icon'}">
+                <div ng-include="'debug-template'" onload="node=cnode"></div>
+            </div>
+        </div>
+
     </div>
 </div>
+<script type="text/ng-template" id="debug-template">
+    <div class="list-group-item">{{node.name}}</div>
+    <div class="list-group-item">{{node.value}}</div>
+    <div class="list-group-item">{{node.attributes}}</div>
+    <div class="indent" ng-repeat="cnode in node.nodes|filter:{name:'!icon'}:{name:'!attribute'}">
+        <div ng-include="'debug-template'" onload="node=cnode"></div>
+    </div>
+</script>
