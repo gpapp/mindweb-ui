@@ -3,7 +3,8 @@ angular.module('MindWebUi', [
     'MindWebUi.file',
     'MindWebUi.viewer',
     'ui.router',
-    'mobile-angular-ui'
+    'mobile-angular-ui',
+    'mobile-angular-ui.gestures'
 ])
     .run(
     ['$rootScope', '$state', '$stateParams', 'UsersApi',

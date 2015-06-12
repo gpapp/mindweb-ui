@@ -1,16 +1,20 @@
 <script type="text/ng-template"  id="tree_item_renderer">
 
-    <div class="list-group-item">
+    <div class="list-group-item nodeList">
         <div class="list-group-item-heading">
-            <span ng-repeat="node in node.nodes | filter:{name:'icon'}">
-                <img ng-src="/images/icons/{{node.attributes.BUILTIN}}.png"/>
-            </span>
-            <span ng-click="Ui.turnOn('detailPanel');refreshDetail(node)">{{node.attributes.TEXT}}</span>
+            <div class="icons">
+                <span ng-repeat="node in node.nodes | filter:{name:'icon'}">
+                    <img ng-src="/images/icons/{{node.attributes.BUILTIN}}.png"/>
+                </span>
+            </div>
+            <div class="item" ng-click="Ui.turnOn('detailPanel');refreshDetail(node)" ng-if="nodeMarkdown(node)">
+                <markdown ng-model="node.nodeMarkdown" extensions="github, prettify"></markdown>
+            </div>
             <i class="fa fa fa-lg pull-right" ng-class="nodeIcon(node)"
                ng-click="nodeToggleOpen(node)"></i>
         </div>
-        <div class="list-group-item-text" ng-if="detailMarkdown(node)">
-            <markdown ng-model="node.detailMarkdown"></markdown>
+        <div class="list-group-item-text detail" ng-if="detailMarkdown(node)">
+            <markdown ng-model="node.detailMarkdown" extensions="github, prettify"></markdown>
         </div>
     </div>
 

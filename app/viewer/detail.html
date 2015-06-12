@@ -4,44 +4,61 @@
         Hide details <span class="pull-right fa fa-close"></span>
     </div>
     <div class="panel-body">
-        <div class="panel panel-default">
-            <div class="panel-heading panel-title">
-                Text
-            </div>
-            <div class="panel-body">
-                <textarea id="text" class="form-control" rows="5" ng-model="node.attributes.TEXT"></textarea>
-            </div>
-        </div>
+        <tabset>
+            <tab>
+                <tab-heading>
+                    <i class='fa fa-fw fa-book'></i>View
+                </tab-heading>
+                <markdown class="tab-content" ng-model="node.nodeMarkdown" extensions="github, prettify"></markdown>
+            </tab>
+            <tab>
+                <tab-heading>
+                    <i class='fa fa-fw fa-edit'></i>Edit
+                </tab-heading>
+                <textarea class="tab-pane form-control" rows="5" ng-model="node.nodeMarkdown" ></textarea>
+            </tab>
+        </tabset>
 
-        <div class="panel panel-default" ui-state="nodeDetailPanel" ng-init="nodeDetailPanel=false">
-            <div class="panel-heading panel-title">
-                Details
-                <a class="pull-right" ui-toggle="nodeDetailPanel">
-                    <i class="fa fa-chevron-down" ui-show="nodeDetailPanel"></i>
-                    <i class="fa fa-chevron-up" ui-hide="nodeDetailPanel"></i>
-                </a>
-            </div>
-            <div class="panel-body" ng-if="Ui.active('nodeDetailPanel')" ng-set="nodeDetailTabActive">
+        <tabset>
+            <tab>
+                <tab-heading>
+                    <i class='fa fa-fw fa-info'></i>Details
+                </tab-heading>
                 <tabset>
-                    <tab heading="Formatted">
+                    <tab>
+                        <tab-heading>
+                            <i class='fa fa-fw fa-book'></i>View
+                        </tab-heading>
                         <markdown class="tab-content" ng-model="node.detailMarkdown" extensions="github, prettify"></markdown>
                     </tab>
-                    <tab heading="Code">
+                    <tab>
+                        <tab-heading>
+                            <i class='fa fa-fw fa-edit'></i>Edit
+                        </tab-heading>
                         <textarea class="tab-pane form-control" rows="5" ng-model="node.detailMarkdown" ></textarea>
                     </tab>
                 </tabset>
-            </div>
-        </div>
-
-        <div class="panel panel-default" ui-state="iconPanel">
-            <div class="panel-heading panel-title">
-                <i class="fa fa-stack fa-picture-o"></i>Icons
-                <a class="pull-right" ui-toggle="iconPanel">
-                    <i class="fa fa-chevron-down" ui-show="iconPanel"></i>
-                    <i class="fa fa-chevron-up" ui-hide="iconPanel"></i>
-                </a>
-            </div>
-            <div class="panel-body" ng-if="Ui.active('iconPanel')">
+            </tab>
+            <tab heading="Notes">
+                <tabset>
+                    <tab>
+                        <tab-heading>
+                            <i class='fa fa-fw fa-book'></i>View
+                        </tab-heading>
+                        <markdown class="tab-content" ng-model="node.noteMarkdown" extensions="github, prettify"></markdown>
+                    </tab>
+                    <tab>
+                        <tab-heading>
+                            <i class='fa fa-fw fa-edit'></i>Edit
+                        </tab-heading>
+                        <textarea class="tab-pane form-control" rows="5" ng-model="node.noteMarkdown" ></textarea>
+                    </tab>
+                </tabset>
+            </tab>
+            <tab>
+                <tab-heading>
+                    <i class='fa fa-stack fa-picture-o'></i>Icons
+                </tab-heading>
                 <div class="table">
                     <div class="row">
                         <div class="col-xs-2 text-center" ng-repeat="attr in node.nodes | filter : {name:'icon'}">
@@ -49,18 +66,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </tab>
+            <tab>
+                <tab-heading>
+                    <i class='fa fa-fw fa-table'></i>Properties
+                </tab-heading>
 
-        <div class="panel panel-default" ui-state="attributePanel">
-            <div class="panel-heading panel-title">
-                <i class="fa fa-stack fa-list"></i>Attributes
-                <a class="pull-right" ui-toggle="attributePanel">
-                    <i class="fa fa-chevron-down" ui-show="attributePanel"></i>
-                    <i class="fa fa-chevron-up" ui-hide="attributePanel"></i>
-                </a>
-            </div>
-            <div class="panel-body" ng-if="Ui.active('attributePanel')">
                 <table class="table table-bordered">
                     <thead>
                     <tr>
@@ -75,8 +86,9 @@
                     </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
+            </tab>
+        </tabset>
+
 <!--- DEBUG --->
         {{node.attributes.LOCALIZED_STYLE_REF}}
         {{node.attributes.POSITION}}

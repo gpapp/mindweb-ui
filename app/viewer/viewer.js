@@ -2,10 +2,11 @@ angular.module('MindWebUi.viewer', [
     'MindWebUi.file.service',
     'ui.router',
     'angular-markdown',
-    'ui.bootstrap.tabs'
+    'ui.bootstrap.tabs',
+    'mobile-angular-ui.gestures'
 ])
     .config(['$stateProvider', '$urlRouterProvider',
-        function ($stateProvider, $urlRouterProvider) {
+        function ($stateProvider) {
             $stateProvider
                 .state('viewer', {
                     abstract: true,
@@ -57,6 +58,24 @@ angular.module('MindWebUi.viewer', [
             $rootScope.$broadcast('refreshDetail', {node: node});
         };
 
+        $scope.nodeMarkdown  = function(node) {
+            if (!node.nodes){
+                node.nodeMarkdown = node.attributes.TEXT;
+                return true;
+            }
+            if (node.nodeMarkdown){
+                return node.nodeMarkdown;
+            }
+            var ret = $filter('filter')(node.nodes,{name:'richContent',attributes:{TYPE:'NODE'}});
+            if(ret.length==1) {
+                node.nodeMarkdown = buildMarkdownContent(ret[0].nodes);
+                return true;
+            } else {
+                node.nodeMarkdown = node.attributes.TEXT;
+                return false;
+            }
+        };
+
         $scope.detailMarkdown = function(node) {
             if (!node.nodes){
                 return false;
@@ -72,10 +91,27 @@ angular.module('MindWebUi.viewer', [
                 node.detailMarkdown = '';
                 return false;
             }
-        }
+        };
+
+        $scope.noteMarkdown = function(node) {
+            if (!node.nodes){
+                return false;
+            }
+            if (node.noteMarkdown){
+                return node.noteMarkdown;
+            }
+            var ret = $filter('filter')(node.nodes,{name:'richContent',attributes:{TYPE:'NOTE'}});
+            if(ret.length==1) {
+                node.noteMarkdown = buildMarkdownContent(ret[0].nodes);
+                return true;
+            } else {
+                node.noteMarkdown = '';
+                return false;
+            }
+        };
     }
 )
-    .controller('detailController', function ($scope, $state) {
+    .controller('detailController', function ($scope) {
         $scope.$on('refreshDetail', function (event, data) {
             $scope.node = data.node;
         });

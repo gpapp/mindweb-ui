@@ -188,6 +188,9 @@ ngf-drop.drop-box {
     text-align: center;
 }
 
+markdown {
+    display: inline-block;
+}
 markdown.tab-content {
     border: 1px solid lightgray;
     padding: 0.5em 1em;
@@ -195,6 +198,30 @@ markdown.tab-content {
     overflow: auto;
     display: block;
 }
+
+.nodeList .list-group-item-heading {
+    display: table;
+    overflow: auto;
+}
+.nodeList .item,
+.nodeList .fa,
+.nodeList .icons {
+    display: table-cell;
+    vertical-align: top;
+}
+.nodeList .fa {
+    position:absolute;
+    right:10px
+}
+.nodeList .icons img {
+    min-width:  36px;
+    padding-right: 8px;
+}
+.nodeList .list-group-item-text {
+    max-height: 300px;
+    overflow: auto;
+}
+
 /* override clashes from bootstrap and mobile-angular-ui */
 .navbar {
     position: absolute;
