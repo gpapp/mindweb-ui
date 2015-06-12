@@ -78,7 +78,6 @@ input.scrollable-header {
 }
 
 .loginDialog {
-    padding: 30px 20px;
     text-align: center;
 }
 
@@ -225,4 +224,8 @@ markdown.tab-content {
 /* override clashes from bootstrap and mobile-angular-ui */
 .navbar {
     position: absolute;
+}
+
+.modal {
+    display: block;
 }
