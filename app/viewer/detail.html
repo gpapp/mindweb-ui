@@ -17,8 +17,8 @@
             <div class="panel-heading panel-title">
                 Details
                 <a class="pull-right" ui-toggle="nodeDetailPanel">
-                    <i class="fa fa-chevron-down" ui-hide="nodeDetailPanel"></i>
-                    <i class="fa fa-chevron-up" ui-show="nodeDetailPanel"></i>
+                    <i class="fa fa-chevron-down" ui-show="nodeDetailPanel"></i>
+                    <i class="fa fa-chevron-up" ui-hide="nodeDetailPanel"></i>
                 </a>
             </div>
             <div class="panel-body" ng-if="Ui.active('nodeDetailPanel')" ng-set="nodeDetailTabActive">
@@ -37,8 +37,8 @@
             <div class="panel-heading panel-title">
                 <i class="fa fa-stack fa-picture-o"></i>Icons
                 <a class="pull-right" ui-toggle="iconPanel">
-                    <i class="fa fa-chevron-down" ui-hide="iconPanel"></i>
-                    <i class="fa fa-chevron-up" ui-show="iconPanel"></i>
+                    <i class="fa fa-chevron-down" ui-show="iconPanel"></i>
+                    <i class="fa fa-chevron-up" ui-hide="iconPanel"></i>
                 </a>
             </div>
             <div class="panel-body" ng-if="Ui.active('iconPanel')">
@@ -56,23 +56,25 @@
             <div class="panel-heading panel-title">
                 <i class="fa fa-stack fa-list"></i>Attributes
                 <a class="pull-right" ui-toggle="attributePanel">
-                    <i class="fa fa-chevron-down" ui-hide="attributePanel"></i>
-                    <i class="fa fa-chevron-up" ui-show="attributePanel"></i>
+                    <i class="fa fa-chevron-down" ui-show="attributePanel"></i>
+                    <i class="fa fa-chevron-up" ui-hide="attributePanel"></i>
                 </a>
             </div>
             <div class="panel-body" ng-if="Ui.active('attributePanel')">
-                <div class="form">
-                    <div class="table table-bordered">
-                        <div class="row">
-                            <div class="col-sm-4 header">Name</div>
-                            <div class="col-sm-8 header">Value</div>
-                        </div>
-                        <div class="row" ng-repeat="attr in node.nodes | filter : {name:'attribute'}">
-                            <div class="col-sm-4" ng-bind="attr.attributes.NAME"></div>
-                            <div class="col-sm-8" ng-bind="attr.attributes.VALUE"></div>
-                        </div>
-                    </div>
-                </div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="attr in node.nodes | filter : {name:'attribute'}">
+                        <td ng-bind="attr.attributes.NAME"></td>
+                        <td ng-bind="attr.attributes.VALUE"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 <!--- DEBUG --->
