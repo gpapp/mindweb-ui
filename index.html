@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="app/lib/mobile-angular-ui/dist/css/mobile-angular-ui-desktop.min.css"/>
     <link rel="stylesheet" href="app/lib/mobile-angular-ui/dist/css/mobile-angular-ui-hover.min.css"/>
 
-    <!--link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"-->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="app/app.css"/>
 
@@ -22,6 +22,7 @@
     <script src="app/lib/angular-cookies/angular-cookies.min.js"></script>
     <script src="app/lib/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="app/lib/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
+    <script src="app/lib/mobile-angular-ui/dist/js/mobile-angular-ui.gestures.min.js"></script>
     <script src="app/lib/ng-file-upload-shim/ng-file-upload-shim.min.js"></script>
     <script src="app/lib/ng-file-upload/ng-file-upload.min.js"></script>
 
@@ -55,13 +56,15 @@
             MindWeb
         </div>
         <div class="btn-group pull-left">
-            <div ui-toggle="uiSidebarLeft" class="btn sidebar-toggle" ng-animate="'slide'">
+            <div ui-toggle="uiSidebarLeft" class="btn sidebar-toggle hidden-md hidden-lg" ng-animate="'slide'">
                 <i class="fa fa-bars"></i> Menu
             </div>
         </div>
         <div class="btn-group pull-right" ui-yield-to="navbarAction">
-            <div class="btn-group" ng-hide="currentUser===undefined">
-                <a href="#/user/options" class="btn btn-navbar"><img class="img-avatar" ng-src="{{currentUser.avatarUrl}}"/> {{currentUser.name}}</a>
+            <div class="btn-group hidden-xs" ng-hide="currentUser===undefined">
+                <a href="#/user/options" class="btn btn-navbar">
+                    <img class="img-avatar" ng-src="{{currentUser.avatarUrl}}"/>
+                    <span class="hidden-sm">{{currentUser.name}}</span></a>
                 <a href="#/user/logout" class="btn btn-navbar"><i class="fa fa-sign-out"></i> Logout</a>
             </div>
             <div class="btn-group" ng-show="currentUser===undefined">
