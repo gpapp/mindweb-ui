@@ -12,8 +12,8 @@ ADD app/ /var/www/app/
 ADD app/ /var/www/images/
 
 WORKDIR  /var/www/
-RUN npm install
+RUN npm install --unsafe-perm
 
 CMD service nginx start
 #ENTRYPOINT ["service", "nginx", "start"]
-EXPOSE 2003:80
+EXPOSE 80
