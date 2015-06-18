@@ -46,7 +46,11 @@ angular.module('MindWebUi.file', [
                 for (var i = 0; i < toUpload.length; i++) {
                     var file = toUpload[i];
                     Upload.upload({
+<<<<<<< HEAD
                         url: '/file/upload',
+=======
+                        url: '/storage/file',
+>>>>>>> 8fa6d9e1c7d04cb7ba26c018df36344999057f2a
                         method: 'POST',
                         fields: {'username': $scope.username},
                         file: file
