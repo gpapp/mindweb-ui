@@ -8,7 +8,7 @@ angular.module('MindWebUi.file.service', [
     {
         function _list () {
             var deferred = $q.defer();
-            $http.get("/storage/files")
+            $http.get("/file/files")
                 .success(function (response) {
                     deferred.resolve(response);
                 })
@@ -20,7 +20,7 @@ angular.module('MindWebUi.file.service', [
 
         function _load (id) {
             var deferred = $q.defer();
-            $http.get("/storage/file/"+id)
+            $http.get("/file/file/"+id)
                 .success(function (response) {
                     deferred.resolve(response);
                 })
@@ -30,7 +30,17 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
-        function _save() {
+        function _save(changes) {
+            var deferred = $q.defer();
+            // TODO: POST changes as JSON data
+            $http.post("/file/change/"+id)
+                .success(function (response) {
+                    deferred.resolve(response);
+                })
+                .error(function (err){
+                    deferred.reject();
+                });
+            return deferred.promise;
         }
 
         function _remove() {
