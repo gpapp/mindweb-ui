@@ -1,4 +1,3 @@
-
 <div class="panel panel-primary">
     <div class="panel-heading panel-title" ng-click="Ui.turnOff('detailPanel')">
         Hide details <span class="pull-right fa fa-close"></span>
@@ -10,13 +9,15 @@
                 <tab-heading>
                     <i class='fa fa-fw fa-book'></i>View
                 </tab-heading>
-                <markdown class="tab-content" ng-model="currentNode.nodeMarkdown" extensions="github, prettify"></markdown>
+                <markdown class="tab-content" ng-model="currentNode.nodeMarkdown"
+                          extensions="github, prettify"></markdown>
             </tab>
             <tab>
                 <tab-heading>
                     <i class='fa fa-fw fa-edit'></i>Edit
+                    <i class="fa fa-question pull-right" ui-turn-on="modalMarkdownDialog"></i>
                 </tab-heading>
-                <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.nodeMarkdown" ></textarea>
+                <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.nodeMarkdown"></textarea>
             </tab>
         </tabset>
 
@@ -30,13 +31,16 @@
                         <tab-heading>
                             <i class='fa fa-fw fa-book'></i>View
                         </tab-heading>
-                        <markdown class="tab-content" ng-model="currentNode.detailMarkdown" extensions="github, prettify"></markdown>
+                        <markdown class="tab-content" ng-model="currentNode.detailMarkdown"
+                                  extensions="github, prettify"></markdown>
                     </tab>
                     <tab>
                         <tab-heading>
                             <i class='fa fa-fw fa-edit'></i>Edit
+                            <i class="fa fa-question pull-right" ui-turn-on="modalMarkdownDialog"></i>
                         </tab-heading>
-                        <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.detailMarkdown" ></textarea>
+                        <textarea class="tab-pane form-control" rows="5"
+                                  ng-model="currentNode.detailMarkdown"></textarea>
                     </tab>
                 </tabset>
             </tab>
@@ -46,13 +50,15 @@
                         <tab-heading>
                             <i class='fa fa-fw fa-book'></i>View
                         </tab-heading>
-                        <markdown class="tab-content" ng-model="currentNode.noteMarkdown" extensions="github, prettify"></markdown>
+                        <markdown class="tab-content" ng-model="currentNode.noteMarkdown"
+                                  extensions="github, prettify"></markdown>
                     </tab>
                     <tab>
                         <tab-heading>
                             <i class='fa fa-fw fa-edit'></i>Edit
+                            <i class="fa fa-question pull-right" ui-turn-on="modalMarkdownDialog"></i>
                         </tab-heading>
-                        <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.noteMarkdown" ></textarea>
+                        <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.noteMarkdown"></textarea>
                     </tab>
                 </tabset>
             </tab>
@@ -62,7 +68,8 @@
                 </tab-heading>
                 <div class="table">
                     <div class="row">
-                        <div class="col-xs-2 text-center" ng-repeat="attr in currentNode.nodes | filter : {name:'icon'}">
+                        <div class="col-xs-2 text-center"
+                             ng-repeat="attr in currentNode.nodes | filter : {name:'icon'}">
                             <img class=" mw-detail-icon" ng-src="/images/icons/{{attr.attributes.BUILTIN}}.png"/>
                         </div>
                     </div>
@@ -89,5 +96,25 @@
                 </table>
             </tab>
         </tabset>
+    </div>
+</div>
+<div ui-content-for="modals">
+    <div class="modal" ui-if="modalMarkdownDialog" ui-state='modalMarkdownDialog'>
+        <div class="modal-backdrop in"></div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close"
+                            ui-turn-off="modalMarkdownDialog">&times;</button>
+                    <h4 class="modal-title">Markdown syntax</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scrollable">
+                        <div class="scrollable-content" ng-include="'/app/viewer/markdown.html'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
