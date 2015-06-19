@@ -57,17 +57,11 @@
                     </div>
                     <div ui-if="myAccordion == 1">
                         <div class="panel-body">
-                            <div class="list-group">
-                                <a ng-repeat="item in files | orderBy:'-modifieddate'" href="#/viewer/{{item.id}}"
-                                   class="list-group-item file-group-item">
-                                    <i class="fa fa-file"></i>
-                                    <span class="fileName">{{ item.name }}</span>
-                                    <span class="fileInfo">
-                                        <span class="version">{{ item.versions.length }}</span>
-                                        <span class="fileDate">{{ item.created }}</span>
-                                        <span class="fileDate">{{ item.modified }}</span>
-                                    </span>
-                                </a>
+                            <div class="list-group file-list">
+                                <div class="list-group-item file-list-item"
+                                   ng-repeat="item in files | orderBy:'-modifieddate'"
+                                   ng-include="'file_item_renderer'" >
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,12 +75,11 @@
                     </div>
                     <div ui-if="myAccordion == 2">
                         <div class="panel-body">
-                            <div class="list-group">
-                                <a ng-repeat="item in files | orderBy:'name'" href="#/viewer/{{item.id}}"
-                                   class="list-group-item file-group-item">
-                                    <i class="fa fa-file"></i>
-                                    {{ item.name }} {{ item.created }}
-                                </a>
+                            <div class="list-group file-list">
+                                <div class="list-group-item file-list-item"
+                                     ng-repeat="item in files | orderBy:'name'"
+                                     ng-include="'file_item_renderer'" >
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -100,12 +93,11 @@
                     </div>
                     <div ui-if="myAccordion == 3">
                         <div class="panel-body">
-                            <div class="list-group">
-                                <a ng-repeat="item in sharedFiles | orderBy:'fileName'" href="#/viewer/{{item.id}}"
-                                   class="list-group-item file-group-item">
-                                    <i class="fa fa-file"></i>
-                                    {{ item.fileName }} {{ item.date }}
-                                </a>
+                            <div class="list-group file-list">
+                                <div class="list-group-item file-list-item"
+                                     ng-repeat="item in sharedFiles | orderBy:'name'"
+                                     ng-include="'file_item_renderer'" >
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -155,3 +147,25 @@
         Search Bar
     </a>
 </div>
+
+<script type="text/ng-template"  id="file_item_renderer">
+    <a href="#/viewer/{{item.id}}"
+       ui-state="filePopup">
+        <i class="fa fa-info-circle pull-right"
+           ng-mouseover="filePopup=true"
+           ng-mouseleave="filePopup=false"></i>
+
+        <span class="fileInfo" ng-class="{hidden : !filePopup}">
+                                            <div class="title">{{item.name}}</div>
+                                            <div class="version">Version: {{ item.versions.length }}</div>
+                                            <div class="fileDate">Created: {{ item.created }}</div>
+                                            <div class="fileDate">Last modification:{{ item.modified }}</div>
+                                        </span>
+        <i class="fa fa-file"></i>
+        <div class="fileName" >{{ item.name }}</div>
+        <div class="actions">
+            <i class="fa fa-edit"></i>
+            <i class="fa fa-trash"></i>
+        </div>
+    </a>
+</script>

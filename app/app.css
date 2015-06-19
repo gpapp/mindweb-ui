@@ -57,6 +57,32 @@ h1 {
     padding: 20px;
 }
 
+.file-list {
+    display: flex;
+}
+.file-list-item {
+    width: 200px;
+    height: 100px;
+}
+
+.fileInfo{
+    display:block;
+    position:absolute;
+    background:beige;
+    border:1px solid black;
+    font-size:80%;
+    left:10px;
+    right:-10px;
+    z-index:1;
+}
+
+.file-list-item .actions {
+    vertical-align: bottom;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
 pre {
     text-align: left !important;
 }
@@ -69,7 +95,7 @@ input.scrollable-header {
     content: '\f017';
 }
 
-.file-group-item {
+.file-list-item {
     display: inline-block;
     border-right: 1px solid #ddd !important;
     border-bottom: 1px solid #ddd !important;
