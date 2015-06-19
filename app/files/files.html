@@ -58,7 +58,7 @@
                     <div ui-if="myAccordion == 1">
                         <div class="panel-body">
                             <div class="list-group">
-                                <a ng-repeat="item in files | orderBy:'-modifieddate'" href="#/viewer/{{item.versions[item.versions.length-1]}}"
+                                <a ng-repeat="item in files | orderBy:'-modifieddate'" href="#/viewer/{{item.id}}"
                                    class="list-group-item file-group-item">
                                     <i class="fa fa-file"></i>
                                     <span class="fileName">{{ item.name }}</span>

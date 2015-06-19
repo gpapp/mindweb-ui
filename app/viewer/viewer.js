@@ -36,7 +36,7 @@ angular.module('MindWebUi.viewer', [
         $rootScope.loading = true;
 
         FileApi.load($state.params.fileId).then(function (data) {
-            $scope.nodes = data.fileVersion.content;
+            $scope.nodes = JSON.parse(data.content);
             $scope.nodes.open = true;
             $rootScope.loading = false;
         });
@@ -58,57 +58,6 @@ angular.module('MindWebUi.viewer', [
             $rootScope.$broadcast('refreshDetail', {node: node});
         };
 
-        $scope.nodeMarkdown  = function(node) {
-            if (!node.nodes){
-                node.nodeMarkdown = node.attributes.TEXT;
-                return true;
-            }
-            if (node.nodeMarkdown){
-                return node.nodeMarkdown;
-            }
-            var ret = $filter('filter')(node.nodes,{name:'richContent',attributes:{TYPE:'NODE'}});
-            if(ret.length==1) {
-                node.nodeMarkdown = buildMarkdownContent(ret[0].nodes);
-                return true;
-            } else {
-                node.nodeMarkdown = node.attributes.TEXT;
-                return false;
-            }
-        };
-
-        $scope.detailMarkdown = function(node) {
-            if (!node.nodes){
-                return false;
-            }
-            if (node.detailMarkdown){
-                return node.detailMarkdown;
-            }
-            var ret = $filter('filter')(node.nodes,{name:'richContent',attributes:{TYPE:'DETAIL'}});
-            if(ret.length==1) {
-                node.detailMarkdown = buildMarkdownContent(ret[0].nodes);
-                return true;
-            } else {
-                node.detailMarkdown = '';
-                return false;
-            }
-        };
-
-        $scope.noteMarkdown = function(node) {
-            if (!node.nodes){
-                return false;
-            }
-            if (node.noteMarkdown){
-                return node.noteMarkdown;
-            }
-            var ret = $filter('filter')(node.nodes,{name:'richContent',attributes:{TYPE:'NOTE'}});
-            if(ret.length==1) {
-                node.noteMarkdown = buildMarkdownContent(ret[0].nodes);
-                return true;
-            } else {
-                node.noteMarkdown = '';
-                return false;
-            }
-        };
     }
 )
     .controller('detailController', function ($scope) {
@@ -117,20 +66,3 @@ angular.module('MindWebUi.viewer', [
         });
 
     });
-
-var urlPattern = /(^|[\s\n]|<br\/?>)((?:https?|ftp):\/\/[\-A-Z0-9+\u0026\u2019@#\/%?=()~_|!:,.;]*[\-A-Z0-9+\u0026@#\/%=~()_|])/gi;
-function buildMarkdownContent(nodes){
-    var retval = '';
-    nodes.forEach(function(n) {
-        if(n.name === 'p') {
-            if (n.value) {
-                retval += n.value.trim().replace(urlPattern, '$1[$2]($2)');
-            }
-            retval += '\n\n';
-        }
-        if (n.nodes) {
-            retval += buildMarkdownContent(n.nodes);
-        }
-    });
-    return retval;
-}
