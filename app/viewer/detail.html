@@ -10,13 +10,13 @@
                 <tab-heading>
                     <i class='fa fa-fw fa-book'></i>View
                 </tab-heading>
-                <markdown class="tab-content" ng-model="node.nodeMarkdown" extensions="github, prettify"></markdown>
+                <markdown class="tab-content" ng-model="currentNode.nodeMarkdown" extensions="github, prettify"></markdown>
             </tab>
             <tab>
                 <tab-heading>
                     <i class='fa fa-fw fa-edit'></i>Edit
                 </tab-heading>
-                <textarea class="tab-pane form-control" rows="5" ng-model="node.nodeMarkdown" ></textarea>
+                <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.nodeMarkdown" ></textarea>
             </tab>
         </tabset>
 
@@ -30,13 +30,13 @@
                         <tab-heading>
                             <i class='fa fa-fw fa-book'></i>View
                         </tab-heading>
-                        <markdown class="tab-content" ng-model="node.detailMarkdown" extensions="github, prettify"></markdown>
+                        <markdown class="tab-content" ng-model="currentNode.detailMarkdown" extensions="github, prettify"></markdown>
                     </tab>
                     <tab>
                         <tab-heading>
                             <i class='fa fa-fw fa-edit'></i>Edit
                         </tab-heading>
-                        <textarea class="tab-pane form-control" rows="5" ng-model="node.detailMarkdown" ></textarea>
+                        <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.detailMarkdown" ></textarea>
                     </tab>
                 </tabset>
             </tab>
@@ -46,13 +46,13 @@
                         <tab-heading>
                             <i class='fa fa-fw fa-book'></i>View
                         </tab-heading>
-                        <markdown class="tab-content" ng-model="node.noteMarkdown" extensions="github, prettify"></markdown>
+                        <markdown class="tab-content" ng-model="currentNode.noteMarkdown" extensions="github, prettify"></markdown>
                     </tab>
                     <tab>
                         <tab-heading>
                             <i class='fa fa-fw fa-edit'></i>Edit
                         </tab-heading>
-                        <textarea class="tab-pane form-control" rows="5" ng-model="node.noteMarkdown" ></textarea>
+                        <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.noteMarkdown" ></textarea>
                     </tab>
                 </tabset>
             </tab>
@@ -62,7 +62,7 @@
                 </tab-heading>
                 <div class="table">
                     <div class="row">
-                        <div class="col-xs-2 text-center" ng-repeat="attr in node.nodes | filter : {name:'icon'}">
+                        <div class="col-xs-2 text-center" ng-repeat="attr in currentNode.nodes | filter : {name:'icon'}">
                             <img class=" mw-detail-icon" ng-src="/images/icons/{{attr.attributes.BUILTIN}}.png"/>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="attr in node.nodes | filter : {name:'attribute'}">
+                    <tr ng-repeat="attr in currentNode.nodes | filter : {name:'attribute'}">
                         <td ng-bind="attr.attributes.NAME"></td>
                         <td ng-bind="attr.attributes.VALUE"></td>
                     </tr>
@@ -89,28 +89,5 @@
                 </table>
             </tab>
         </tabset>
-
-<!--- DEBUG --->
-        {{node.attributes.LOCALIZED_STYLE_REF}}
-        {{node.attributes.POSITION}}
-        <div ng-repeat="cnode in node.keys">
-            {{key}}:{{cnode}}
-        </div>
-        <div class="list-group">
-            <div class="list-group-item">{{node.name}}</div>
-            <div class="list-group-item">{{node.attributes}}</div>
-            <div class="list-group" ng-repeat="cnode in node.nodes|filter :{name:'!node'}:{name:'!attribute'}|filter:{name:'!icon'}">
-                <div ng-include="'debug-template'" onload="node=cnode"></div>
-            </div>
-        </div>
-
     </div>
 </div>
-<script type="text/ng-template" id="debug-template">
-    <div class="list-group-item">{{node.name}}</div>
-    <div class="list-group-item">{{node.value}}</div>
-    <div class="list-group-item">{{node.attributes}}</div>
-    <div class="indent" ng-repeat="cnode in node.nodes|filter:{name:'!icon'}:{name:'!attribute'}">
-        <div ng-include="'debug-template'" onload="node=cnode"></div>
-    </div>
-</script>

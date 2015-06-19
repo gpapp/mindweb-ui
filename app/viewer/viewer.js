@@ -12,6 +12,7 @@ angular.module('MindWebUi.viewer', [
                     abstract: true,
                     url: '/viewer',
                     templateUrl: '/app/viewer/viewerTemplate.html',
+                    controller: 'viewerController',
                     data: {
                         requireLogin: false
                     }
@@ -31,6 +32,12 @@ angular.module('MindWebUi.viewer', [
                 });
         }
     ])
+    .controller('viewerController', function ($scope) {
+        $scope.$on('selectNode', function (event, data) {
+            $scope.currentNode = data.node;
+            event.stopPropagation();
+        });
+    })
     .controller('structureController', function ($scope, $rootScope, $state, $filter, FileApi) {
 
         $rootScope.loading = true;
@@ -55,14 +62,12 @@ angular.module('MindWebUi.viewer', [
             node.open = !node.open;
         };
         $scope.refreshDetail = function (node) {
-            $rootScope.$broadcast('refreshDetail', {node: node});
+            $scope.$emit('selectNode', {node: node});
         };
 
     }
 )
     .controller('detailController', function ($scope) {
-        $scope.$on('refreshDetail', function (event, data) {
-            $scope.node = data.node;
-        });
+
 
     });
