@@ -158,8 +158,8 @@
         <span class="fileInfo" ng-class="{hidden : !filePopup}">
                                             <div class="title">{{item.name}}</div>
                                             <div class="version">Version: {{ item.versions.length }}</div>
-                                            <div class="fileDate">Created: {{ item.created }}</div>
-                                            <div class="fileDate">Last modification:{{ item.modified }}</div>
+                                            <div class="fileDate">Created: {{ item.created | date:'medium'}}</div>
+                                            <div class="fileDate">Last modification:{{ item.modified  | date:'medium'}}</div>
                                         </span>
         <i class="fa fa-file"></i>
         <div class="fileName" >{{ item.name }}</div>

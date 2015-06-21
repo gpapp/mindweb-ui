@@ -58,13 +58,26 @@ h1 {
 }
 
 .file-list {
-    display: flex;
+    display: grid;
 }
+
 .file-list-item {
+    display: inline-table;
+    border-right: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+    margin-bottom: 3px !important;
+    margin-right: 3px !important;
     width: 200px;
     height: 100px;
 }
 
+.fileInfo.hidden{
+    display:block !important;
+    visibility:visible!important;
+    opacity: 0;
+    z-index:-1;
+    transition: opacity 1s;
+}
 .fileInfo{
     display:block;
     position:absolute;
@@ -72,8 +85,16 @@ h1 {
     border:1px solid black;
     font-size:80%;
     left:10px;
-    right:-10px;
+    right:10px;
+    top: 25pt;
     z-index:1;
+    opacity:1;
+    transition: opacity 1s;
+    padding:5px 5px;
+}
+.fileInfo .title {
+    border-bottom: 1px solid;
+    font-weight:bold;
 }
 
 .file-list-item .actions {
@@ -93,14 +114,6 @@ input.scrollable-header {
 
 .fa-time:before {
     content: '\f017';
-}
-
-.file-list-item {
-    display: inline-block;
-    border-right: 1px solid #ddd !important;
-    border-bottom: 1px solid #ddd !important;
-    margin-bottom: 3px !important;
-    margin-right: 3px !important;
 }
 
 .loginDialog {
