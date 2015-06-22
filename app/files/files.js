@@ -25,18 +25,16 @@ angular.module('MindWebUi.file', [
     ])
     .controller('fileController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileApi) {
 
-        FileApi.list().then(function (data) {
-            $scope.files = data;
-        });
+        reloadFiles($scope);
 
         //$http.get("/storage/sharedfiles")
         //    .success(function (response) {
         //        $scope.sharedFiles = response;
         //    });
-        var uploadMutex=false;
+        var uploadMutex = false;
         $scope.$watch('uploadedFiles', function () {
-            if (!uploadMutex){
-                uploadMutex=true;
+            if (!uploadMutex) {
+                uploadMutex = true;
                 $scope.upload($scope.uploadedFiles);
             }
         });
@@ -45,6 +43,7 @@ angular.module('MindWebUi.file', [
             if (toUpload && toUpload.length) {
                 for (var i = 0; i < toUpload.length; i++) {
                     var file = toUpload[i];
+                    $rootScope.$emit('$routeChangeStart');
                     Upload.upload({
                         url: '/file/upload',
                         method: 'POST',
@@ -55,35 +54,50 @@ angular.module('MindWebUi.file', [
                         console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
                     }).success(function (data, status, headers, config) {
                         console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
-                        FileApi.list().then(function (data) {
-                            $scope.files = data;
-                        });
-                        uploadMutex=false;
-                    }).error( function () {
-                        uploadMutex=false;
-
+                        $rootScope.$emit('$routeChangeSuccess');
+                        reloadFiles();
+                        uploadMutex = false;
+                    }).error(function () {
+                        uploadMutex = false;
+                        $rootScope.$emit('$routeChangeSuccess');
                     })
                     ;
-
                 }
             } else {
-                uploadMutex=false;
+                uploadMutex = false;
             }
         };
 
-        $scope.newFile = {};
-        $scope.fileCreate = function (){
-
-            //TODO add files creation call here
-                    $scope.files.push(
-                        {   fileName:$scope.newFile.fileName,
-                            description: $scope.newFile.description,
-                            version: 0,
-                            creationDate: 'New',
-                            modificationDate: 'New'
-                        });
-                    $state.go('files.list');
+        $scope.rename = function (toRename) {
 
         };
-    })
-;
+
+        $scope.delete = function (toDelete) {
+
+        };
+
+        $scope.newFile = {};
+        $scope.fileCreate = function () {
+
+            //TODO add files creation call here
+            $scope.files.push(
+                {
+                    fileName: $scope.newFile.fileName,
+                    description: $scope.newFile.description,
+                    version: 0,
+                    creationDate: 'New',
+                    modificationDate: 'New'
+                });
+            $state.go('files.list');
+
+        };
+
+        // Utility functions for controller
+        function reloadFiles() {
+            $rootScope.$emit('$routeChangeStart');
+            FileApi.list().then(function (data) {
+                $scope.files = data;
+                $rootScope.$emit('$routeChangeSuccess');
+            });
+        }
+    });

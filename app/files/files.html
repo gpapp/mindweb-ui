@@ -5,33 +5,58 @@
 <div ui-content-for="modals">
     <div class="modal" ui-if="fileCreateModal" ui-state='fileCreateModal'>
         <div class="modal-backdrop in"></div>
-        <div class="modal-dialog" role="dialog">
-            <div role="dialog">
-                <form role="form">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Create file</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-horizontal" role="form">
-                            <div class="form-group">
-                                <div class="control-label col-sm-5">File name</div>
-                                <div class="col-sm-7 ">
-                                    <input class="form-control disabled" ng-model="newFile.fileName">
-                                </div>
+        <div class="modal-dialog modal-content" role="dialog">
+                <div class="modal-header">
+                    <h4 class="modal-title">Create file</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <div class="control-label col-sm-5">File name</div>
+                            <div class="col-sm-7 ">
+                                <input class="form-control disabled" ng-model="newFile.fileName">
                             </div>
-                            <div class="form-group">
-                                <div class="control-label col-sm-5">File description</div>
-                                <div class="col-sm-7 ">
-                                    <input class="form-control disabled" ng-model="newFile.fileDescription">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label col-sm-5">File description</div>
+                            <div class="col-sm-7 ">
+                                <input class="form-control disabled" ng-model="newFile.fileDescription">
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
             <div class="modal-footer">
                     <div ui-turn-off="fileCreateModal" class="btn btn-primary" ng-click="fileCreate()">Submit</div>
                     <div ui-turn-off="fileCreateModal" class="btn">Cancel</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" ui-if="fileRenameModal" ui-state='fileRenameModal'>
+        <div class="modal-backdrop in"></div>
+        <div class="modal-dialog modal-content" role="dialog">
+            <div class="modal-header">
+                <h4 class="modal-title">Rename file</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <div class="control-label col-sm-5">Old file name</div>
+                        <div class="col-sm-7 ">
+                            <input class="form-control" ng-model="newFile.fileName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label col-sm-5">New file name</div>
+                        <div class="col-sm-7 ">
+                            <input class="form-control disabled" ng-model="newFile.fileName">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div ui-turn-off="fileRenameModal" class="btn btn-primary" ng-click="fileRename(oldFile,newFile)">Submit</div>
+                <div ui-turn-off="fileRenameModal" class="btn">Cancel</div>
             </div>
         </div>
     </div>
