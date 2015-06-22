@@ -58,25 +58,24 @@ h1 {
 }
 
 .file-list {
-    display: grid;
 }
 
 .file-list-item {
+    width: 200px;
+    height: 100px;
     display: inline-table;
     border-right: 1px solid #ddd !important;
     border-bottom: 1px solid #ddd !important;
     margin-bottom: 3px !important;
     margin-right: 3px !important;
-    width: 200px;
-    height: 100px;
 }
 
 .fileInfo.hidden{
     display:block !important;
-    visibility:visible!important;
     opacity: 0;
-    z-index:-1;
+    visibility: visible !important;
     transition: opacity 1s;
+    z-index:-1;
 }
 .fileInfo{
     display:block;
@@ -84,19 +83,19 @@ h1 {
     background:beige;
     border:1px solid black;
     font-size:80%;
+    top: 25pt;
     left:10px;
     right:10px;
-    top: 25pt;
+    padding: 3px 10px;
     z-index:1;
-    opacity:1;
-    transition: opacity 1s;
-    padding:5px 5px;
-}
-.fileInfo .title {
-    border-bottom: 1px solid;
-    font-weight:bold;
+    opacity: 1;
+    transition: opacity 0.5s;
 }
 
+.fileInfo .title{
+    font-size:120%;
+    border-bottom:1px solid;
+}
 .file-list-item .actions {
     vertical-align: bottom;
     position: absolute;
