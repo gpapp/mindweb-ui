@@ -1,5 +1,8 @@
 From google/nodejs:latest
 #From nginx:latest
+RUN npm cache clean -fI
+RUN npm install -g n
+RUN n stable
 
 RUN apt-get update
 RUN apt-get install apt-utils -y
