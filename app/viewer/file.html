@@ -1,24 +1,35 @@
 <script type="text/ng-template"  id="tree_item_renderer">
 
-    <div ui-tree-handle class="list-group-item nodeList">
+    <div class="list-group-item nodeList">
         <div class="list-group-item-heading">
+            <div ui-tree-handle class="handle">
+                <i class="fa fa-bars"></i>
+            </div>
             <div class="icons">
-                <span ng-repeat="node in node.nodes | filter:{name:'icon'}">
-                    <img ng-src="/images/icons/{{node.attributes.BUILTIN}}.png"/>
-                </span>
+                <div class="icon-block">
+                    <span ng-repeat="node in node.nodes | filter:{name:'icon'}">
+                        <img ng-src="/images/icons/{{node.attributes.BUILTIN}}.png"/>
+                    </span>
+                </div>
             </div>
             <div class="item" ng-click="Ui.turnOn('detailPanel');refreshDetail(node)">
                 <markdown ng-model="node.nodeMarkdown" extensions="github, prettify"></markdown>
             </div>
-            <i class="fa fa fa-lg pull-right" ng-class="nodeIcon(node)"
-               ng-click="nodeToggleOpen(node)"></i>
+            <div class="chevron">
+                <div class="icon-block">
+                    <img ng-if="node.noteMarkdown" src="/images/knotes.png"/>
+                    <i class="fa" ng-class="nodeIcon(node)"
+                       ng-click="nodeToggleOpen(node)"></i>
+                </div>
+            </div>
         </div>
-        <div class="list-group-item-text detail">
-            <markdown ng-model="node.detailMarkdown" extensions="github, prettify"></markdown>
+        <div class="list-group-item-text detail" ng-if="node.detailMarkdown" ui-state="showDetail" ui-default="false">
+            <i class="fa" ui-class="{'fa-chevron-down':showDetail, 'fa-chevron-right':showDetail==false}" ui-toggle="showDetail"></i>
+            <markdown ng-model="node.detailMarkdown" extensions="github, prettify" ui-if="showDetail"></markdown>
         </div>
     </div>
-    <div class="indent" ui-tree-nodes ng-model="nodes.nodes" ng-class="{hidden: node.open}">
-        <div ng-repeat="cnode in nodes.nodes | filter:{name:'node'}"
+    <div class="indent" ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: node.open}">
+        <div ng-repeat="node in node.nodes | filter:{name:'node'}"
              ui-tree-node
              ng-include="'tree_item_renderer'">
         </div>
@@ -30,7 +41,7 @@
          ng-swipe-left='Ui.turnOn("detailPanel")'
          ng-swipe-right='Ui.turnOff("detailPanel")'>
         <div ui-tree class="list-group">
-            <div ui-tree-nodes>
+            <div id="tree-root" ui-tree-nodes="" ng-model="nodes.nodes">
                 <div ng-repeat="node in nodes.nodes | filter:{name:'node'}"
                      ui-tree-node
                      ng-include="'tree_item_renderer'">

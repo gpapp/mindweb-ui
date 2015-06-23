@@ -35,6 +35,14 @@ h1 {
     opacity: 1;
 }
 
+.fa-time:before {
+    content: '\f017';
+}
+
+.loginDialog {
+    text-align: center;
+}
+
 .notices-container {
     overflow-x: hidden;
 }
@@ -53,6 +61,19 @@ h1 {
     transition: opacity 0.3s;
 }
 
+.img-avatar {
+    border-radius: 50%;
+    height: 40px;
+}
+/*
+    Override bootstrap styles
+*/
+.nav li a {
+    padding:5px 10px;
+}
+/*
+    File manager styles
+*/
 .list-group-item-home {
     padding: 20px;
 }
@@ -96,12 +117,14 @@ h1 {
     font-size:120%;
     border-bottom:1px solid;
 }
+
 .file-list-item .actions {
     vertical-align: bottom;
     position: absolute;
     bottom: 10px;
     right: 10px;
 }
+
 #uploads {
     display: inline-table;
     width: 100%;
@@ -115,28 +138,21 @@ h1 {
     display: table-cell;
     width: 10%;
 }
-
-
-pre {
-    text-align: left !important;
+ngf-drop.drop-box {
+    border: 2px dashed lightgray;
+    width:  150px;
+    display: inline-block;
+    padding: 15px 5px;
+    text-align: center;
 }
 
 input.scrollable-header {
     border-bottom: 3px solid #ccc;
 }
 
-.fa-time:before {
-    content: '\f017';
-}
-
-.loginDialog {
-    text-align: center;
-}
-
-.indent {
-    padding-left: 10px;
-}
-
+/*
+    Viewer layout
+*/
 @media (max-width: 479px) {
     #viewerTable {
         display: block;
@@ -220,23 +236,17 @@ input.scrollable-header {
     }
 }
 
+/*
+    Viewer styles
+*/
+.indent {
+    padding-left: 10px;
+}
+
 .mw-detail-icon {
     width: 32px;
     padding: 5px;
     border: 1px solid gray;
-}
-
-.img-avatar {
-    border-radius: 50%;
-    height: 40px;
-}
-
-ngf-drop.drop-box {
-    border: 2px dashed lightgray;
-    width:  150px;
-    display: inline-block;
-    padding: 15px 5px;
-    text-align: center;
 }
 
 markdown {
@@ -249,25 +259,44 @@ markdown.tab-content {
     overflow: auto;
     display: block;
 }
-
+.nodeList {
+}
 .nodeList .list-group-item-heading {
     display: table;
+    width:100%;
     overflow: auto;
 }
+.nodeList .handle,
+.nodeList .icons,
 .nodeList .item,
-.nodeList .fa,
-.nodeList .icons {
+.nodeList .chevron
+{
     display: table-cell;
     vertical-align: top;
 }
-.nodeList .fa {
-    position:absolute;
-    right:10px
+
+.nodeList .handle,
+.nodeList .icons,
+.nodeList .chevron {
+    width: 0.1px;
 }
-.nodeList .icons img {
-    min-width:  36px;
-    padding-right: 8px;
+
+.nodeList .handle {
+    padding-right:8px;
 }
+
+.nodeList .icons .icon-block,
+.nodeList .chevron .icon-block {
+    display: flex;
+}
+
+
+.nodeList .icons img,
+.nodeList .chevron img {
+    min-width:  20px;
+    padding-right: 4px;
+}
+
 .nodeList .list-group-item-text {
     max-height: 300px;
     overflow: auto;
