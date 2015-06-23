@@ -102,6 +102,20 @@ h1 {
     bottom: 10px;
     right: 10px;
 }
+#uploads {
+    display: inline-table;
+    width: 100%;
+}
+
+#uploads .file {
+    display: table-row;
+}
+
+#uploads .progress {
+    display: table-cell;
+    width: 10%;
+}
+
 
 pre {
     text-align: left !important;

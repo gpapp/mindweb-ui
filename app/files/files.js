@@ -38,12 +38,12 @@ angular.module('MindWebUi.file', [
                 $scope.upload($scope.uploadedFiles);
             }
         });
-
+        $scope.uploads = {};
         $scope.upload = function (toUpload) {
             if (toUpload && toUpload.length) {
                 for (var i = 0; i < toUpload.length; i++) {
                     var file = toUpload[i];
-                    $rootScope.$emit('$routeChangeStart');
+                    $scope.uploads[file.name]={name:file.name, max:file.size, value:0, done:false, error:false};
                     Upload.upload({
                         url: '/file/upload',
                         method: 'POST',
@@ -51,15 +51,15 @@ angular.module('MindWebUi.file', [
                         file: file
                     }).progress(function (evt) {
                         var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                        console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+                        $scope.uploads[evt.config.file.name].value=evt.loaded;
                     }).success(function (data, status, headers, config) {
-                        console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
-                        $rootScope.$emit('$routeChangeSuccess');
+                        $scope.uploads[config.file.name].done = true;
+                        $scope.uploads[config.file.name].error = status!=200;
                         reloadFiles();
                         uploadMutex = false;
                     }).error(function () {
+                        $scope.uploads[config.file.name].error = true;
                         uploadMutex = false;
-                        $rootScope.$emit('$routeChangeSuccess');
                     })
                     ;
                 }

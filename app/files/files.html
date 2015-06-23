@@ -135,30 +135,36 @@
                     </div>
                     <div>
                         <div class="panel-body">
-                            <form name="fileForm">
-                                <div class="btn btn-default" ui-turn-on='fileCreateModal'>
-                                    <span class="fa fa-file" >&nbsp;</span>Create new
-                                </div>
+                            <div class="btn btn-default" ui-turn-on='fileCreateModal'>
+                                <span class="fa fa-file" >&nbsp;</span>Create new
+                            </div>
 
-                                <ngf-drop
-                                        ngf-drop=""
-                                        ngf-select=""
-                                        ng-model="uploadedFiles"
-                                        ng-model-rejected="rejFiles"
-                                        ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
-                                        class="drop-box"
-                                        ngf-multiple="true"
-                                        ngf-allow-dir="true"
-                                        ngf-accept="'.mm'"
-                                        ngf-drop-available="dropAvailable">
-                                    <div ng-hide="dropAvailable">File Drop not available</div>
-                                    <div ng-show="dropAvailable">
-                                        Drop Files
-                                    </div>
-                                    <div><span class="fa fa-upload" >&nbsp;</span>Upload files</div>
-                                </ngf-drop>
-                                <div class="progress-bar"></div>
-                            </form>
+                            <ngf-drop
+                                    ngf-drop=""
+                                    ngf-select=""
+                                    ng-model="uploadedFiles"
+                                    ng-model-rejected="rejFiles"
+                                    ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
+                                    class="drop-box"
+                                    ngf-multiple="true"
+                                    ngf-allow-dir="true"
+                                    ngf-accept="'.mm'"
+                                    ngf-drop-available="dropAvailable">
+                                <div ng-hide="dropAvailable">File Drop not available</div>
+                                <div ng-show="dropAvailable">
+                                    Drop Files
+                                </div>
+                                <div><span class="fa fa-upload" >&nbsp;</span>Upload files</div>
+                            </ngf-drop>
+                            <div id="uploads">
+                                <div class="file" ng-repeat="upload in uploads">
+                                    <progressbar max="upload.max" value="upload.value"
+                                                 type="{{upload.error?'danger':(upload.done?'success':'info')}}">
+                                        <span style="color:black; white-space:nowrap;">{{dynamic}} / {{max}}</span>
+                                    </progressbar>
+                                    <span>{{upload.name}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
