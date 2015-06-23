@@ -1,6 +1,6 @@
 <script type="text/ng-template"  id="tree_item_renderer">
 
-    <div class="list-group-item nodeList">
+    <div ui-tree-handle class="list-group-item nodeList">
         <div class="list-group-item-heading">
             <div class="icons">
                 <span ng-repeat="node in node.nodes | filter:{name:'icon'}">
@@ -17,10 +17,10 @@
             <markdown ng-model="node.detailMarkdown" extensions="github, prettify"></markdown>
         </div>
     </div>
-
-    <div class="indent" ng-show="node.open">
-        <div ng-repeat="cnode in node.nodes | filter:{name:'node'}">
-            <div ng-include="'tree_item_renderer'" onload="node=cnode"></div>
+    <div class="indent" ui-tree-nodes ng-model="nodes.nodes" ng-class="{hidden: node.open}">
+        <div ng-repeat="cnode in nodes.nodes | filter:{name:'node'}"
+             ui-tree-node
+             ng-include="'tree_item_renderer'">
         </div>
     </div>
 </script>
@@ -29,9 +29,12 @@
     <div class="panel-body"
          ng-swipe-left='Ui.turnOn("detailPanel")'
          ng-swipe-right='Ui.turnOff("detailPanel")'>
-        <div class="list-group">
-            <div ng-repeat="cnode in nodes.nodes | filter:{name:'node'}">
-                <div ng-include="'tree_item_renderer'" onload="node=cnode"></div>
+        <div ui-tree class="list-group">
+            <div ui-tree-nodes>
+                <div ng-repeat="node in nodes.nodes | filter:{name:'node'}"
+                     ui-tree-node
+                     ng-include="'tree_item_renderer'">
+                </div>
             </div>
         </div>
     </div>

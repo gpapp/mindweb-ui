@@ -3,7 +3,8 @@ angular.module('MindWebUi.viewer', [
     'ui.router',
     'angular-markdown',
     'ui.bootstrap.tabs',
-    'mobile-angular-ui.gestures'
+    'mobile-angular-ui.gestures',
+    'ui.tree'
 ])
     .config(['$stateProvider', '$urlRouterProvider',
         function ($stateProvider) {
