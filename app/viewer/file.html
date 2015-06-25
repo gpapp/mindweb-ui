@@ -23,9 +23,9 @@
                 </div>
             </div>
         </div>
-        <div class="list-group-item-text detail" ng-if="node.detailMarkdown" ui-state="showDetail" ui-default="false">
-            <i class="fa" ui-class="{'fa-chevron-down':showDetail, 'fa-chevron-right':showDetail==false}" ui-toggle="showDetail"></i>
-            <markdown ng-model="node.detailMarkdown" extensions="github, prettify" ui-if="showDetail"></markdown>
+        <div class="list-group-item-text detail" ng-if="node.detailMarkdown">
+            <i class="fa" ui-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}" ng-click="node.detailOpen=!node.detailOpen"></i>
+            <markdown ng-model="node.detailMarkdown" extensions="github, prettify" ng-if="node.detailOpen"></markdown>
         </div>
     </div>
     <div class="indent" ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: node.open}">
