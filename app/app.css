@@ -127,17 +127,26 @@ h1 {
 
 #uploads {
     display: inline-table;
-    width: 100%;
 }
 
 #uploads .file {
     display: table-row;
 }
 
-#uploads .progress {
+#uploads .file .status,
+#uploads .file .name,
+#uploads .file .err {
     display: table-cell;
+    padding: 3px 5px;
+}
+#uploads .file .status {
     width: 10%;
 }
+#uploads .file .status .progress{
+    display: flex;
+    margin-bottom: 0;
+}
+
 ngf-drop.drop-box {
     border: 2px dashed lightgray;
     width:  150px;

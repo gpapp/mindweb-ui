@@ -135,34 +135,40 @@
                     </div>
                     <div>
                         <div class="panel-body">
-                            <div class="btn btn-default" ui-turn-on='fileCreateModal'>
-                                <span class="fa fa-file" >&nbsp;</span>Create new
-                            </div>
-
-                            <ngf-drop
-                                    ngf-drop=""
-                                    ngf-select=""
-                                    ng-model="uploadedFiles"
-                                    ng-model-rejected="rejFiles"
-                                    ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
-                                    class="drop-box"
-                                    ngf-multiple="true"
-                                    ngf-allow-dir="true"
-                                    ngf-accept="'.mm'"
-                                    ngf-drop-available="dropAvailable">
-                                <div ng-hide="dropAvailable">File Drop not available</div>
-                                <div ng-show="dropAvailable">
-                                    Drop Files
+                            <div class="col-sm-2">
+                                <div class="btn btn-default" ui-turn-on='fileCreateModal'>
+                                    <span class="fa fa-file" >&nbsp;</span>Create new
                                 </div>
-                                <div><span class="fa fa-upload" >&nbsp;</span>Upload files</div>
-                            </ngf-drop>
-                            <div id="uploads">
+                            </div>
+                            <div class="col-sm-2">
+                                <ngf-drop
+                                        ngf-drop=""
+                                        ngf-select=""
+                                        ng-model="uploadedFiles"
+                                        ng-model-rejected="rejFiles"
+                                        ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
+                                        class="drop-box"
+                                        ngf-multiple="true"
+                                        ngf-allow-dir="true"
+                                        ngf-accept="'.mm'"
+                                        ngf-drop-available="dropAvailable">
+                                    <div ng-hide="dropAvailable">File Drop not available</div>
+                                    <div ng-show="dropAvailable">
+                                        Drop Files
+                                    </div>
+                                    <div><span class="fa fa-upload" >&nbsp;</span>Upload files</div>
+                                </ngf-drop>
+                            </div>
+                            <div id="uploads" class="col-sm-offset-1 col-sm-7">
                                 <div class="file" ng-repeat="upload in uploads">
-                                    <progressbar max="upload.max" value="upload.value"
-                                                 type="{{upload.error?'danger':(upload.done?'success':'info')}}">
-                                        <span style="color:black; white-space:nowrap;">{{dynamic}} / {{max}}</span>
-                                    </progressbar>
-                                    <span>{{upload.name}}</span>
+                                    <span class="status">
+                                        <progressbar max="upload.max" value="upload.value"
+                                                     type="{{upload.error?'danger':(upload.done?'success':'info')}}">
+                                            <span style="color:black; white-space:nowrap;">{{upload.value}} / {{upload.max}}</span>
+                                        </progressbar>
+                                    </span>
+                                    <span class="name" >{{upload.name}}</span>
+                                    <span class="error label-danger">{{upload.errorMsg}}</span>
                                 </div>
                             </div>
                         </div>

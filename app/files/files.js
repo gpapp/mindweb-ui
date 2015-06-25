@@ -57,8 +57,9 @@ angular.module('MindWebUi.file', [
                         $scope.uploads[config.file.name].error = status!=200;
                         reloadFiles();
                         uploadMutex = false;
-                    }).error(function () {
+                    }).error(function (data, status, headers, config) {
                         $scope.uploads[config.file.name].error = true;
+                        $scope.uploads[config.file.name].errorMsg = status + ' ' + data;
                         uploadMutex = false;
                     })
                     ;
