@@ -168,7 +168,7 @@
                                         </progressbar>
                                     </span>
                                     <span class="name" >{{upload.name}}</span>
-                                    <span class="error label-danger">{{upload.errorMsg}}</span>
+                                    <span class="error label-danger" ng-bind="upload.errorMsg" ng-if="upload.errorMsg"></span>
                                 </div>
                             </div>
                         </div>

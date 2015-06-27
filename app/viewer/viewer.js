@@ -50,12 +50,8 @@ angular.module('MindWebUi.viewer', [
         });
 
         $scope.nodeIcon = function (node) {
-            if (node.nodes) {
-                for(var i= 0, tot=node.nodes.length; i<tot; i++) {
-                    if (node.nodes[i].name === 'node') {
-                        return node['open'] ? 'fa-chevron-down' : 'fa-chevron-right';
-                    }
-                }
+            if (node.node) {
+               return node['open'] ? 'fa-chevron-down' : 'fa-chevron-right';
             }
             return 'hidden';
         };
