@@ -7,24 +7,24 @@
             </div>
             <div class="icons">
                 <div class="icon-block">
-                    <span ng-repeat="node in node.icon">
-                        <img ng-src="/images/icons/{{node.$['BUILTIN']}}.png"/>
+                    <span ng-repeat="icon in node.icon">
+                        <img ng-src="/images/icons/{{icon.$['BUILTIN']}}.png" ng-click="openDetails(node,'icons')"/>
                     </span>
                 </div>
             </div>
-            <div class="item" ng-click="Ui.turnOn('detailPanel');refreshDetail(node)">
+            <div class="item" ng-click="openDetails(node,'details')">
                 <markdown ng-model="node.nodeMarkdown" extensions="github, prettify"></markdown>
             </div>
             <div class="chevron">
                 <div class="icon-block">
-                    <img ng-if="node.noteMarkdown" src="/images/knotes.png"/>
-                    <i class="fa" ng-class="nodeIcon(node)"
-                       ng-click="nodeToggleOpen(node)"></i>
+                    <img ng-if="node.noteMarkdown" src="/images/knotes.png" ng-click="openDetails(node,'notes')"/>
+                    <i class="fa" ng-class="nodeIcon(node)" ng-click="nodeToggleOpen(node)"></i>
                 </div>
             </div>
         </div>
         <div class="list-group-item-text detail" ng-if="node.detailMarkdown">
-            <i class="fa" ui-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}" ng-click="node.detailOpen=!node.detailOpen"></i>
+            <i class="fa pull-left" ng-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}" ng-click="node.detailOpen=!node.detailOpen"></i>
+            <div class="rule" ng-if="!node.detailOpen"></div>
             <markdown ng-model="node.detailMarkdown" extensions="github, prettify" ng-if="node.detailOpen"></markdown>
         </div>
     </div>

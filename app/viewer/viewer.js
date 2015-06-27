@@ -3,11 +3,10 @@ angular.module('MindWebUi.viewer', [
     'ui.router',
     'angular-markdown',
     'ui.bootstrap.tabs',
-    'mobile-angular-ui.gestures',
     'ui.tree'
 ])
-    .config(['$stateProvider', '$urlRouterProvider',
-        function ($stateProvider) {
+    .config(['$stateProvider',
+        function ($stateProvider, $rootScope) {
             $stateProvider
                 .state('viewer', {
                     abstract: true,
@@ -33,9 +32,11 @@ angular.module('MindWebUi.viewer', [
                 });
         }
     ])
-    .controller('viewerController', function ($scope) {
+    .controller('viewerController', function ($scope, $rootScope) {
         $scope.$on('selectNode', function (event, data) {
+            $rootScope.Ui.turnOn('detailPanel');
             $scope.currentNode = data.node;
+            $scope.selectedTab = data.destination;
             event.stopPropagation();
         });
     })
@@ -58,10 +59,9 @@ angular.module('MindWebUi.viewer', [
         $scope.nodeToggleOpen = function (node) {
             node.open = !node.open;
         };
-        $scope.refreshDetail = function (node) {
-            $scope.$emit('selectNode', {node: node});
+        $scope.openDetails = function (node, destination) {
+            $scope.$emit('selectNode', {node: node, destination:destination});
         };
-
     }
 )
     .controller('detailController', function ($scope) {
