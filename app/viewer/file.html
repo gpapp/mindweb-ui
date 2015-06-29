@@ -1,6 +1,6 @@
 <script type="text/ng-template"  id="tree_item_renderer">
 
-    <div class="list-group-item nodeList">
+    <div class="list-group-item nodeList" ng-class="{active : currentNode===node}">
         <div class="list-group-item-heading">
             <div ui-tree-handle class="handle">
                 <i class="fa fa-bars"></i>
@@ -8,7 +8,7 @@
             <div class="icons">
                 <div class="icon-block">
                     <span ng-repeat="icon in node.icon">
-                        <img ng-src="/images/icons/{{icon.$['BUILTIN']}}.png" ng-click="openDetails(node,'icons')"/>
+                        <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png" ng-click="openDetails(node,'icons')"/>
                     </span>
                 </div>
             </div>
@@ -34,6 +34,7 @@
              ng-include="'tree_item_renderer'">
         </div>
     </div>
+
 </script>
 
 <div class="panel">

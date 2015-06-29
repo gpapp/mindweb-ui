@@ -23,7 +23,7 @@
 
         <tabset>
             <tab active="selectedTab==='details'">
-                <tab-heading>
+                <tab-heading ng-click="selectedTab='details'">
                     <i class='fa fa-fw fa-info'></i>Details
                 </tab-heading>
                 <tabset>
@@ -44,7 +44,10 @@
                     </tab>
                 </tabset>
             </tab>
-            <tab active="selectedTab==='notes'" heading="Notes">
+            <tab active="selectedTab==='notes'">
+                <tab-heading ng-click="selectedTab='notes'">
+                    Notes
+                </tab-heading>
                 <tabset>
                     <tab>
                         <tab-heading>
@@ -63,20 +66,28 @@
                 </tabset>
             </tab>
             <tab active="selectedTab==='icons'">
-                <tab-heading>
+                <tab-heading ng-click="selectedTab='icons'">
                     <i class='fa fa-stack fa-picture-o'></i>Icons
                 </tab-heading>
-                <div class="table">
-                    <div class="row">
-                        <div class="col-xs-2 text-center"
-                             ng-repeat="attr in currentNode.icon">
-                            <img class=" mw-detail-icon" ng-src="/images/icons/{{attr.$['BUILTIN']}}.png"/>
+                <div class="panel">
+                    <div id='detail-icon' class="panel-body ">
+                        <div class="icon"
+                             ng-repeat="attr in currentNode.icon" ng-mouseover="iconEditor=true" ng-mouseleave="iconEditor=false">
+                            <div ui-state="iconEditor">
+                                <img class=" mw-detail-icon" ng-src="/images/icons/{{attr.$['BUILTIN']|escape}}.png"/>
+                                <i class="fa fa-trash" ng-class="{hidden: !iconEditor}" ng-click="deleteIcon($index)"></i>
+                                <i class="fa fa-arrow-left" ng-class="{hidden: !iconEditor||$first}" ng-click="moveIcon($index,'left')"></i>
+                                <i class="fa fa-arrow-right" ng-class="{hidden: !iconEditor||$last}" ng-click="moveIcon($index,'right')"></i>
+                            </div>
                         </div>
+                    </div>
+                    <div class="panel-footer">
+                        <i class="fa fa-2x fa-plus-circle pull-right" ui-turn-on="iconDialog"></i>
                     </div>
                 </div>
             </tab>
             <tab active="selectedTab==='properties'">
-                <tab-heading>
+                <tab-heading ng-click="selectedTab='properties'">
                     <i class='fa fa-fw fa-table'></i>Properties
                 </tab-heading>
 
@@ -113,6 +124,43 @@
                         <div class="scrollable-content" ng-include="'/app/viewer/markdown.html'">
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" ui-if="iconDialog" ui-state='iconDialog'>
+        <div class="modal-backdrop in" ui-turn-off="iconDialog"></div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" keyboard-shortcut="esc" keyboard-title="Close dialog"
+                            ui-turn-off="iconDialog">&times;</button>
+                    <h4 class="modal-title">Add icon</h4>
+                </div>
+                <div class="modal-body">
+                    <div id='iconSelectList' class="table">
+                        <div keyboard-selectable="list item"
+                             select-next="right"
+                             select-previous="left"
+                             keyboard-prevent-default>
+                            <div class="iconSelectCell" ng-repeat="item in iconList">
+                                <img class="iconsSelectIcon"
+                                     keyboard-shortcut="space"
+                                     selection-shortcut
+                                     keyboard-title="Add icon"
+                                     ng-src="{{item.link}}" ng-click="addIcon(item.name)"/>
+                                <span class="hidden"
+                                      keyboard-shortcut="{{item.shortcut}}"
+                                      shortcutIf="item.shortcut"
+                                      keyboard-action="addIcon(item.name)"
+                                      keyboard-title="{{item.xxxxdescription}}"
+                                      ng-if="item.shortcut"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <keyboard-help></keyboard-help>
                 </div>
             </div>
         </div>

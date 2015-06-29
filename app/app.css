@@ -252,12 +252,6 @@ input.scrollable-header {
     padding-left: 10px;
 }
 
-.mw-detail-icon {
-    width: 32px;
-    padding: 5px;
-    border: 1px solid gray;
-}
-
 markdown {
     display: inline-block;
 }
@@ -320,6 +314,30 @@ markdown.tab-content {
     padding: 5px;
     max-height: 300px;
     overflow: auto;
+}
+
+/* Detail styles */
+#detail-icon .icon {
+    display: inline-flex;
+    padding-left: 20px;
+    width: 70px;
+    height: 60px;
+}
+
+.mw-detail-icon {
+    width: 32px;
+    padding: 5px;
+    border: 1px solid gray;
+}
+#iconSelectList .table {
+
+}
+#iconSelectList .iconSelectCell {
+    display: inline-flex;
+    padding: 10px;
+}
+#iconSelectList .iconSelectIcon {
+    width: 40px;
 }
 
 /* override clashes from bootstrap and mobile-angular-ui */

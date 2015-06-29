@@ -3,8 +3,12 @@ angular.module('MindWebUi.viewer', [
     'ui.router',
     'angular-markdown',
     'ui.bootstrap.tabs',
-    'ui.tree'
+    'ui.tree',
+    'angular-keyboard'
 ])
+    .filter('escape', function() {
+        return window.encodeURIComponent;
+    })
     .config(['$stateProvider',
         function ($stateProvider, $rootScope) {
             $stateProvider
@@ -52,7 +56,7 @@ angular.module('MindWebUi.viewer', [
 
         $scope.nodeIcon = function (node) {
             if (node.node) {
-               return node['open'] ? 'fa-chevron-down' : 'fa-chevron-right';
+                return node['open'] ? 'fa-chevron-down' : 'fa-chevron-right';
             }
             return 'hidden';
         };
@@ -60,11 +64,41 @@ angular.module('MindWebUi.viewer', [
             node.open = !node.open;
         };
         $scope.openDetails = function (node, destination) {
-            $scope.$emit('selectNode', {node: node, destination:destination});
+            $scope.$emit('selectNode', {node: node, destination: destination});
         };
-    }
-)
-    .controller('detailController', function ($scope) {
+    })
+    .controller('detailController', function ($scope, $http) {
 
+        $http.get('app/viewer/iconlist.json')
+            .then(function (res) {
+                $scope.iconList = res.data;
+            });
 
+        $scope.moveIcon = function (pos, dir) {
+            var icons = $scope.currentNode.icon;
+            var cut = icons[pos];
+            var target;
+            switch (dir) {
+                case 'left':
+                    target = pos - 1;
+                    break;
+                case 'right':
+                    target = pos + 1;
+                    break;
+            }
+            icons[pos] = icons[target];
+            icons[target] = cut;
+        };
+
+        $scope.deleteIcon = function (pos) {
+            $scope.currentNode.icon.splice(pos, 1);
+        };
+
+        $scope.addIcon = function (name) {
+            $scope.currentNode.icon.push({'$': {BUILTIN: name}});
+        };
+
+        $scope.lookupAndAddIcon = function(event){
+            console.log(event);
+        }
     });
