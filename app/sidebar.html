@@ -15,6 +15,17 @@
                 <i class="fa fa-fw fa-2x fa-file"></i>Files
                 <i class="fa fa-chevron-right pull-right"></i>
             </a>
+            <div class="indent" ng-hide="currentUser===undefined || openFiles===undefined" ng-controller="fileController">
+                <a class="list-group-item"  ng-repeat="item in openFiles" ng-click="fileOpen(item)">
+                    <span>
+                        <i class="fa fa-fw fa-2x fa-file"></i>{{item.name}}
+                    </span>
+                    <span class="pull-right">
+                        <i class="fa fa-close " ng-click="fileClose(item)"></i>
+                        <i class="fa fa-chevron-right"></i>
+                    </span>
+                </a>
+            </div>
             <a class="list-group-item" href="#/user/options">
                 <i class="fa fa-fw fa-2x fa-cog"></i>Options
                 <i class="fa fa-chevron-right pull-right"></i>

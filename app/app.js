@@ -15,12 +15,30 @@ angular.module('MindWebUi', [
             // to active whenever 'contacts.list' or one of its decendents is active.
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
+            $rootScope.openFiles = [];
 
             $rootScope.$on("$routeChangeStart", function () {
                 $rootScope.loading = true;
             });
             $rootScope.$on("$routeChangeSuccess", function () {
                 $rootScope.loading = false;
+            });
+
+            $rootScope.$on("openFile", function (event, file) {
+                for (var index in $rootScope.openFiles) {
+                    if (file.id === $rootScope.openFiles[index].id) {
+                        return;
+                    }
+                }
+                $rootScope.openFiles.push(file);
+            });
+
+            $rootScope.$on("closeFile", function (event, file) {
+                for (var index in $rootScope.openFiles){
+                    if (file.id === $rootScope.openFiles[index].id) {
+                        $rootScope.openFiles.splice(index,1)
+                    }
+                }
             });
 
             UsersApi.lookup().then(function (user) {

@@ -41,6 +41,12 @@
     <div class="panel-body"
          ng-swipe-left='Ui.turnOn("detailPanel")'
          ng-swipe-right='Ui.turnOff("detailPanel")'>
+        <keyboard-shortcut keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')"/>
+        <keyboard-shortcut keyboard-shortcut="down" keyboard-title="Next node" keyboard-action="selectNode('next')"/>
+        <keyboard-shortcut keyboard-shortcut="left" keyboard-title="Unfold node" keyboard-action="selectedNode.open=true"/>
+        <keyboard-shortcut keyboard-shortcut="right" keyboard-title="Fold node" keyboard-action="selectedNode.open=false"/>
+        <keyboard-shortcut keyboard-shortcut="ins" keyboard-title="Add new subnode" keyboard-action="alert('Insert')"/>
+        <keyboard-shortcut keyboard-shortcut="enter" keyboard-title="Add new node" keyboard-action="alert('Append')"/>
         <div ui-tree class="list-group">
             <div id="tree-root" ui-tree-nodes="" ng-model="nodes.map.node">
                 <div ng-repeat="node in nodes.map.node"

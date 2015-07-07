@@ -46,12 +46,18 @@ angular.module('MindWebUi.viewer', [
     })
     .controller('structureController', function ($scope, $rootScope, $state, $filter, FileApi) {
 
-        $rootScope.loading = true;
+        $rootScope.$emit('$routeChangeStart');
+
+        $rootScope.$on("closeFile", function (event, file) {
+            if($state.params.fileId === file.id){
+                $state.go('files.list');
+            }
+        });
 
         FileApi.load($state.params.fileId).then(function (data) {
             $scope.nodes = JSON.parse(data.content);
             $scope.nodes.open = true;
-            $rootScope.loading = false;
+            $rootScope.$emit('$routeChangeSuccess');
         });
 
         $scope.nodeIcon = function (node) {

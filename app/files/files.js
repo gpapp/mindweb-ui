@@ -69,11 +69,11 @@ angular.module('MindWebUi.file', [
             }
         };
 
-        $scope.rename = function (toRename) {
+        $scope.fileRename = function (toRename) {
 
         };
 
-        $scope.delete = function (toDelete) {
+        $scope.fileDelete = function (toDelete) {
 
         };
 
@@ -91,6 +91,15 @@ angular.module('MindWebUi.file', [
                 });
             $state.go('files.list');
 
+        };
+
+        $scope.fileOpen = function (file) {
+            $rootScope.$emit('openFile',file);
+            $state.go('viewer.file',{fileId:file.id});
+        };
+
+        $scope.fileClose = function (file) {
+            $rootScope.$emit('closeFile',file);
         };
 
         // Utility functions for controller
