@@ -25,7 +25,7 @@
 
         <tabset>
             <tab active="selectedTab==='details'">
-                <tab-heading ng-click="selectedTab='details'">
+                <tab-heading ng-click="selectTab('details')">
                     <i class='fa fa-fw fa-info'></i>Details
                 </tab-heading>
                 <tabset>
@@ -47,7 +47,7 @@
                 </tabset>
             </tab>
             <tab active="selectedTab==='notes'">
-                <tab-heading ng-click="selectedTab='notes'">
+                <tab-heading ng-click="selectTab('notes')">
                     Notes
                 </tab-heading>
                 <tabset>
@@ -68,7 +68,7 @@
                 </tabset>
             </tab>
             <tab active="selectedTab==='icons'">
-                <tab-heading ng-click="selectedTab='icons'">
+                <tab-heading ng-click="selectTab('icons')">
                     <i class='fa fa-stack fa-picture-o'></i>Icons
                 </tab-heading>
                 <div class="panel">
@@ -89,7 +89,7 @@
                 </div>
             </tab>
             <tab active="selectedTab==='properties'">
-                <tab-heading ng-click="selectedTab='properties'">
+                <tab-heading ng-click="selectTab('properties')">
                     <i class='fa fa-fw fa-table'></i>Properties
                 </tab-heading>
 

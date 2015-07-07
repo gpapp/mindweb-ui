@@ -43,6 +43,10 @@ angular.module('MindWebUi.viewer', [
             $scope.selectedTab = data.destination;
             event.stopPropagation();
         });
+        $scope.$on('selectTab', function (event, data) {
+            $scope.selectedTab = data.destination;
+            event.stopPropagation();
+        });
     })
     .controller('structureController', function ($scope, $rootScope, $state, $filter, FileApi) {
 
@@ -98,13 +102,20 @@ angular.module('MindWebUi.viewer', [
 
         $scope.deleteIcon = function (pos) {
             $scope.currentNode.icon.splice(pos, 1);
+            if ($scope.currentNode.icon.length == 0){
+                delete $scope.currentNode.icon;
+            }
         };
 
         $scope.addIcon = function (name) {
-            $scope.currentNode.icon.push({'$': {BUILTIN: name}});
+            if ($scope.currentNode.icon) {
+                $scope.currentNode.icon.push({'$': {BUILTIN: name}});
+            } else {
+                $scope.currentNode.icon = [{'$': {BUILTIN: name}}];
+            }
         };
 
-        $scope.lookupAndAddIcon = function(event){
-            console.log(event);
-        }
+        $scope.selectTab = function (destination) {
+            $scope.$emit('selectTab', {destination: destination});
+        };
     });
