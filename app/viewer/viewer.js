@@ -6,7 +6,7 @@ angular.module('MindWebUi.viewer', [
     'ui.tree',
     'angular-keyboard'
 ])
-    .filter('escape', function() {
+    .filter('escape', function () {
         return window.encodeURIComponent;
     })
     .config(['$stateProvider',
@@ -36,11 +36,11 @@ angular.module('MindWebUi.viewer', [
                 });
         }
     ])
-    .controller('viewerController', function ($scope, $rootScope) {
+    .controller('viewerController', function ($scope, $location, $anchorScroll) {
+        $anchorScroll.yOffset = 50;
         $scope.$on('selectNode', function (event, data) {
-            $rootScope.Ui.turnOn('detailPanel');
             $scope.currentNode = data.node;
-            $scope.selectedTab = data.destination;
+            $location.hash(data.node.$['ID']);
             event.stopPropagation();
         });
         $scope.$on('selectTab', function (event, data) {
@@ -53,16 +53,22 @@ angular.module('MindWebUi.viewer', [
         $rootScope.$emit('$routeChangeStart');
 
         $rootScope.$on("closeFile", function (event, file) {
-            if($state.params.fileId === file.id){
+            if ($state.params.fileId === file.id) {
                 $state.go('files.list');
             }
         });
 
         FileApi.load($state.params.fileId).then(function (data) {
             $scope.nodes = JSON.parse(data.content);
-            $scope.nodes.open = true;
+            $scope.nodes.map.open = true;
+            $scope.$emit('selectNode', {node: $scope.nodes.map});
             $rootScope.$emit('$routeChangeSuccess');
         });
+
+        $scope.setupParent = function (node, $modelValue, $index) {
+            node.$parent = $modelValue;
+            node.$parentIndex = $index;
+        };
 
         $scope.nodeIcon = function (node) {
             if (node.node) {
@@ -74,7 +80,83 @@ angular.module('MindWebUi.viewer', [
             node.open = !node.open;
         };
         $scope.openDetails = function (node, destination) {
-            $scope.$emit('selectNode', {node: node, destination: destination});
+            $rootScope.Ui.turnOn('detailPanel');
+            $scope.$emit('selectNode', {node: node});
+            $scope.$emit('selectTab', {destination: destination});
+        };
+        $scope.selectNode = function (event) {
+            var currentNode = $scope.currentNode;
+            switch (event) {
+                case 'prev':
+                    if (!currentNode.$parent) {
+                        break;
+                    }
+                    if (currentNode.$parentIndex == 0) {
+                        // if it's the first node, select it's parent as next
+                        $scope.$emit('selectNode', {node: currentNode.$parent});
+                    } else {
+                        // find the previous node, or it`s last open child
+                        if (!currentNode.$parent.node[currentNode.$parentIndex - 1].open) {
+                            $scope.$emit('selectNode', {node: currentNode.$parent.node[currentNode.$parentIndex - 1]});
+                        } else {
+                            //dig down to last open child
+                            var ptr = currentNode.$parent.node[currentNode.$parentIndex - 1];
+                            outside:
+                                do {
+                                    for (var i = ptr.node.length - 1; i >= 0; i++) {
+                                        if (ptr.node[i].open) {
+                                            ptr = ptr.node[i];
+
+                                        } else {
+                                            $scope.$emit('selectNode', {node: ptr.node[i]});
+                                            break outside;
+                                        }
+                                    }
+                                } while (true);
+                        }
+                    }
+                    break;
+                case 'next':
+                    if (!currentNode.$parent && !currentNode.open) {
+                        break;
+                    }
+                    if (currentNode.node && currentNode.open) {
+                        $scope.$emit('selectNode', {node: currentNode.node[0]});
+                    } else if (currentNode.$parentIndex < currentNode.$parent.node.length - 1) {
+                        // if it's the last node, select it's parent's sibling as next
+                        $scope.$emit('selectNode', {node: currentNode.$parent.node[currentNode.$parentIndex + 1]});
+                    } else {
+                        var ptr = currentNode.$parent;
+                        do {
+                            if(!ptr.$parent) {
+                                break;
+                            }
+                            if (ptr.$parentIndex + 1 == ptr.$parent.node.length) {
+                                ptr = ptr.$parent;
+                                continue;
+                            }
+                            $scope.$emit('selectNode', {node: ptr.$parent.node[ptr.$parentIndex + 1]});
+                            break;
+                        } while (true);
+                    }
+                    break;
+                case 'fold':
+                    if (currentNode.node) {
+                        currentNode.open = false;
+                    }
+                    break;
+                case 'unfold':
+                    if (currentNode.node) {
+                        currentNode.open = true;
+                    }
+                    break;
+            }
+        };
+        $scope.addNode = function (event) {
+            console.log(event);
+        };
+        $scope.addSubNode = function (event) {
+            console.log(event);
         };
     })
     .controller('detailController', function ($scope, $http) {
@@ -102,7 +184,7 @@ angular.module('MindWebUi.viewer', [
 
         $scope.deleteIcon = function (pos) {
             $scope.currentNode.icon.splice(pos, 1);
-            if ($scope.currentNode.icon.length == 0){
+            if ($scope.currentNode.icon.length == 0) {
                 delete $scope.currentNode.icon;
             }
         };
