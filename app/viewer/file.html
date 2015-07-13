@@ -12,8 +12,12 @@
                     </span>
                 </div>
             </div>
-            <div class="item" ng-click="openDetails(node,'details')">
-                <markdown ng-model="node.nodeMarkdown" extensions="github, prettify"></markdown>
+            <div class="item">
+                <markdown ng-model="node.nodeMarkdown" extensions="github, prettify"
+                          ng-click="openDetails(node,'details')"></markdown>
+                <a ng-if="node.$['LINK']" title="{{node.$['LINK']}}" ng-click="jumptoLink(node.$['LINK'])">
+                    <img ng-src="/images/{{node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
+                </a>
             </div>
             <div class="chevron">
                 <div class="icon-block">

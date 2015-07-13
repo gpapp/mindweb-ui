@@ -48,7 +48,9 @@ angular.module('MindWebUi.viewer', [
             event.stopPropagation();
         });
     })
-    .controller('structureController', function ($scope, $rootScope, $state, $filter, FileApi) {
+    .controller('structureController', function ($scope, $rootScope, $state, $filter, $window, FileApi, $location) {
+        // Array of nodes, to be used for lookups.
+        var flatNodes = [];
 
         $rootScope.$emit('$routeChangeStart');
 
@@ -66,6 +68,7 @@ angular.module('MindWebUi.viewer', [
         });
 
         $scope.setupParent = function (node, $modelValue, $index) {
+            flatNodes.push(node);
             node.$parent = $modelValue;
             node.$parentIndex = $index;
         };
@@ -76,13 +79,34 @@ angular.module('MindWebUi.viewer', [
             }
             return 'hidden';
         };
+
         $scope.nodeToggleOpen = function (node) {
             node.open = !node.open;
         };
+
         $scope.openDetails = function (node, destination) {
             $rootScope.Ui.turnOn('detailPanel');
             $scope.$emit('selectNode', {node: node});
             $scope.$emit('selectTab', {destination: destination});
+        };
+
+        $scope.jumptoLink = function (link) {
+            if (link[0] == '#') {
+                for (var nodeindex in flatNodes) {
+                    var node = flatNodes[nodeindex];
+                    if (node.$['ID'] === link.substr(1)) {
+                        var nodeparent = node.$parent;
+                        while (nodeparent.$parent) {
+                            nodeparent.open = true;
+                            nodeparent = nodeparent.$parent;
+                        }
+                        $scope.$emit('selectNode', {node: node});
+                        break;
+                    }
+                }
+            } else {
+                $window.open(link, '_blank');
+            }
         };
         $scope.selectNode = function (event) {
             var currentNode = $scope.currentNode;
@@ -128,7 +152,7 @@ angular.module('MindWebUi.viewer', [
                     } else {
                         var ptr = currentNode.$parent;
                         do {
-                            if(!ptr.$parent) {
+                            if (!ptr.$parent) {
                                 break;
                             }
                             if (ptr.$parentIndex + 1 == ptr.$parent.node.length) {
