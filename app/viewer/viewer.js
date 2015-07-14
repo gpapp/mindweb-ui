@@ -37,14 +37,31 @@ angular.module('MindWebUi.viewer', [
         }
     ])
     .controller('viewerController', function ($scope, $location, $anchorScroll) {
+        var msgStack = [];
+
         $anchorScroll.yOffset = 50;
         $scope.$on('selectNode', function (event, data) {
             $scope.currentNode = data.node;
+            $scope.currentEditor = {
+                text:data.node.nodeMarkdown,
+                detail: data.node.detailMarkdown,
+                note: data.node.noteMarkdown
+            };
             $location.hash(data.node.$['ID']);
             event.stopPropagation();
         });
         $scope.$on('selectTab', function (event, data) {
             $scope.selectedTab = data.destination;
+            event.stopPropagation();
+        });
+        $scope.$on('fileModified', function (event, data) {
+            for (var i in msgStack) {
+                if (msgStack[i].parent === data.parent && msgStack[i].event === data.event) {
+                    msgStack.splice(i,1);
+                }
+            }
+            msgStack.push(data);
+            $scope.msgStack = msgStack;
             event.stopPropagation();
         });
     })
@@ -82,6 +99,7 @@ angular.module('MindWebUi.viewer', [
 
         $scope.nodeToggleOpen = function (node) {
             node.open = !node.open;
+            $scope.$emit('fileModified',{event:'nodeFold', parent:node, payload:node.open});
         };
 
         $scope.openDetails = function (node, destination) {
@@ -130,7 +148,7 @@ angular.module('MindWebUi.viewer', [
                                     for (var i = ptr.node.length - 1; i >= 0; i++) {
                                         if (ptr.node[i].open) {
                                             ptr = ptr.node[i];
-
+                                            break;
                                         } else {
                                             $scope.$emit('selectNode', {node: ptr.node[i]});
                                             break outside;
@@ -167,21 +185,89 @@ angular.module('MindWebUi.viewer', [
                 case 'fold':
                     if (currentNode.node) {
                         currentNode.open = false;
+                        $scope.$emit('fileModified',{event:'nodeFold', parent:currentNode, payload:currentNode.open});
                     }
                     break;
                 case 'unfold':
                     if (currentNode.node) {
                         currentNode.open = true;
+                        $scope.$emit('fileModified',{event:'nodeFold', parent:currentNode, payload:currentNode.open});
                     }
                     break;
             }
         };
-        $scope.addNode = function (event) {
-            console.log(event);
+        $scope.addNode = function (target) {
+            var newNode = {};
+            var timeStamp = new Date().getTime();
+            if (target instanceof String) {
+                newNode.$parent = target === 'current' ? $scope.currentNode : $scope.currentNode.$parent;
+            } else  {
+                newNode.$parent = target;
+            }
+
+            newNode.$ = {CREATED:timeStamp, ID:'ID_'+timeStamp, MODIFIED:timeStamp, TEXT:'New Node'};
+            newNode.nodeMarkdown = 'New Node';
+            var minId = -1;
+            for (var i=flatNodes.length - 1; i>=0; i--) {
+                var curNum = Number(flatNodes[i].$$hashKey.substr(7));
+                if (curNum>minId) {
+                    minId=curNum;
+                }
+            }
+            newNode.$$hashKey = 'object:'+(minId+1);
+            if (newNode.$parent.node) {
+                newNode.$parent.node.push(newNode);
+            } else {
+                newNode.$parent.node = [ newNode ];
+            }
+            newNode.$parentIndex = newNode.$parent.node.length - 1;
+
+            flatNodes.push(newNode);
+            // Make sure the node is open, so the new node is shown
+            newNode.$parent.open=true;
+            $scope.$emit('fileModified',{event:'newNode', parent:newNode.$parent, payload:newNode});
         };
-        $scope.addSubNode = function (event) {
-            console.log(event);
-        };
+        $scope.deleteNode = function (target) {
+            if (target instanceof String) {
+                target = $scope.currentNode;
+            }
+            // TODO: Do a deep tree traversal to remove the nodes under it
+            var ptr = target;
+            while (true) {
+                if (ptr===target && !ptr.node) break;
+                if(ptr.node && ptr.node.length > 0){
+                    ptr = ptr.node[0];
+                } else {
+                    for (var i in flatNodes) {
+                        if (ptr===flatNodes[i]) {
+                            flatNodes.splice(i,1);
+                            break;
+                        }
+                    }
+                    ptr = ptr.$parent;
+                    ptr.node.splice(0,1);
+                    if(ptr.node.length == 0) {
+                        delete ptr.node;
+                    }
+
+                }
+            }
+            for (var i in flatNodes) {
+                if (target===flatNodes[i]) {
+                    flatNodes.splice(i,1);
+                    break;
+                }
+            }
+            var parent = target.$parent;
+            parent.node.splice(target.$parentIndex,1);
+            for (var i  in parent.node){
+                parent.node[i].$parentIndex = i;
+            }
+            if(parent.node.length == 0) {
+                delete parent.node;
+            }
+            $scope.$emit('fileModified',{event:'deleteNode', parent:target});
+        }
     })
     .controller('detailController', function ($scope, $http) {
 
@@ -190,8 +276,30 @@ angular.module('MindWebUi.viewer', [
                 $scope.iconList = res.data;
             });
 
+        $scope.$watch ('currentEditor.text', function (newValue, oldValue) {
+            if ($scope.currentNode.nodeMarkdown != newValue) {
+                $scope.currentNode.nodeMarkdown = newValue;
+                $scope.$emit('fileModified',{event:'nodeText', parent: $scope.currentNode, payload:newValue});
+            }
+        });
+
+        $scope.$watch ('currentEditor.detail', function (newValue, oldValue) {
+            if ($scope.currentNode.detailMarkdown != newValue) {
+                $scope.currentNode.detailMarkdown = newValue;
+                $scope.$emit('fileModified', {event: 'nodeDetail', parent: $scope.currentNode, payload: newValue});
+            }
+        });
+
+        $scope.$watch ('currentEditor.note', function (newValue, oldValue) {
+            if ($scope.currentNode.noteMarkdown != newValue) {
+                $scope.currentNode.noteMarkdown = newValue;
+                $scope.$emit('fileModified',{event:'nodeNote', parent: $scope.currentNode, payload:newValue});
+            }
+        });
+
         $scope.moveIcon = function (pos, dir) {
-            var icons = $scope.currentNode.icon;
+            var node = $scope.currentNode;
+            var icons = node.icon;
             var cut = icons[pos];
             var target;
             switch (dir) {
@@ -204,21 +312,26 @@ angular.module('MindWebUi.viewer', [
             }
             icons[pos] = icons[target];
             icons[target] = cut;
+            $scope.$emit('fileModified',{event:'nodeModifyIcons', parent: node, payload:icons});
         };
 
         $scope.deleteIcon = function (pos) {
-            $scope.currentNode.icon.splice(pos, 1);
-            if ($scope.currentNode.icon.length == 0) {
-                delete $scope.currentNode.icon;
+            var node = $scope.currentNode;
+            node.icon.splice(pos, 1);
+            if (node.icon.length == 0) {
+                delete node.icon;
             }
+            $scope.$emit('fileModified',{event:'nodeModifyIcons', parent:node, payload:node.icon});
         };
 
         $scope.addIcon = function (name) {
-            if ($scope.currentNode.icon) {
-                $scope.currentNode.icon.push({'$': {BUILTIN: name}});
+            var node = $scope.currentNode;
+            if (node.icon) {
+                node.icon.push({'$': {BUILTIN: name}});
             } else {
-                $scope.currentNode.icon = [{'$': {BUILTIN: name}}];
+                node.icon = [{'$': {BUILTIN: name}}];
             }
+            $scope.$emit('fileModified',{event:'nodeModifyIcons', parent:node, payload:node.icon});
         };
 
         $scope.selectTab = function (destination) {

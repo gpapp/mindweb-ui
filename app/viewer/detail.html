@@ -19,7 +19,7 @@
                     <i class='fa fa-fw fa-edit'></i>Edit
                     <i class="fa fa-question pull-right" ui-turn-on="modalMarkdownDialog"></i>
                 </tab-heading>
-                <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.nodeMarkdown"></textarea>
+                <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.text"></textarea>
             </tab>
         </tabset>
 
@@ -42,7 +42,7 @@
                             <i class="fa fa-question pull-right" ui-turn-on="modalMarkdownDialog"></i>
                         </tab-heading>
                         <textarea class="tab-pane form-control" rows="5"
-                                  ng-model="currentNode.detailMarkdown"></textarea>
+                                  ng-model="currentEditor.detail"></textarea>
                     </tab>
                 </tabset>
             </tab>
@@ -63,7 +63,7 @@
                             <i class='fa fa-fw fa-edit'></i>Edit
                             <i class="fa fa-question pull-right" ui-turn-on="modalMarkdownDialog"></i>
                         </tab-heading>
-                        <textarea class="tab-pane form-control" rows="5" ng-model="currentNode.noteMarkdown"></textarea>
+                        <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.note"></textarea>
                     </tab>
                 </tabset>
             </tab>
@@ -109,6 +109,11 @@
                 </table>
             </tab>
         </tabset>
+    </div>
+</div>
+<div class="debug">
+    <div class="list-item" ng-repeat="msg in msgStack track by $index">
+        <pre>{{$index}} {{msg.event}} {{msg.parent.$['ID']}} {{msg.payload}}</pre>
     </div>
 </div>
 <div ui-content-for="modals">
