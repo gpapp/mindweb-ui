@@ -4,42 +4,43 @@
 angular.module('MindWebUi.file.service', [
     'ngCookies'
 ])
-.factory("FileApi", ['$rootScope', '$http', '$q', function ($rootScope, $http, $q)
-    {
-        function _list () {
+    .factory("FileApi", ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
+        function _list() {
             var deferred = $q.defer();
             $http.get("/file/files")
                 .success(function (response) {
                     deferred.resolve(response);
                 })
-                .error(function (err){
+                .error(function (err) {
                     deferred.reject();
                 });
             return deferred.promise;
         }
 
-        function _load (id) {
+        function _load(id) {
             var deferred = $q.defer();
-            $http.get("/file/file/"+id)
-                .success(function (response) {
-                    deferred.resolve(response);
-                })
-                .error(function (err){
+            $http.get("/file/file/" + id).then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (err) {
                     deferred.reject();
-                });
+                }
+            );
             return deferred.promise;
         }
 
-        function _save(changes) {
+        function _save(id, changes) {
             var deferred = $q.defer();
-            // TODO: POST changes as JSON data
-            $http.post("/file/change/"+id)
-                .success(function (response) {
-                    deferred.resolve(response);
-                })
-                .error(function (err){
+            $http.put('/file/change/' + id, {actions: changes}).then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (err) {
                     deferred.reject();
-                });
+                }
+            );
+
             return deferred.promise;
         }
 
@@ -49,7 +50,7 @@ angular.module('MindWebUi.file.service', [
         return {
             list: _list,
             load: _load,
-            save:   _save,
+            save: _save,
             remove: _remove
         };
     }]);

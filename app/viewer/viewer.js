@@ -36,10 +36,14 @@ angular.module('MindWebUi.viewer', [
                 });
         }
     ])
-    .controller('viewerController', function ($scope, $location, $anchorScroll) {
+    .controller('viewerController', function ($scope, $location, $anchorScroll, FileApi) {
         var msgStack = [];
 
         $anchorScroll.yOffset = 50;
+        $scope.$on('openId', function (event, data) {
+            $scope.openId = data.id;
+            event.stopPropagation();
+        });
         $scope.$on('selectNode', function (event, data) {
             $scope.currentNode = data.node;
             $scope.currentEditor = {
@@ -64,8 +68,15 @@ angular.module('MindWebUi.viewer', [
             $scope.msgStack = msgStack;
             event.stopPropagation();
         });
+
+        $scope.performSave = function () {
+            var messages = msgStack;
+            FileApi.save($scope.openId, messages).then(function (data) {
+                msgStack = [];
+            });
+        }
     })
-    .controller('structureController', function ($scope, $rootScope, $state, $filter, $window, FileApi, $location) {
+    .controller('structureController', function ($scope, $rootScope, $state, $filter, $window, FileApi) {
         // Array of nodes, to be used for lookups.
         var flatNodes = [];
 
@@ -80,10 +91,13 @@ angular.module('MindWebUi.viewer', [
         FileApi.load($state.params.fileId).then(function (data) {
             $scope.nodes = JSON.parse(data.content);
             $scope.nodes.map.open = true;
+            $scope.$emit('openId', {id: $state.params.fileId});
             $scope.$emit('selectNode', {node: $scope.nodes.map});
             $rootScope.$emit('$routeChangeSuccess');
         });
 
+        // create parent/child links, build flat array to store the nodes,
+        // to overcome recursion depth limitations
         $scope.setupParent = function (node, $modelValue, $index) {
             flatNodes.push(node);
             node.$parent = $modelValue;
