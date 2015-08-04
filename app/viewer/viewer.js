@@ -99,7 +99,7 @@ angular.module('MindWebUi.viewer', [
 
         $scope.nodeToggleOpen = function (node) {
             node.open = !node.open;
-            $scope.$emit('fileModified',{event:'nodeFold', parent:node, payload:node.open});
+            $scope.$emit('fileModified',{event:'nodeFold', parent:node.$['ID'], payload:node.open});
         };
 
         $scope.openDetails = function (node, destination) {
@@ -185,13 +185,13 @@ angular.module('MindWebUi.viewer', [
                 case 'fold':
                     if (currentNode.node) {
                         currentNode.open = false;
-                        $scope.$emit('fileModified',{event:'nodeFold', parent:currentNode, payload:currentNode.open});
+                        $scope.$emit('fileModified',{event:'nodeFold', parent:currentNode.$['ID'], payload:currentNode.open});
                     }
                     break;
                 case 'unfold':
                     if (currentNode.node) {
                         currentNode.open = true;
-                        $scope.$emit('fileModified',{event:'nodeFold', parent:currentNode, payload:currentNode.open});
+                        $scope.$emit('fileModified',{event:'nodeFold', parent:currentNode.$['ID'], payload:currentNode.open});
                     }
                     break;
             }
@@ -225,7 +225,7 @@ angular.module('MindWebUi.viewer', [
             flatNodes.push(newNode);
             // Make sure the node is open, so the new node is shown
             newNode.$parent.open=true;
-            $scope.$emit('fileModified',{event:'newNode', parent:newNode.$parent, payload:newNode});
+            $scope.$emit('fileModified',{event:'newNode', parent:newNode.$parent.$['ID'], payload:newNode});
         };
         $scope.deleteNode = function (target) {
             if (target instanceof String) {
@@ -266,7 +266,7 @@ angular.module('MindWebUi.viewer', [
             if(parent.node.length == 0) {
                 delete parent.node;
             }
-            $scope.$emit('fileModified',{event:'deleteNode', parent:target});
+            $scope.$emit('fileModified',{event:'deleteNode', parent:target.$['ID']});
         }
     })
     .controller('detailController', function ($scope, $http) {
@@ -279,21 +279,21 @@ angular.module('MindWebUi.viewer', [
         $scope.$watch ('currentEditor.text', function (newValue, oldValue) {
             if ($scope.currentNode.nodeMarkdown != newValue) {
                 $scope.currentNode.nodeMarkdown = newValue;
-                $scope.$emit('fileModified',{event:'nodeText', parent: $scope.currentNode, payload:newValue});
+                $scope.$emit('fileModified',{event:'nodeText', parent: $scope.currentNode.$['ID'], payload:newValue});
             }
         });
 
         $scope.$watch ('currentEditor.detail', function (newValue, oldValue) {
             if ($scope.currentNode.detailMarkdown != newValue) {
                 $scope.currentNode.detailMarkdown = newValue;
-                $scope.$emit('fileModified', {event: 'nodeDetail', parent: $scope.currentNode, payload: newValue});
+                $scope.$emit('fileModified', {event: 'nodeDetail', parent: $scope.currentNode.$['ID'], payload: newValue});
             }
         });
 
         $scope.$watch ('currentEditor.note', function (newValue, oldValue) {
             if ($scope.currentNode.noteMarkdown != newValue) {
                 $scope.currentNode.noteMarkdown = newValue;
-                $scope.$emit('fileModified',{event:'nodeNote', parent: $scope.currentNode, payload:newValue});
+                $scope.$emit('fileModified',{event:'nodeNote', parent: $scope.currentNode.$['ID'], payload:newValue});
             }
         });
 
@@ -312,7 +312,7 @@ angular.module('MindWebUi.viewer', [
             }
             icons[pos] = icons[target];
             icons[target] = cut;
-            $scope.$emit('fileModified',{event:'nodeModifyIcons', parent: node, payload:icons});
+            $scope.$emit('fileModified',{event:'nodeModifyIcons', parent: node.$['ID'], payload:icons});
         };
 
         $scope.deleteIcon = function (pos) {
@@ -321,7 +321,7 @@ angular.module('MindWebUi.viewer', [
             if (node.icon.length == 0) {
                 delete node.icon;
             }
-            $scope.$emit('fileModified',{event:'nodeModifyIcons', parent:node, payload:node.icon});
+            $scope.$emit('fileModified',{event:'nodeModifyIcons', parent:node.$['ID'], payload:node.icon});
         };
 
         $scope.addIcon = function (name) {
@@ -331,7 +331,7 @@ angular.module('MindWebUi.viewer', [
             } else {
                 node.icon = [{'$': {BUILTIN: name}}];
             }
-            $scope.$emit('fileModified',{event:'nodeModifyIcons', parent:node, payload:node.icon});
+            $scope.$emit('fileModified',{event:'nodeModifyIcons', parent:node.$['ID'], payload:node.icon});
         };
 
         $scope.selectTab = function (destination) {

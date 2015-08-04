@@ -21,7 +21,7 @@
             </div>
             <div class="chevron">
                 <div class="icon-block">
-                    <span ng-if="displayIcons">
+                    <span name="editorIcons" ng-if="displayIcons">
                         <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.$parent)"></i>
                         <i class="fa fa-fw fa-folder-o" ng-click="addNode(node)"></i>
                         <i class="fa fa-fw fa-trash" ng-click="deleteNode(node)"></i>
@@ -59,6 +59,7 @@
         <keyboard-shortcut keyboard-shortcut="left" keyboard-title="Fold node" keyboard-action="selectNode('fold')" keyboard-prevent-default="true"/>
         <keyboard-shortcut keyboard-shortcut="ins" keyboard-title="Add new subnode" keyboard-action="addNode('current')" keyboard-prevent-default="true"/>
         <keyboard-shortcut keyboard-shortcut="enter" keyboard-title="Add new node" keyboard-action="addNode('parent')" keyboard-prevent-default="true"/>
+        <keyboard-shortcut keyboard-shortcut="del" keyboard-title="Delete node" keyboard-action="deleteNode('current')" keyboard-prevent-default="true"/>
         <div ui-tree class="list-group">
             <div id="tree-root" ui-tree-nodes="" ng-model="nodes.map">
                 <div ng-repeat="node in nodes.map.node"

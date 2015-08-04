@@ -113,7 +113,7 @@
 </div>
 <div class="debug">
     <div class="list-item" ng-repeat="msg in msgStack track by $index">
-        <pre>{{$index}} {{msg.event}} {{msg.parent.$['ID']}} {{msg.payload}}</pre>
+        <pre>{{$index}} {{msg.event}} {{msg.parent}} {{msg.payload}}</pre>
     </div>
 </div>
 <div ui-content-for="modals">

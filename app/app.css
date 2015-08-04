@@ -293,6 +293,9 @@ markdown.tab-content {
     display: flex;
 }
 
+.nodeList .chevron span[name='editorIcons'] {
+    display: flex;
+}
 
 .nodeList .icons img,
 .nodeList .chevron img {
