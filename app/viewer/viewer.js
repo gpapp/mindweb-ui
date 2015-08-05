@@ -118,7 +118,10 @@ angular.module('MindWebUi.viewer', [
             node.open = !node.open;
             $scope.$emit('fileModified', {event: 'nodeFold', parent: node.$['ID'], payload: node.open});
         };
-
+        $scope.detailToggleOpen = function (node) {
+            node.detailOpen = !node.detailOpen;
+            $scope.$emit('fileModified', {event: 'nodeDetailFold', parent: node.$['ID'], payload: node.detailOpen});
+        };
         $scope.openDetails = function (node, destination) {
             $rootScope.Ui.turnOn('detailPanel');
             $scope.$emit('selectNode', {node: node});

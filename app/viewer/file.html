@@ -34,7 +34,8 @@
             </div>
         </div>
         <div class="list-group-item-text detail" ng-if="node.detailMarkdown">
-            <i class="fa pull-left" ng-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}" ng-click="node.detailOpen=!node.detailOpen"></i>
+            <i class="fa pull-left" ng-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}"
+               ng-click="detailToggleOpen(node)"></i>
             <div class="rule" ng-if="!node.detailOpen"></div>
             <markdown ng-model="node.detailMarkdown" extensions="github, prettify" ng-if="node.detailOpen"
                       ng-click="openDetails(node,'details')"></markdown>
