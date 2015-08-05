@@ -196,7 +196,7 @@ input.scrollable-header {
     }
 
     #viewerTable #nodePane.panel, #viewerTable #detailPane.panel {
-        margin-bottom: 0%;
+        margin-bottom: 0;
     }
 }
 
@@ -314,6 +314,8 @@ markdown.tab-content {
 .nodeList .detail markdown {
     display: block;
     background-color: ghostwhite;
+    color: black;
+    border: 1px solid black;
     padding: 5px;
     max-height: 300px;
     overflow: auto;

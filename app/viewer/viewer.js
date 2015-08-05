@@ -114,13 +114,6 @@ angular.module('MindWebUi.viewer', [
             node.$parentIndex = $index;
         };
 
-        $scope.nodeIcon = function (node) {
-            if (node.node) {
-                return node['open'] ? 'fa-chevron-down' : 'fa-chevron-right';
-            }
-            return 'hidden';
-        };
-
         $scope.nodeToggleOpen = function (node) {
             node.open = !node.open;
             $scope.$emit('fileModified', {event: 'nodeFold', parent: node.$['ID'], payload: node.open});
