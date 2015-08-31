@@ -7,6 +7,10 @@ angular.module('MindWebUi.file.service', [
     .factory("FileApi", ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
         function _list() {
             var deferred = $q.defer();
+            if (!$rootScope.currentUser) {
+                deferred.reject();
+                return deferred.promise;
+            }
             $http.get("/file/files")
                 .success(function (response) {
                     deferred.resolve(response);
@@ -19,6 +23,10 @@ angular.module('MindWebUi.file.service', [
 
         function _load(id) {
             var deferred = $q.defer();
+            if (!$rootScope.currentUser) {
+                deferred.reject();
+                return deferred.promise;
+            }
             $http.get("/file/file/" + id).then(
                 function (response) {
                     deferred.resolve(response.data);
@@ -32,6 +40,10 @@ angular.module('MindWebUi.file.service', [
 
         function _save(id, changes) {
             var deferred = $q.defer();
+            if (!$rootScope.currentUser) {
+                deferred.reject();
+                return deferred.promise;
+            }
             $http.put('/file/change/' + id, {actions: changes}).then(
                 function (response) {
                     deferred.resolve(response.data);
@@ -45,6 +57,11 @@ angular.module('MindWebUi.file.service', [
         }
 
         function _remove() {
+            var deferred = $q.defer();
+            if (!$rootScope.currentUser) {
+                deferred.reject();
+                return deferred.promise;
+            }
         }
 
         return {

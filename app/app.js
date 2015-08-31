@@ -8,13 +8,7 @@ angular.module('MindWebUi', [
 ])
     .run(
     ['$rootScope', '$state', '$stateParams', 'UsersApi',
-        function ($rootScope, $state, $stateParams,UsersApi) {
-            // It's very handy to add references to $state and $stateParams to the $rootScope
-            // so that you can access them from any scope within your applications.For example,
-            // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
-            // to active whenever 'contacts.list' or one of its decendents is active.
-            $rootScope.$state = $state;
-            $rootScope.$stateParams = $stateParams;
+        function ($rootScope, $state, $stateParams, UsersApi) {
             $rootScope.openFiles = [];
 
             $rootScope.$on("$routeChangeStart", function () {
@@ -25,8 +19,8 @@ angular.module('MindWebUi', [
             });
 
             $rootScope.$on("openFile", function (event, file) {
-                for (var index in $rootScope.openFiles) {
-                    if (file.id === $rootScope.openFiles[index].id) {
+                for (var index = 0, length = $rootScope.openFiles.length; index < length; index++) {
+                    if (file.id === $rootScope.openFiles[index]['id']) {
                         return;
                     }
                 }
@@ -34,18 +28,21 @@ angular.module('MindWebUi', [
             });
 
             $rootScope.$on("closeFile", function (event, file) {
-                for (var index in $rootScope.openFiles){
-                    if (file.id === $rootScope.openFiles[index].id) {
-                        $rootScope.openFiles.splice(index,1)
+                for (var index = 0, length = $rootScope.openFiles.length; index < length; index++) {
+                    if (file['id'] === $rootScope.openFiles[index]['id']) {
+                        $rootScope.openFiles.splice(index, 1)
                     }
                 }
             });
 
             UsersApi.lookup().then(function (user) {
                 $rootScope.currentUser = user;
+            }, function () {
+                delete $rootScope.currentUser;
+            }, function () {
             });
 
-            }
+        }
     ])
     .config(function ($stateProvider) {
         $stateProvider
@@ -58,7 +55,10 @@ angular.module('MindWebUi', [
             })
             .state('about', {
                 url: '/about',
-                templateUrl: 'app/about.html'
+                templateUrl: 'app/about.html',
+                data: {
+                    requireLogin: false
+                }
             })
             .state('login', {
                 url: '/login',

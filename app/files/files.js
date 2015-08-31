@@ -50,7 +50,6 @@ angular.module('MindWebUi.file', [
                         fields: {'username': $scope.username},
                         file: file
                     }).progress(function (evt) {
-                        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                         $scope.uploads[evt.config.file.name].value=evt.loaded;
                     }).success(function (data, status, headers, config) {
                         $scope.uploads[config.file.name].done = true;
@@ -108,6 +107,9 @@ angular.module('MindWebUi.file', [
             FileApi.list().then(function (data) {
                 $scope.files = data;
                 $rootScope.$emit('$routeChangeSuccess');
+                },
+                function () {
+                    $rootScope.$emit('$routeChangeSuccess');
             });
         }
     });

@@ -101,25 +101,33 @@
 <!-- ~ .app -->
 <div ui-yield-to="modals">
 </div>
-    <div class="modal" ui-if="loginModal" ui-state='loginModal'>
-        <div class="modal-backdrop"></div>
-        <div class="modal-dialog modal-content loginDialog" role="dialog">
-            <div class="modal-header">
-                <h4 class="modal-title">Login</h4>
-            </div>
-            <div class="modal-body">
-                <div class="list-group">
-                    <a class="list-group-item" href="/auth/google">Login with Google account</a>
-                    <a class="list-group-item" href="/auth/twitter">Login with Twitter account</a>
-                    <a class="list-group-item" href="/auth/linkedin">Login with LinkedIn account</a>
-                    <a class="list-group-item" href="/auth/facebook">Login with Facebook account</a>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button ui-turn-off="loginModal" class="btn btn-default">Close</button>
+<div class="modal" ui-if="loginModal" ui-state='loginModal'>
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog modal-content loginDialog" role="dialog">
+        <div class="modal-header">
+            <h4 class="modal-title">Login</h4>
+        </div>
+        <div class="modal-body">
+            <div class="btn-group btn-group-vertical">
+                <a href="/auth/google" class="btn list-group-item">
+                    <i class="fa fa-2x fa-stack fa-google-plus"></i>Login with Google account
+                </a>
+                <a href="/auth/twitter" class="btn list-group-item">
+                    <i class="fa fa-2x fa-stack fa-twitter"></i>Login with Twitter account
+                </a>
+                <a href="/auth/linkedin" class="btn list-group-item">
+                    <i class="fa fa-2x fa-stack fa-linkedin"></i>Login with LinkedIn account
+                </a>
+                <a href="/auth/facebook" class="btn list-group-item">
+                    <i class="fa fa-2x fa-stack fa-facebook"></i>Login with Facebook account
+                </a>
             </div>
         </div>
+        <div class="modal-footer">
+            <button ui-turn-off="loginModal" class="btn btn-default">Close</button>
+        </div>
     </div>
+</div>
 
 </body>
 </html>

@@ -15,10 +15,10 @@
     "angular-ui-router": "~0.2.14",
     "mobile-angular-ui": "~1.2.x",
     "html5-boilerplate": "~5.2.0",
-    "ng-file-upload": "~5.0.3",
-    "ng-file-upload-shim": "~5.0.3",
+    "ng-file-upload": "~7.0.15",
+    "ng-file-upload-shim": "~7.0.15",
     "angular-markdown": "~0.0.1",
-    "angular-ui-tree": "~2.5.0",
+    "angular-ui-tree": "~2.9.0",
     "angular-keyboard": "gampleman/angular-keyboard"
   }
 }
