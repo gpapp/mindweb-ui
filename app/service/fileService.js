@@ -46,7 +46,7 @@ angular.module('MindWebUi.file.service', [
             }
             $http.put('/file/change/' + id, {actions: changes}).then(
                 function (response) {
-                    deferred.resolve(response.data);
+                    deferred.resolve({body: response.data, length: changes.length});
                 },
                 function (err) {
                     deferred.reject();

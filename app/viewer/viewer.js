@@ -38,6 +38,7 @@ angular.module('MindWebUi.viewer', [
     ])
     .controller('viewerController', function ($scope, $location, $anchorScroll, $interval, FileApi) {
         var msgStack = [];
+        var saveMutex = false;
         var saveTimer = $interval(function () {
             $scope.performSave();
         }, 10000);
@@ -62,13 +63,23 @@ angular.module('MindWebUi.viewer', [
             event.stopPropagation();
         });
         $scope.$on('fileModified', function (event, data) {
+            // remove circular references
+            if (data.payload && typeof data.payload == 'object') {
+                var nodeCopy = {};
+                angular.copy(data.payload, nodeCopy);
+                delete nodeCopy.$parent;
+                delete nodeCopy.$parentIndex;
+                data.payload = nodeCopy;
+            }
+            // remove items already processed on the stack
+            // TODO: this will! break undo function, as previous items might be eliminated
             for (var i in msgStack) {
                 if (msgStack[i].parent === data.parent && msgStack[i].event === data.event) {
                     msgStack.splice(i, 1);
                 }
             }
-            msgStack.push(data);
             $scope.msgStack = msgStack;
+            msgStack.push(data);
             event.stopPropagation();
         });
         $scope.$on("$destroy", function (event) {
@@ -78,11 +89,19 @@ angular.module('MindWebUi.viewer', [
         );
 
         $scope.performSave = function () {
-            var messages = msgStack;
-            if (messages.length > 0) {
+            if (msgStack.length > 0 && !saveMutex) {
+                saveMutex = true;
+                var messages = [];
+                for (var i = 0, len = msgStack.length; i < len; i++) {
+                    messages.push(msgStack[i]);
+                }
                 FileApi.save($scope.openId, messages).then(function (data) {
-                    msgStack = [];
-                });
+                        msgStack.splice(0, data.length);
+                        saveMutex = false;
+                    }, function (error) {
+                        saveMutex = false;
+                    }
+                );
             }
         }
     })
@@ -101,9 +120,9 @@ angular.module('MindWebUi.viewer', [
         FileApi.load($state.params.fileId).then(function (data) {
             $scope.nodes = JSON.parse(data.content);
             $scope.nodes.map.open = true;
-            $scope.$emit('openId', {id: $state.params.fileId});
-            $scope.$emit('selectNode', {node: $scope.nodes.map});
             $rootScope.$emit('$routeChangeSuccess');
+            $scope.$emit('openId', {id: $state.params.fileId});
+            $scope.$emit('selectNode', {node: $scope.nodes.map.node[0]});
         });
 
         // create parent/child links, build flat array to store the nodes,
@@ -227,8 +246,11 @@ angular.module('MindWebUi.viewer', [
         $scope.addNode = function (target) {
             var newNode = {};
             var timeStamp = new Date().getTime();
-            if (target instanceof String) {
+            if (typeof target === 'string') {
                 newNode.$parent = target === 'current' ? $scope.currentNode : $scope.currentNode.$parent;
+                if (!newNode.$parent) {
+                    newNode.$parent = $scope.currentNode;
+                }
             } else {
                 newNode.$parent = target;
             }
@@ -253,14 +275,18 @@ angular.module('MindWebUi.viewer', [
             flatNodes.push(newNode);
             // Make sure the node is open, so the new node is shown
             newNode.$parent.open = true;
+            $scope.currentNode = newNode;
             $scope.$emit('fileModified', {event: 'newNode', parent: newNode.$parent.$['ID'], payload: newNode});
         };
         $scope.deleteNode = function (target) {
-            if (target instanceof String) {
+            if (typeof target === 'string') {
                 target = $scope.currentNode;
+                if (!target.$parent) {
+                    return;
+                }
             }
-            // TODO: Do a deep tree traversal to remove the nodes under it
             var ptr = target;
+            // TODO: Do a deep tree traversal to remove the nodes under it
             while (true) {
                 if (ptr === target && !ptr.node) break;
                 if (ptr.node && ptr.node.length > 0) {
