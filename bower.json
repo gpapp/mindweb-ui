@@ -20,5 +20,8 @@
     "angular-markdown": "~0.0.1",
     "angular-ui-tree": "~2.9.0",
     "angular-keyboard": "gampleman/angular-keyboard"
+  },
+  "resolutions": {
+    "angular": "1.4.5"
   }
 }
