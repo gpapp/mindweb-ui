@@ -118,7 +118,7 @@ angular.module('MindWebUi.viewer', [
         });
 
         FileApi.load($state.params.fileId).then(function (data) {
-            $scope.nodes = JSON.parse(data.content);
+            $scope.nodes = data.content;
             $scope.nodes.map.open = true;
             $rootScope.$emit('$routeChangeSuccess');
             $scope.$emit('openId', {id: $state.params.fileId});
