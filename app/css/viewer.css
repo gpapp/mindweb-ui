@@ -1,0 +1,194 @@
+/*
+    Viewer layout
+*/
+@media (max-width: 479px) {
+    #viewerTable {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        position: absolute;
+    }
+
+    #viewerTable #nodePane, #viewerTable #detailPane {
+        width: 100%;
+        display: block;
+    }
+
+    #viewerTable #nodePane.detailOpen {
+        display: none;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+    #viewerTable {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        position: absolute;
+    }
+
+    #viewerTable #nodePane, #viewerTable #detailPane {
+        width: 100%;
+        display: block;
+    }
+
+    #viewerTable #nodePane.panel, #viewerTable #detailPane.panel {
+        margin-bottom: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    #viewerTable {
+        display: table;
+        width: 100%;
+        min-height: 100%;
+    }
+
+    #viewerTable #nodePane, #viewerTable #detailPane {
+        display: table-cell;
+        vertical-align: top;
+        width: 50%;
+        min-height: 100%;
+        position: relative;
+    }
+
+    #viewerTable #nodePane.panel, #viewerTable #detailPane.panel {
+        margin-bottom: 0;
+        border: 1px solid;
+        position: absolute;
+        min-height: 100%;
+        min-width: 100%;
+    }
+
+    #viewerTable #nodePane {
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: auto;
+        height: 100%;
+        width: 100%;
+    }
+
+    #viewerTable #nodePane.detailOpen {
+        width: 50%;
+    }
+
+    #viewerTable #detailPane {
+        position: absolute;
+        top: 0;
+        right: 0;
+        overflow: auto;
+        height: 100%;
+    }
+}
+
+/*
+    Viewer styles
+*/
+.indent {
+    padding-left: 10px;
+}
+
+markdown {
+    display: inline-block;
+}
+
+markdown.tab-content {
+    border: 1px solid lightgray;
+    padding: 0.5em 1em;
+    height: 8em;
+    overflow: auto;
+    display: block;
+}
+
+.nodeList {
+}
+
+.nodeList .list-group-item-heading {
+    display: table;
+    width: 100%;
+    overflow: auto;
+}
+
+.nodeList .handle,
+.nodeList .icons,
+.nodeList .item,
+.nodeList .chevron {
+    display: table-cell;
+    vertical-align: top;
+}
+
+.nodeList .handle,
+.nodeList .icons,
+.nodeList .chevron {
+    width: 0.1px;
+}
+
+.nodeList .handle {
+    padding-right: 8px;
+}
+
+.nodeList .icons .icon-block,
+.nodeList .chevron .icon-block {
+    display: flex;
+}
+
+.nodeList .chevron span[name='editorIcons'] {
+    display: flex;
+    position: absolute;
+    right: 40px;
+    z-index: 20;
+}
+
+.nodeList .icons img,
+.nodeList .chevron img {
+    min-width: 20px;
+    padding-right: 4px;
+}
+
+.nodeList .detail .rule {
+    height: 5pt;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 10pt;
+    margin-left: 10pt;
+}
+
+.nodeList .detail markdown {
+    display: block;
+    background-color: ghostwhite;
+    color: black;
+    border: 1px solid black;
+    padding: 5px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+/* Detail styles */
+#detail-icon .icon {
+    display: inline-flex;
+    padding-left: 20px;
+    width: 70px;
+    height: 60px;
+}
+
+.mw-detail-icon {
+    width: 32px;
+    padding: 5px;
+    border: 1px solid gray;
+}
+
+#iconSelectList .table {
+
+}
+
+#iconSelectList .iconSelectCell {
+    display: inline-flex;
+    padding: 10px;
+}
+
+#iconSelectList .iconSelectIcon {
+    width: 40px;
+}
+

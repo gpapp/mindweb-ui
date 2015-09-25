@@ -1,0 +1,87 @@
+/*
+    File manager styles
+*/
+.list-group-item-home {
+    padding: 20px;
+}
+
+.file-list {
+}
+
+.file-list-item {
+    width: 200px;
+    height: 100px;
+    display: inline-table;
+    border-right: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+    margin-bottom: 3px !important;
+    margin-right: 3px !important;
+}
+
+.fileInfo.hidden{
+    display:block !important;
+    opacity: 0;
+    visibility: visible !important;
+    transition: opacity 1s;
+    z-index:-1;
+}
+.fileInfo{
+    display:block;
+    position:absolute;
+    background:beige;
+    border:1px solid black;
+    font-size:80%;
+    top: 25pt;
+    left:10px;
+    right:10px;
+    padding: 3px 10px;
+    z-index:1;
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.fileInfo .title{
+    font-size:120%;
+    border-bottom:1px solid;
+}
+
+.file-list-item .actions {
+    vertical-align: bottom;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+#uploads {
+    display: inline-table;
+}
+
+#uploads .file {
+    display: table-row;
+}
+
+#uploads .file .status,
+#uploads .file .name,
+#uploads .file .error {
+    display: table-cell;
+    padding: 3px 5px;
+}
+#uploads .file .status {
+    width: 10%;
+}
+#uploads .file .status .progress{
+    display: flex;
+    margin-bottom: 0;
+}
+
+ngf-drop.drop-box {
+    border: 2px dashed lightgray;
+    width:  150px;
+    display: inline-block;
+    padding: 15px 5px;
+    text-align: center;
+}
+
+input.scrollable-header {
+    border-bottom: 3px solid #ccc;
+}
