@@ -119,10 +119,10 @@ angular.module('MindWebUi.viewer', [
 
         FileApi.load($state.params.fileId).then(function (data) {
             $scope.nodes = data.content;
-            $scope.nodes.map.open = true;
+            $scope.nodes.open = true;
             $rootScope.$emit('$routeChangeSuccess');
             $scope.$emit('openId', {id: $state.params.fileId});
-            $scope.$emit('selectNode', {node: $scope.nodes.map.node[0]});
+            $scope.$emit('selectNode', {node: $scope.nodes.rootNode});
         });
 
         // create parent/child links, build flat array to store the nodes,

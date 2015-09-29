@@ -1,4 +1,4 @@
-<script type="text/ng-template"  id="tree_item_renderer">
+<script type="text/ng-template" id="tree_item_renderer">
 
     <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node}">
         <div class="list-group-item-heading" ng-mouseover="displayIcons=true" ng-mouseleave="displayIcons=false">
@@ -8,7 +8,8 @@
             <div class="icons">
                 <div class="icon-block">
                     <span ng-repeat="icon in node.icon">
-                        <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png" ng-click="openDetails(node,'icons')"/>
+                        <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png"
+                             ng-click="openDetails(node,'icons')"/>
                     </span>
                 </div>
             </div>
@@ -26,7 +27,8 @@
                         <i class="fa fa-fw fa-folder-o" ng-click="addNode(node)"></i>
                         <i class="fa fa-fw fa-trash" ng-click="deleteNode(node)"></i>
                     </span>
-                    <img ng-if="node.attribute" src="/images/AttributesView.png" ng-click="openDetails(node,'properties')"/>
+                    <img ng-if="node.attribute" src="/images/AttributesView.png"
+                         ng-click="openDetails(node,'properties')"/>
                     <img ng-if="node.noteMarkdown" src="/images/knotes.png" ng-click="openDetails(node,'notes')"/>
                     <i class="fa" ng-class="{'fa-chevron-down': node.open, 'fa-chevron-right': !node.open}"
                        ng-click="nodeToggleOpen(node)" ng-if="node.node"></i>
@@ -36,6 +38,7 @@
         <div class="list-group-item-text detail" ng-if="node.detailMarkdown">
             <i class="fa pull-left" ng-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}"
                ng-click="detailToggleOpen(node)"></i>
+
             <div class="rule" ng-if="!node.detailOpen"></div>
             <markdown ng-model="node.detailMarkdown" extensions="github, prettify" ng-if="node.detailOpen"
                       ng-click="openDetails(node,'details')"></markdown>
@@ -50,25 +53,35 @@
     </div>
 
 </script>
+{{nodes}}
 
 <div class="panel">
     <div class="panel-body"
          ng-swipe-left='Ui.turnOn("detailPanel")'
          ng-swipe-right='Ui.turnOff("detailPanel")'>
-        <keyboard-shortcut keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')" keyboard-prevent-default="true"/>
-        <keyboard-shortcut keyboard-shortcut="down" keyboard-title="Next node" keyboard-action="selectNode('next')" keyboard-prevent-default="true"/>
-        <keyboard-shortcut keyboard-shortcut="right" keyboard-title="Unfold node" keyboard-action="selectNode('unfold')" keyboard-prevent-default="true"/>
-        <keyboard-shortcut keyboard-shortcut="left" keyboard-title="Fold node" keyboard-action="selectNode('fold')" keyboard-prevent-default="true"/>
-        <keyboard-shortcut keyboard-shortcut="ins" keyboard-title="Add new subnode" keyboard-action="addNode('current')" keyboard-prevent-default="true"/>
-        <keyboard-shortcut keyboard-shortcut="enter" keyboard-title="Add new node" keyboard-action="addNode('parent')" keyboard-prevent-default="true"/>
-        <keyboard-shortcut keyboard-shortcut="del" keyboard-title="Delete node" keyboard-action="deleteNode('current')" keyboard-prevent-default="true"/>
+        <keyboard-shortcut keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')"
+                           keyboard-prevent-default="true"></keyboard-shortcut>
+        <keyboard-shortcut keyboard-shortcut="down" keyboard-title="Next node" keyboard-action="selectNode('next')"
+                           keyboard-prevent-default="true"></keyboard-shortcut>
+        <keyboard-shortcut keyboard-shortcut="right" keyboard-title="Unfold node" keyboard-action="selectNode('unfold')"
+                           keyboard-prevent-default="true"></keyboard-shortcut>
+        <keyboard-shortcut keyboard-shortcut="left" keyboard-title="Fold node" keyboard-action="selectNode('fold')"
+                           keyboard-prevent-default="true"></keyboard-shortcut>
+        <keyboard-shortcut keyboard-shortcut="ins" keyboard-title="Add new subnode" keyboard-action="addNode('current')"
+                           keyboard-prevent-default="true"></keyboard-shortcut>
+        <keyboard-shortcut keyboard-shortcut="enter" keyboard-title="Add new node" keyboard-action="addNode('parent')"
+                           keyboard-prevent-default="true"></keyboard-shortcut>
+        <keyboard-shortcut keyboard-shortcut="del" keyboard-title="Delete node" keyboard-action="deleteNode('current')"
+                           keyboard-prevent-default="true"></keyboard-shortcut>
         <div ui-tree class="list-group">
-            <div id="tree-root" ui-tree-nodes="" ng-model="nodes.map">
-                <div ng-repeat="node in nodes.map.node"
-                     ui-tree-node
-                     ng-include="'tree_item_renderer'"
-                     ng-init="setupParent(node,null,$index)">
+            <div id="tree-root" ui-tree-nodes="" ng-model="nodes.rootNode">
+<!--
+                <div
+                        ui-tree-node
+                        ng-include="'tree_item_renderer'"
+                        ng-init="setupParent(nodes.rootNode,null,$index)">
                 </div>
+-->
             </div>
         </div>
     </div>
