@@ -8,7 +8,7 @@ angular.module('MindWebUi.user.service', [
     function _lookup () {
         var defer = $q.defer();
         setTimeout(function () {
-            var authURL = '/session/authenticated';
+            var authURL = '/auth/authenticated';
             $http.get(authURL)
                 .success (function (data,b,c,d) {
                 defer.resolve(data);
@@ -21,7 +21,7 @@ angular.module('MindWebUi.user.service', [
     }
 
     function _logout() {
-        var authURL = '/session/logout';
+        var authURL = '/auth/logout';
         $http.get(authURL).success (
             function (data)
             {

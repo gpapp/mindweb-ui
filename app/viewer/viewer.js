@@ -119,7 +119,8 @@ angular.module('MindWebUi.viewer', [
 
         FileApi.load($state.params.fileId).then(function (data) {
             $scope.nodes = data.content;
-            $scope.nodes.open = true;
+            $scope.nodes.rootNode.open = true;
+            $scope.nodes.rootNode.$$hashKey = 'object:0';
             $rootScope.$emit('$routeChangeSuccess');
             $scope.$emit('openId', {id: $state.params.fileId});
             $scope.$emit('selectNode', {node: $scope.nodes.rootNode});
@@ -128,6 +129,7 @@ angular.module('MindWebUi.viewer', [
         // create parent/child links, build flat array to store the nodes,
         // to overcome recursion depth limitations
         $scope.setupParent = function (node, $modelValue, $index) {
+            if (!node)return;
             flatNodes.push(node);
             node.$parent = $modelValue;
             node.$parentIndex = $index;

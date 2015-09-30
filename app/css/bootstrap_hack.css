@@ -1,0 +1,8 @@
+/* override clashes from bootstrap and mobile-angular-ui */
+.navbar {
+    position: absolute;
+}
+
+.modal {
+    display: block;
+}

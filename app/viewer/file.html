@@ -1,5 +1,4 @@
 <script type="text/ng-template" id="tree_item_renderer">
-
     <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node}">
         <div class="list-group-item-heading" ng-mouseover="displayIcons=true" ng-mouseleave="displayIcons=false">
             <div ui-tree-handle class="handle">
@@ -51,9 +50,7 @@
              ng-init="setupParent(node,$modelValue,$index); displayIcons=false">
         </div>
     </div>
-
 </script>
-{{nodes}}
 
 <div class="panel">
     <div class="panel-body"
@@ -75,13 +72,11 @@
                            keyboard-prevent-default="true"></keyboard-shortcut>
         <div ui-tree class="list-group">
             <div id="tree-root" ui-tree-nodes="" ng-model="nodes.rootNode">
-<!--
-                <div
-                        ui-tree-node
-                        ng-include="'tree_item_renderer'"
-                        ng-init="setupParent(nodes.rootNode,null,$index)">
+                <div ng-repeat="node in nodes"
+                     ui-tree-node
+                     ng-include="'tree_item_renderer'"
+                     ng-init="setupParent(node,null,$index);">
                 </div>
--->
             </div>
         </div>
     </div>
