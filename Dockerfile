@@ -8,6 +8,5 @@ USER www-data
 RUN npm install
 
 USER root
-#CMD service nginx start
 ENTRYPOINT ["service", "nginx", "start"]
 EXPOSE 80
