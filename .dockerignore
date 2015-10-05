@@ -2,5 +2,5 @@
 .gitignore
 Dockerfile
 README.md
-config
+nginx
 docker_create.sh
