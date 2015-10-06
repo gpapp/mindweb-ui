@@ -29,6 +29,7 @@ angular.module('MindWebUi.file.service', [
             }
             $http.get("/file/file/" + id).then(
                 function (response) {
+                    $rootScope.$emit('openFile', response.data.file);
                     deferred.resolve(response.data);
                 },
                 function (err) {
@@ -64,6 +65,7 @@ angular.module('MindWebUi.file.service', [
             }
             $http.delete('/file/file/' + id).then(
                 function (response) {
+                    $rootScope.$emit('closeFile', response.data);
                     deferred.resolve();
                 },
                 function (err) {
@@ -100,13 +102,47 @@ angular.module('MindWebUi.file.service', [
             }
             $http.post('/file/rename/' + id, {newName: newName}).then(
                 function (response) {
+                    $rootScope.$emit('updateFile', response.data);
                     deferred.resolve();
                 },
                 function (err) {
                     deferred.reject();
                 }
             );
+            return deferred.promise;
+        }
 
+        function _exportFreeplane(id) {
+            var deferred = $q.defer();
+            if (!$rootScope.currentUser) {
+                deferred.reject();
+                return deferred.promise;
+            }
+            $http.get('/file/convert/freeplane/' + id).then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (err) {
+                    deferred.reject();
+                }
+            );
+            return deferred.promise;
+        }
+
+        function _exportODF(id) {
+            var deferred = $q.defer();
+            if (!$rootScope.currentUser) {
+                deferred.reject();
+                return deferred.promise;
+            }
+            $http.get('/file/convert/odf/' + id).then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (err) {
+                    deferred.reject();
+                }
+            );
             return deferred.promise;
         }
 
@@ -116,6 +152,8 @@ angular.module('MindWebUi.file.service', [
             save: _save,
             rename: _rename,
             create: _create,
-            remove: _delete
+            remove: _delete,
+            exportFreeplane: _exportFreeplane,
+            exportODF: _exportODF
         };
     }]);

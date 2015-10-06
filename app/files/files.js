@@ -24,13 +24,8 @@ angular.module('MindWebUi.file', [
         }
     ])
     .controller('fileController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileApi) {
-
         reloadFiles($scope);
 
-        //$http.get("/storage/sharedfiles")
-        //    .success(function (response) {
-        //        $scope.sharedFiles = response;
-        //    });
         var uploadMutex = false;
         $scope.$watch('uploadedFiles', function () {
             if (!uploadMutex) {
@@ -92,6 +87,11 @@ angular.module('MindWebUi.file', [
                 });
             });
         };
+
+        $scope.downloadFreeplane = function (target) {
+
+        };
+
         $scope.openShareModal = function (target) {
             var modalInstance = $modal.open({
                 animation: true,
@@ -147,7 +147,6 @@ angular.module('MindWebUi.file', [
         $scope.newFile = {};
 
         $scope.fileOpen = function (file) {
-            $rootScope.$emit('openFile', file);
             $state.go('viewer.file', {fileId: file.id});
         };
 

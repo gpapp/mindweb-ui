@@ -18,6 +18,15 @@ angular.module('MindWebUi', [
                 $rootScope.loading = false;
             });
 
+            $rootScope.$on("updateFile", function (event, file) {
+                for (var index = 0, length = $rootScope.openFiles.length; index < length; index++) {
+                    if (file.id === $rootScope.openFiles[index]['id']) {
+                        $rootScope.openFiles[index]=file;
+                        return;
+                    }
+                }
+            });
+
             $rootScope.$on("openFile", function (event, file) {
                 for (var index = 0, length = $rootScope.openFiles.length; index < length; index++) {
                     if (file.id === $rootScope.openFiles[index]['id']) {
