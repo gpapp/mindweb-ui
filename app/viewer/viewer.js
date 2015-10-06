@@ -65,7 +65,7 @@ angular.module('MindWebUi.viewer', [
         $scope.$on('fileModified', function (event, data) {
             // remove circular references
             if (data.payload && typeof data.payload == 'object') {
-                var nodeCopy = {};
+                var nodeCopy = (data.payload instanceof Array) ? [] : {};
                 angular.copy(data.payload, nodeCopy);
                 delete nodeCopy.$parent;
                 delete nodeCopy.$parentIndex;
