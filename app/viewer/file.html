@@ -56,20 +56,23 @@
     <div class="panel-body"
          ng-swipe-left='Ui.turnOn("detailPanel")'
          ng-swipe-right='Ui.turnOff("detailPanel")'>
-        <keyboard-shortcut keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')"
-                           keyboard-prevent-default="true"></keyboard-shortcut>
-        <keyboard-shortcut keyboard-shortcut="down" keyboard-title="Next node" keyboard-action="selectNode('next')"
-                           keyboard-prevent-default="true"></keyboard-shortcut>
-        <keyboard-shortcut keyboard-shortcut="right" keyboard-title="Unfold node" keyboard-action="selectNode('unfold')"
-                           keyboard-prevent-default="true"></keyboard-shortcut>
-        <keyboard-shortcut keyboard-shortcut="left" keyboard-title="Fold node" keyboard-action="selectNode('fold')"
-                           keyboard-prevent-default="true"></keyboard-shortcut>
-        <keyboard-shortcut keyboard-shortcut="ins" keyboard-title="Add new subnode" keyboard-action="addNode('current')"
-                           keyboard-prevent-default="true"></keyboard-shortcut>
-        <keyboard-shortcut keyboard-shortcut="enter" keyboard-title="Add new node" keyboard-action="addNode('parent')"
-                           keyboard-prevent-default="true"></keyboard-shortcut>
-        <keyboard-shortcut keyboard-shortcut="del" keyboard-title="Delete node" keyboard-action="deleteNode('current')"
-                           keyboard-prevent-default="true"></keyboard-shortcut>
+        <span keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')"
+                           keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="down" keyboard-title="Next node" keyboard-action="selectNode('next')"
+                           keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="right" keyboard-title="Unfold node" keyboard-action="selectNode('unfold')"
+                           keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="left" keyboard-title="Fold node" keyboard-action="selectNode('fold')"
+                           keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="ins" keyboard-title="Add new subnode" keyboard-action="addNode('current')"
+                           keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="enter" keyboard-title="Add new node" keyboard-action="addNode('parent')"
+                           keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="del" keyboard-title="Delete node" keyboard-action="deleteNode('current')"
+                           keyboard-prevent-default="true"></span>
+        <div class="panel-footer">
+            <keyboard-help></keyboard-help>
+        </div>
         <div ui-tree class="list-group">
             <div id="tree-root" ui-tree-nodes="" ng-model="nodes.rootNode">
                 <div ng-repeat="node in nodes"

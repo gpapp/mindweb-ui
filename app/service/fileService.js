@@ -65,7 +65,7 @@ angular.module('MindWebUi.file.service', [
                 function () {
                     $http.delete('/file/file/' + id).
                     success(function (response) {
-                        $rootScope.$emit('closeFile', response.data);
+                        $rootScope.$emit('closeFile', response);
                         deferred.resolve();
                     }).
                     error(function (err) {
@@ -107,7 +107,8 @@ angular.module('MindWebUi.file.service', [
                 function () {
                     $http.post('/file/rename/' + id, {newName: newName}).
                     success(function (response) {
-                        $rootScope.$emit('updateFile', response.data);
+                        $rootScope.$emit('updateFile', response);
+                        deferred.resolve(response);
                     }).
                     error(function (err) {
                         deferred.reject();
