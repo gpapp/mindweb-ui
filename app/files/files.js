@@ -1,10 +1,10 @@
 angular.module('MindWebUi.file', [
-    'MindWebUi.file.service',
-    'ui.bootstrap',
-    'ui.bootstrap.tpls',
-    'ui.router',
-    'ngFileUpload'
-])
+        'MindWebUi.file.service',
+        'ui.bootstrap',
+        'ui.bootstrap.tpls',
+        'ui.router',
+        'ngFileUpload'
+    ])
     .config(['$stateProvider',
         function ($stateProvider) {
             $stateProvider
@@ -43,17 +43,17 @@ angular.module('MindWebUi.file', [
             if (toUpload && toUpload.length) {
                 for (var i = 0; i < toUpload.length; i++) {
                     var file = toUpload[i];
-                    $scope.uploads[file.name]={name:file.name, max:file.size, value:0, done:false, error:false};
+                    $scope.uploads[file.name] = {name: file.name, max: file.size, value: 0, done: false, error: false};
                     Upload.upload({
                         url: '/file/upload',
                         method: 'POST',
                         fields: {'username': $scope.username},
                         file: file
                     }).progress(function (evt) {
-                        $scope.uploads[evt.config.file.name].value=evt.loaded;
+                        $scope.uploads[evt.config.file.name].value = evt.loaded;
                     }).success(function (data, status, headers, config) {
                         $scope.uploads[config.file.name].done = true;
-                        $scope.uploads[config.file.name].error = status!=200;
+                        $scope.uploads[config.file.name].error = status != 200;
                         reloadFiles();
                         uploadMutex = false;
                     }).error(function (data, status, headers, config) {
@@ -68,12 +68,50 @@ angular.module('MindWebUi.file', [
             }
         };
 
-        $scope.fileRename = function (toRename) {
+        $scope.openShareModal = function (target) {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: "file_share_modal.html",
+                controller: "fileActionController",
+                resolve: {
+                    target: function () {
+                        return target;
+                    }
+                }
+            });
 
+            modalInstance.result.then(function (selectedItem) {
+            });
         };
+        $scope.openRenameModal = function (target) {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: "file_rename_modal.html",
+                controller: "fileActionController",
+                resolve: {
+                    target: function () {
+                        return target;
+                    }
+                }
+            });
 
-        $scope.fileDelete = function (toDelete) {
+            modalInstance.result.then(function (selectedItem) {
+            });
+        };
+        $scope.openDeleteModal = function (target) {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: "file_delete_modal.html",
+                controller: "fileActionController",
+                resolve: {
+                    target: function () {
+                        return target;
+                    }
+                }
+            });
 
+            modalInstance.result.then(function (selectedItem) {
+            });
         };
 
         $scope.newFile = {};
@@ -93,23 +131,38 @@ angular.module('MindWebUi.file', [
         };
 
         $scope.fileOpen = function (file) {
-            $rootScope.$emit('openFile',file);
-            $state.go('viewer.file',{fileId:file.id});
+            $rootScope.$emit('openFile', file);
+            $state.go('viewer.file', {fileId: file.id});
         };
 
         $scope.fileClose = function (file) {
-            $rootScope.$emit('closeFile',file);
+            $rootScope.$emit('closeFile', file);
         };
 
         // Utility functions for controller
         function reloadFiles() {
             $rootScope.$emit('$routeChangeStart');
             FileApi.list().then(function (data) {
-                $scope.files = data;
-                $rootScope.$emit('$routeChangeSuccess');
+                    $scope.files = data;
+                    $rootScope.$emit('$routeChangeSuccess');
                 },
                 function () {
                     $rootScope.$emit('$routeChangeSuccess');
-            });
+                });
         }
+    })
+    .controller('fileActionController', function ($scope, $modalInstance, target) {
+        $scope.target = target;
+        $scope.target.newName = $scope.target.name.replace(new RegExp("^(.*)\.mm$"),"$1");
+        $scope.target.newIsPublic = $scope.target.isPublic;
+        $scope.target.newViewers = $scope.target.viewers;
+        $scope.target.newEditors = $scope.target.editors;
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.target+'.mm');
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
     });

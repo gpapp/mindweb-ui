@@ -2,66 +2,6 @@
     <span>MindWeb - Files</span>
 </div>
 
-<div ui-content-for="modals">
-    <div class="modal" ui-if="fileCreateModal" ui-state='fileCreateModal'>
-        <div class="modal-backdrop in"></div>
-        <div class="modal-dialog modal-content" role="dialog">
-                <div class="modal-header">
-                    <h4 class="modal-title">Create file</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <div class="control-label col-sm-5">File name</div>
-                            <div class="col-sm-7 ">
-                                <input class="form-control disabled" ng-model="newFile.fileName">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="control-label col-sm-5">File description</div>
-                            <div class="col-sm-7 ">
-                                <input class="form-control disabled" ng-model="newFile.fileDescription">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <div class="modal-footer">
-                    <div ui-turn-off="fileCreateModal" class="btn btn-primary" ng-click="fileCreate()">Submit</div>
-                    <div ui-turn-off="fileCreateModal" class="btn">Cancel</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" ui-if="fileRenameModal" ui-state='fileRenameModal'>
-        <div class="modal-backdrop in"></div>
-        <div class="modal-dialog modal-content" role="dialog">
-            <div class="modal-header">
-                <h4 class="modal-title">Rename file</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <div class="control-label col-sm-5">Old file name</div>
-                        <div class="col-sm-7 ">
-                            <input class="form-control" ng-model="newFile.fileName">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="control-label col-sm-5">New file name</div>
-                        <div class="col-sm-7 ">
-                            <input class="form-control disabled" ng-model="newFile.fileName">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div ui-turn-off="fileRenameModal" class="btn btn-primary" ng-click="fileRename(oldFile,newFile)">Submit</div>
-                <div ui-turn-off="fileRenameModal" class="btn">Cancel</div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="scrollable" ui-state="searchBar">
     <div class="scrollable-content">
         <div class="section">
@@ -84,8 +24,8 @@
                         <div class="panel-body">
                             <div class="list-group file-list">
                                 <div class="list-group-item file-list-item"
-                                   ng-repeat="item in files | orderBy:'-modifieddate'"
-                                   ng-include="'file_item_renderer'" >
+                                     ng-repeat="item in files | orderBy:'-modifieddate'"
+                                     ng-include="'file_item_renderer'">
                                 </div>
                             </div>
                         </div>
@@ -103,7 +43,7 @@
                             <div class="list-group file-list">
                                 <div class="list-group-item file-list-item"
                                      ng-repeat="item in files | orderBy:'name'"
-                                     ng-include="'file_item_renderer'" >
+                                     ng-include="'file_item_renderer'">
                                 </div>
                             </div>
                         </div>
@@ -121,7 +61,7 @@
                             <div class="list-group file-list">
                                 <div class="list-group-item file-list-item"
                                      ng-repeat="item in sharedFiles | orderBy:'name'"
-                                     ng-include="'file_item_renderer'" >
+                                     ng-include="'file_item_renderer'">
                                 </div>
                             </div>
                         </div>
@@ -137,7 +77,7 @@
                         <div class="panel-body">
                             <div class="col-sm-2">
                                 <div class="btn btn-default" ui-turn-on='fileCreateModal'>
-                                    <span class="fa fa-file" >&nbsp;</span>Create new
+                                    <span class="fa fa-file">&nbsp;</span>Create new
                                 </div>
                             </div>
                             <div class="col-sm-2">
@@ -156,7 +96,7 @@
                                     <div ng-show="dropAvailable">
                                         Drop Files
                                     </div>
-                                    <div><span class="fa fa-upload" >&nbsp;</span>Upload files</div>
+                                    <div><span class="fa fa-upload">&nbsp;</span>Upload files</div>
                                 </ngf-drop>
                             </div>
                             <div id="uploads" class="col-sm-offset-1 col-sm-7">
@@ -167,8 +107,9 @@
                                             <span style="color:black; white-space:nowrap;">{{upload.value}} / {{upload.max}}</span>
                                         </progressbar>
                                     </span>
-                                    <span class="name" >{{upload.name}}</span>
-                                    <span class="error label-danger" ng-bind="upload.errorMsg" ng-if="upload.errorMsg"></span>
+                                    <span class="name">{{upload.name}}</span>
+                                    <span class="error label-danger" ng-bind="upload.errorMsg"
+                                          ng-if="upload.errorMsg"></span>
                                 </div>
                             </div>
                         </div>
@@ -185,23 +126,133 @@
     </a>
 </div>
 
-<script type="text/ng-template"  id="file_item_renderer">
-    <div ng-click="fileOpen(item)" ui-state="filePopup">
-        <i class="fa fa-info-circle pull-right"
-           ng-mouseover="filePopup=true"
-           ng-mouseleave="filePopup=false"></i>
+<script type="text/ng-template" id="file_item_renderer">
+    <div ui-state="filePopup">
+        <div ng-click="fileOpen(item)">
+            <i class="fa fa-info-circle pull-right"
+               ng-mouseover="filePopup=true"
+               ng-mouseleave="filePopup=false"></i>
 
-        <span class="fileInfo" ng-class="{hidden : !filePopup}">
-                                            <div class="title">{{item.name}}</div>
-                                            <div class="version">Version: {{ item.versions.length }}</div>
-                                            <div class="fileDate">Created: {{ item.created | date:'medium'}}</div>
-                                            <div class="fileDate">Last modification:{{ item.modified  | date:'medium'}}</div>
-                                        </span>
-        <i class="fa fa-file"></i>
-        <div class="fileName" >{{ item.name }}</div>
+            <div class="fileInfo" ng-class="{hidden : !filePopup}">
+                <div class="title">{{item.name}}</div>
+                <div class="version">Version: {{ item.versions.length }}</div>
+                <div class="fileDate">Created: {{ item.created | date:'medium'}}</div>
+                <div class="fileDate">Last modification:{{ item.modified | date:'medium'}}
+                </div>
+            </div>
+            <i class="fa fa-file"></i>
+
+            <div class="fileName">{{ item.name }}</div>
+        </div>
         <div class="actions">
-            <i class="fa fa-edit"></i>
-            <i class="fa fa-trash"></i>
+            <i class="fa fa-share" ng-click="openShareModal(item)"></i>
+            <i class="fa fa-edit" ng-click="openRenameModal(item)"></i>
+            <i class="fa fa-trash" ng-click="openDeleteModal(item)"></i>
         </div>
     </div>
 </script>
+
+<script type="text/ng-template" id="file_create_modal.html">
+    <div class="modal-dialog modal-content" role="dialog">
+        <div class="modal-header">
+            <h4 class="modal-title">Create file</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-horizontal" role="form">
+                <div class="form-group">
+                    <div class="control-label col-sm-5">File name</div>
+                    <div class="col-sm-7 ">
+                        <input class="form-control disabled" ng-model="newFile.fileName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-sm-5">File description</div>
+                    <div class="col-sm-7 ">
+                        <input class="form-control disabled" ng-model="newFile.fileDescription">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div ui-turn-off="fileCreateModal" class="btn btn-primary" ng-click="fileCreate()">Submit</div>
+            <div ui-turn-off="fileCreateModal" class="btn">Cancel</div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="file_share_modal.html">
+    <div role="dialog">
+        <div class="modal-header">
+            <h4 class="modal-title">share file</h4>
+            <h5 class="modal-title">{{target.name}}</h5>
+        </div>
+        <div class="modal-body">
+            <div class="table">
+                <div class="col-sm-3">Public</div>
+                <div class="col-sm-9" ng-class="{'text-danger':'target.isPublic!=target.newIsPublic'}"><button class="btn-xs">Change</button></div>
+
+                <div class="col-sm-3">Viewers</div>
+                <div class="col-sm-4">{{target.viewers?target.viewers:"Not shared"}}</div>
+                <div class="col-sm-5">
+                    <textarea class="" ng-model="target.viewers"></textarea>
+                </div>
+
+                <div class="col-sm-3">Editors</div>
+                <div class="col-sm-4">{{target.editors}}</div>
+                <div class="col-sm-5">
+                    <textarea class="" ng-model="target.editors"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>
+            <div type="button" class="btn" ng-click="cancel()">Cancel</div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="file_rename_modal.html">
+    <div role="dialog">
+        <div class="modal-header">
+            <h4 class="modal-title">Rename file</h4>
+            <h5 class="modal-title">{{target.name}}</h5>
+        </div>
+        <div class="modal-body">
+            <div class="form-horizontal" role="form">
+                <div class="form-group">
+                    <div class="control-label col-sm-3">New file name</div>
+                    <div class="control-label col-sm-8 ">
+                        <input class="form-control disabled" ng-model="target.newName">
+                    </div>
+                    <div class="control-label col-sm-1">.mm</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>
+            <div type="button" class="btn" ng-click="cancel()">Cancel</div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="file_delete_modal.html">
+    <div role="dialog">
+        <div class="modal-header">
+            <h4 class="modal-title">Delete file</h4>
+            <h5 class="modal-title">{{target.name}}</h5>
+        </div>
+        <div class="modal-body">
+            <h4 class="text-danger">
+                <i class="fa fa-2x fa-exclamation-circle"></i> Are you sure you want to permanently remove this file?
+            </h4>
+            <div class="text-danger">
+                The file will be unshared and permanently removed from everyone. Proceed with caution!
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>
+            <div type="button" class="btn" ng-click="cancel()">Cancel</div>
+        </div>
+    </div>
+</script>
+
