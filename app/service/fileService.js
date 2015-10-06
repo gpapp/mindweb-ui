@@ -7,15 +7,17 @@ angular.module('MindWebUi.file.service', [
     .factory("FileApi", ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
         function _list() {
             var deferred = $q.defer();
-            if (!$rootScope.currentUser) {
-                deferred.reject();
-                return deferred.promise;
-            }
-            $http.get("/file/files")
-                .success(function (response) {
-                    deferred.resolve(response);
-                })
-                .error(function (err) {
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.get("/file/files").
+                    success(function (response) {
+                        deferred.resolve(response);
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
+                },
+                function () {
                     deferred.reject();
                 });
             return deferred.promise;
@@ -23,126 +25,133 @@ angular.module('MindWebUi.file.service', [
 
         function _load(id) {
             var deferred = $q.defer();
-            if (!$rootScope.currentUser) {
-                deferred.reject();
-                return deferred.promise;
-            }
-            $http.get("/file/file/" + id).then(
-                function (response) {
-                    $rootScope.$emit('openFile', response.data.file);
-                    deferred.resolve(response.data);
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.get("/file/file/" + id).
+                    success(function (response) {
+                        $rootScope.$emit('openFile', response.file);
+                        deferred.resolve(response);
+                    }).error(function (err) {
+                        deferred.reject();
+                    });
                 },
-                function (err) {
+                function () {
                     deferred.reject();
-                }
-            );
+                });
             return deferred.promise;
         }
 
         function _save(id, changes) {
             var deferred = $q.defer();
-            if (!$rootScope.currentUser) {
-                deferred.reject();
-                return deferred.promise;
-            }
-            $http.put('/file/change/' + id, {actions: changes}).then(
-                function (response) {
-                    deferred.resolve({body: response.data, length: changes.length});
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.put('/file/change/' + id, {actions: changes}).
+                    success(function (response) {
+                        deferred.resolve({body: response.data, length: changes.length});
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
                 },
-                function (err) {
+                function () {
                     deferred.reject();
-                }
-            );
-
+                });
             return deferred.promise;
         }
 
         function _delete(id) {
             var deferred = $q.defer();
-            if (!$rootScope.currentUser) {
-                deferred.reject();
-                return deferred.promise;
-            }
-            $http.delete('/file/file/' + id).then(
-                function (response) {
-                    $rootScope.$emit('closeFile', response.data);
-                    deferred.resolve();
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.delete('/file/file/' + id).
+                    success(function (response) {
+                        $rootScope.$emit('closeFile', response.data);
+                        deferred.resolve();
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
                 },
-                function (err) {
+                function () {
                     deferred.reject();
-                }
-            );
-
+                });
             return deferred.promise;
         }
 
         function _create(name, isPublic, viewers, editors) {
             var deferred = $q.defer();
-            if (!$rootScope.currentUser) {
-                deferred.reject();
-                return deferred.promise;
-            }
-            $http.post('/file/create', {name: name, isPublic: isPublic, viewers: viewers, editors: editors}).then(
-                function (response) {
-                    deferred.resolve();
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.post('/file/create', {
+                        name: name,
+                        isPublic: isPublic,
+                        viewers: viewers,
+                        editors: editors
+                    }).
+                    success(function (response) {
+                        deferred.resolve();
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
                 },
-                function (err) {
+                function () {
                     deferred.reject();
-                }
-            );
-
+                });
             return deferred.promise;
         }
 
         function _rename(id, newName) {
             var deferred = $q.defer();
-            if (!$rootScope.currentUser) {
-                deferred.reject();
-                return deferred.promise;
-            }
-            $http.post('/file/rename/' + id, {newName: newName}).then(
-                function (response) {
-                    $rootScope.$emit('updateFile', response.data);
-                    deferred.resolve();
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.post('/file/rename/' + id, {newName: newName}).
+                    success(function (response) {
+                        $rootScope.$emit('updateFile', response.data);
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
                 },
-                function (err) {
+                function () {
                     deferred.reject();
-                }
-            );
+                });
             return deferred.promise;
         }
 
         function _exportFreeplane(id) {
             var deferred = $q.defer();
-            if (!$rootScope.currentUser) {
-                deferred.reject();
-                return deferred.promise;
-            }
-            $http.get('/file/convert/freeplane/' + id).then(
-                function (response) {
-                    deferred.resolve(response.data);
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.get('/file/convert/freeplane/' + id).
+                    success(function (response) {
+                        deferred.resolve(response.data);
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
                 },
-                function (err) {
+                function () {
                     deferred.reject();
-                }
-            );
+                });
             return deferred.promise;
         }
 
         function _exportODF(id) {
             var deferred = $q.defer();
-            if (!$rootScope.currentUser) {
-                deferred.reject();
-                return deferred.promise;
-            }
-            $http.get('/file/convert/odf/' + id).then(
-                function (response) {
-                    deferred.resolve(response.data);
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.get('/file/convert/odf/' + id).
+                    success(function (response) {
+                        deferred.resolve(response.data);
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
                 },
-                function (err) {
+                function () {
                     deferred.reject();
-                }
-            );
+                });
             return deferred.promise;
         }
 
@@ -156,4 +165,6 @@ angular.module('MindWebUi.file.service', [
             exportFreeplane: _exportFreeplane,
             exportODF: _exportODF
         };
-    }]);
+    }
+
+    ]);
