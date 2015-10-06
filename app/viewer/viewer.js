@@ -71,15 +71,6 @@ angular.module('MindWebUi.viewer', [
                 delete nodeCopy.$parentIndex;
                 data.payload = nodeCopy;
             }
-            // merge items already processed on the stack
-            // TODO: this will! break undo function, as previous items might be eliminated
-            if (data.event === 'fileModified') {
-                for (var i in msgStack) {
-                    if (msgStack[i].parent === data.parent && msgStack[i].event === data.event) {
-                        msgStack.splice(i, 1);
-                    }
-                }
-            }
             $scope.msgStack = msgStack;
             msgStack.push(data);
             event.stopPropagation();
