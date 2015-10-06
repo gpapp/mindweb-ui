@@ -1,11 +1,11 @@
 angular.module('MindWebUi.viewer', [
-    'MindWebUi.file.service',
-    'ui.router',
-    'angular-markdown',
-    'ui.bootstrap.tabs',
-    'ui.tree',
-    'angular-keyboard'
-])
+        'MindWebUi.file.service',
+        'ui.router',
+        'angular-markdown',
+        'ui.bootstrap.tabs',
+        'ui.tree',
+        'angular-keyboard'
+    ])
     .filter('escape', function () {
         return window.encodeURIComponent;
     })
@@ -71,11 +71,13 @@ angular.module('MindWebUi.viewer', [
                 delete nodeCopy.$parentIndex;
                 data.payload = nodeCopy;
             }
-            // remove items already processed on the stack
+            // merge items already processed on the stack
             // TODO: this will! break undo function, as previous items might be eliminated
-            for (var i in msgStack) {
-                if (msgStack[i].parent === data.parent && msgStack[i].event === data.event) {
-                    msgStack.splice(i, 1);
+            if (data.event === 'fileModified') {
+                for (var i in msgStack) {
+                    if (msgStack[i].parent === data.parent && msgStack[i].event === data.event) {
+                        msgStack.splice(i, 1);
+                    }
                 }
             }
             $scope.msgStack = msgStack;

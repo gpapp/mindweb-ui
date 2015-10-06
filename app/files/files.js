@@ -68,6 +68,30 @@ angular.module('MindWebUi.file', [
             }
         };
 
+        $scope.openCreateModal = function () {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: "file_create_modal.html",
+                controller: "fileActionController",
+                resolve: {
+                    target: function () {
+                        return {
+                            name: '',
+                            description: '',
+                            version: 0,
+                            creationDate: 'New',
+                            modificationDate: 'New'
+                        };
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                FileApi.create(selectedItem.newName).then(function () {
+                    reloadFiles();
+                });
+            });
+        };
         $scope.openShareModal = function (target) {
             var modalInstance = $modal.open({
                 animation: true,
@@ -96,6 +120,9 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
+                FileApi.rename(selectedItem.id, selectedItem.newName).then(function () {
+                    reloadFiles();
+                });
             });
         };
         $scope.openDeleteModal = function (target) {
@@ -111,24 +138,13 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
+                FileApi.remove(selectedItem.id).then(function () {
+                    reloadFiles();
+                });
             });
         };
 
         $scope.newFile = {};
-        $scope.fileCreate = function () {
-
-            //TODO add files creation call here
-            $scope.files.push(
-                {
-                    fileName: $scope.newFile.fileName,
-                    description: $scope.newFile.description,
-                    version: 0,
-                    creationDate: 'New',
-                    modificationDate: 'New'
-                });
-            $state.go('files.list');
-
-        };
 
         $scope.fileOpen = function (file) {
             $rootScope.$emit('openFile', file);
@@ -153,13 +169,13 @@ angular.module('MindWebUi.file', [
     })
     .controller('fileActionController', function ($scope, $modalInstance, target) {
         $scope.target = target;
-        $scope.target.newName = $scope.target.name.replace(new RegExp("^(.*)\.mm$"),"$1");
+        $scope.target.newName = $scope.target.name.replace(new RegExp("^(.*)\.mm$"), "$1");
         $scope.target.newIsPublic = $scope.target.isPublic;
         $scope.target.newViewers = $scope.target.viewers;
         $scope.target.newEditors = $scope.target.editors;
 
         $scope.ok = function () {
-            $modalInstance.close($scope.target+'.mm');
+            $modalInstance.close($scope.target);
         };
 
         $scope.cancel = function () {

@@ -2,8 +2,8 @@
  * Created by gpapp on 2015.05.15..
  */
 angular.module('MindWebUi.file.service', [
-    'ngCookies'
-])
+        'ngCookies'
+    ])
     .factory("FileApi", ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
         function _list() {
             var deferred = $q.defer();
@@ -56,18 +56,66 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
-        function _remove() {
+        function _delete(id) {
             var deferred = $q.defer();
             if (!$rootScope.currentUser) {
                 deferred.reject();
                 return deferred.promise;
             }
+            $http.delete('/file/file/' + id).then(
+                function (response) {
+                    deferred.resolve();
+                },
+                function (err) {
+                    deferred.reject();
+                }
+            );
+
+            return deferred.promise;
+        }
+
+        function _create(name, isPublic, viewers, editors) {
+            var deferred = $q.defer();
+            if (!$rootScope.currentUser) {
+                deferred.reject();
+                return deferred.promise;
+            }
+            $http.post('/file/create', {name: name, isPublic: isPublic, viewers: viewers, editors: editors}).then(
+                function (response) {
+                    deferred.resolve();
+                },
+                function (err) {
+                    deferred.reject();
+                }
+            );
+
+            return deferred.promise;
+        }
+
+        function _rename(id, newName) {
+            var deferred = $q.defer();
+            if (!$rootScope.currentUser) {
+                deferred.reject();
+                return deferred.promise;
+            }
+            $http.post('/file/rename/' + id, {newName: newName}).then(
+                function (response) {
+                    deferred.resolve();
+                },
+                function (err) {
+                    deferred.reject();
+                }
+            );
+
+            return deferred.promise;
         }
 
         return {
             list: _list,
             load: _load,
             save: _save,
-            remove: _remove
+            rename: _rename,
+            create: _create,
+            remove: _delete
         };
     }]);

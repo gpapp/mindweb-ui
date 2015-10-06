@@ -5,67 +5,21 @@
         Hide details <span class="pull-right fa fa-close"></span>
     </div>
     <div class="panel-body">
-
-        <tabset>
-            <tab>
-                <tab-heading>
-                    <i class='fa fa-fw fa-book'></i>View
-                </tab-heading>
-                <markdown class="tab-content" ng-model="currentNode.nodeMarkdown"
-                          extensions="github, prettify"></markdown>
-            </tab>
-            <tab>
-                <tab-heading>
-                    <i class='fa fa-fw fa-edit'></i>Edit
-                    <i class="fa fa-question pull-right" ui-turn-on="modalMarkdownDialog"></i>
-                </tab-heading>
-                <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.text"></textarea>
-            </tab>
-        </tabset>
+        <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.text"></textarea>
 
         <tabset>
             <tab active="selectedTab==='details'">
                 <tab-heading ng-click="selectTab('details')">
                     <i class='fa fa-fw fa-info'></i>Details
                 </tab-heading>
-                <tabset>
-                    <tab>
-                        <tab-heading>
-                            <i class='fa fa-fw fa-book'></i>View
-                        </tab-heading>
-                        <markdown class="tab-content" ng-model="currentNode.detailMarkdown"
-                                  extensions="github, prettify"></markdown>
-                    </tab>
-                    <tab>
-                        <tab-heading>
-                            <i class='fa fa-fw fa-edit'></i>Edit
-                            <i class="fa fa-question pull-right" ui-turn-on="modalMarkdownDialog"></i>
-                        </tab-heading>
                         <textarea class="tab-pane form-control" rows="5"
                                   ng-model="currentEditor.detail"></textarea>
-                    </tab>
-                </tabset>
             </tab>
             <tab active="selectedTab==='notes'">
                 <tab-heading ng-click="selectTab('notes')">
                     Notes
                 </tab-heading>
-                <tabset>
-                    <tab>
-                        <tab-heading>
-                            <i class='fa fa-fw fa-book'></i>View
-                        </tab-heading>
-                        <markdown class="tab-content" ng-model="currentNode.noteMarkdown"
-                                  extensions="github, prettify"></markdown>
-                    </tab>
-                    <tab>
-                        <tab-heading>
-                            <i class='fa fa-fw fa-edit'></i>Edit
-                            <i class="fa fa-question pull-right" ui-turn-on="modalMarkdownDialog"></i>
-                        </tab-heading>
-                        <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.note"></textarea>
-                    </tab>
-                </tabset>
+                <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.note"></textarea>
             </tab>
             <tab active="selectedTab==='icons'">
                 <tab-heading ng-click="selectTab('icons')">
@@ -74,12 +28,16 @@
                 <div class="panel">
                     <div id='detail-icon' class="panel-body ">
                         <div class="icon"
-                             ng-repeat="attr in currentNode.icon" ng-mouseover="iconEditor=true" ng-mouseleave="iconEditor=false">
+                             ng-repeat="attr in currentNode.icon" ng-mouseover="iconEditor=true"
+                             ng-mouseleave="iconEditor=false">
                             <div ui-state="iconEditor">
                                 <img class=" mw-detail-icon" ng-src="/images/icons/{{attr.$['BUILTIN']|escape}}.png"/>
-                                <i class="fa fa-trash" ng-class="{hidden: !iconEditor}" ng-click="deleteIcon($index)"></i>
-                                <i class="fa fa-arrow-left" ng-class="{hidden: !iconEditor||$first}" ng-click="moveIcon($index,'left')"></i>
-                                <i class="fa fa-arrow-right" ng-class="{hidden: !iconEditor||$last}" ng-click="moveIcon($index,'right')"></i>
+                                <i class="fa fa-trash" ng-class="{hidden: !iconEditor}"
+                                   ng-click="deleteIcon($index)"></i>
+                                <i class="fa fa-arrow-left" ng-class="{hidden: !iconEditor||$first}"
+                                   ng-click="moveIcon($index,'left')"></i>
+                                <i class="fa fa-arrow-right" ng-class="{hidden: !iconEditor||$last}"
+                                   ng-click="moveIcon($index,'right')"></i>
                             </div>
                         </div>
                     </div>
