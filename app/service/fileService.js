@@ -126,10 +126,10 @@ angular.module('MindWebUi.file.service', [
                 function () {
                     $http.get('/file/convert/freeplane/' + id).
                     success(function (response) {
-                        deferred.resolve(response.data);
+                        deferred.resolve(response);
                     }).
                     error(function (err) {
-                        deferred.reject();
+                        deferred.reject(err);
                     });
                 },
                 function () {

@@ -19,7 +19,8 @@
     "ng-file-upload-shim": "~7.0.15",
     "angular-markdown": "~0.0.1",
     "angular-ui-tree": "~2.9.0",
-    "angular-keyboard": "gampleman/angular-keyboard"
+    "angular-keyboard": "gampleman/angular-keyboard",
+    "file-saver-js": "*"
   },
   "resolutions": {
     "angular": "1.4.7"

@@ -89,7 +89,15 @@ angular.module('MindWebUi.file', [
         };
 
         $scope.downloadFreeplane = function (target) {
-
+            FileApi.exportFreeplane(target.id).then(
+                function (data) {
+                    var blob = new Blob([data], {type: 'application/x-freemind'});
+                    saveAs(blob, target.name);
+                },
+                function (error) {
+                    alert("Cannot save file:" + error);
+                }
+            )
         };
 
         $scope.openShareModal = function (target) {
