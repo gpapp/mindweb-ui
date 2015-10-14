@@ -59,25 +59,6 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
-        function _delete(id) {
-            var deferred = $q.defer();
-            $rootScope.getCurrentUser().then(
-                function () {
-                    $http.delete('/file/file/' + id).
-                    success(function (response) {
-                        $rootScope.$emit('closeFile', response);
-                        deferred.resolve();
-                    }).
-                    error(function (err) {
-                        deferred.reject();
-                    });
-                },
-                function () {
-                    deferred.reject();
-                });
-            return deferred.promise;
-        }
-
         function _create(name, isPublic, viewers, editors) {
             var deferred = $q.defer();
             $rootScope.getCurrentUser().then(
@@ -120,6 +101,32 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
+        function _tag(id, tag) {
+            var defer = $q.defer();
+            var authURL = '/file/tag/' + id + '/' + tag;
+            $http.get(authURL).then (
+                function (data) {
+                    defer.resolve(data);
+                },
+                function (error) {
+                    defer.reject();
+                });
+            return defer.promise;
+        }
+
+        function _untag(id, tag) {
+            var defer = $q.defer();
+            var authURL = '/file/untag/' + id + '/' + tag;
+            $http.get(authURL).then (
+                function (data) {
+                    defer.resolve(data);
+                },
+                function (error) {
+                    defer.reject();
+                });
+            return defer.promise;
+        }
+
         function _exportFreeplane(id) {
             var deferred = $q.defer();
             $rootScope.getCurrentUser().then(
@@ -156,15 +163,36 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
+        function _delete(id) {
+            var deferred = $q.defer();
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.delete('/file/file/' + id).
+                    success(function (response) {
+                        $rootScope.$emit('closeFile', response);
+                        deferred.resolve();
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
+                },
+                function () {
+                    deferred.reject();
+                });
+            return deferred.promise;
+        }
+
         return {
             list: _list,
             load: _load,
             save: _save,
-            rename: _rename,
             create: _create,
-            remove: _delete,
+            rename: _rename,
+            tag: _tag,
+            untag: _untag,
             exportFreeplane: _exportFreeplane,
-            exportODF: _exportODF
+            exportODF: _exportODF,
+            remove: _delete
         };
     }
 

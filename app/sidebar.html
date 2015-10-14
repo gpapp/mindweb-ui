@@ -26,7 +26,11 @@
                     </span>
                 </a>
             </div>
-            <a class="list-group-item" href="#/user/options">
+            <a class="list-group-item" href="#/friends" ng-hide="currentUser===undefined">
+                <i class="fa fa-fw fa-2x fa-users"></i>Friends
+                <i class="fa fa-chevron-right pull-right"></i>
+            </a>
+            <a class="list-group-item" href="#/user/options" ng-hide="currentUser===undefined">
                 <i class="fa fa-fw fa-2x fa-cog"></i>Options
                 <i class="fa fa-chevron-right pull-right"></i>
             </a>

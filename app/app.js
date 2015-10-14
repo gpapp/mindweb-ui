@@ -2,6 +2,7 @@ angular.module('MindWebUi', [
         'MindWebUi.user',
         'MindWebUi.file',
         'MindWebUi.viewer',
+        'MindWebUi.friends',
         'ui.router',
         'mobile-angular-ui',
         'mobile-angular-ui.gestures'
@@ -65,7 +66,7 @@ angular.module('MindWebUi', [
                     return deferred.promise;
                 }
 
-                $rootScope.getCurrentUser().then(function(data){
+                $rootScope.getCurrentUser().then(function (data) {
                     console.log(data);
                 });
             }
