@@ -9,4 +9,5 @@ RUN npm install
 
 USER root
 ENTRYPOINT ["service", "nginx", "start"]
+
 EXPOSE 80
