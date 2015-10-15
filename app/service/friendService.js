@@ -59,8 +59,8 @@ angular.module('MindWebUi.friend.service', [
 
         function _tag(id, tag) {
             var defer = $q.defer();
-            var authURL = '/friend/tag/' + id + '/' + tag;
-            $http.get(authURL).then (
+            var authURL = '/friend/tag';
+            $http.put(authURL, {id: id, tag: tag}).then (
                 function (data) {
                     defer.resolve(data);
                 },
@@ -72,8 +72,8 @@ angular.module('MindWebUi.friend.service', [
 
         function _untag(id, tag) {
             var defer = $q.defer();
-            var authURL = '/friend/untag/' + id + '/' + tag;
-            $http.get(authURL).then (
+            var authURL = '/friend/untag';
+            $http.put(authURL, {id: id, tag: tag}).then (
                 function (data) {
                     defer.resolve(data);
                 },

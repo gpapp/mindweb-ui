@@ -36,7 +36,7 @@ angular.module('MindWebUi.viewer', [
                 });
         }
     ])
-    .controller('viewerController', function ($scope, $location, $anchorScroll, $interval, FileApi) {
+    .controller('viewerController', function ($scope, $location, $anchorScroll, $interval, FileService) {
         var msgStack = [];
         var saveMutex = false;
         var saveTimer = $interval(function () {
@@ -98,7 +98,7 @@ angular.module('MindWebUi.viewer', [
             }
         }
     })
-    .controller('structureController', function ($scope, $rootScope, $state, $filter, $window, FileApi) {
+    .controller('structureController', function ($scope, $rootScope, $state, $filter, $window, FileService) {
         // Array of nodes, to be used for lookups.
         var flatNodes = [];
 

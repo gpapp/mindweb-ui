@@ -3,7 +3,8 @@ angular.module('MindWebUi.file', [
         'ui.bootstrap',
         'ui.bootstrap.tpls',
         'ui.router',
-        'ngFileUpload'
+        'ngFileUpload',
+        'ngTagsInput'
     ])
     .config(['$stateProvider',
         function ($stateProvider) {
@@ -23,7 +24,7 @@ angular.module('MindWebUi.file', [
                 })
         }
     ])
-    .controller('fileController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileApi) {
+    .controller('fileController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileService) {
         reloadFiles($scope);
 
         var uploadMutex = false;
@@ -82,14 +83,14 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileApi.create(selectedItem.newName).then(function () {
+                FileService.create(selectedItem.newName).then(function () {
                     reloadFiles();
                 });
             });
         };
 
         $scope.downloadFreeplane = function (target) {
-            FileApi.exportFreeplane(target.id).then(
+            FileService.exportFreeplane(target.id).then(
                 function (data) {
                     var blob = new Blob([data], {type: 'application/x-freemind'});
                     saveAs(blob, target.name);
@@ -128,7 +129,7 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileApi.rename(selectedItem.id, selectedItem.newName).then(function () {
+                FileService.rename(selectedItem.id, selectedItem.newName).then(function () {
                     reloadFiles();
                 });
             });
@@ -146,9 +147,25 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileApi.remove(selectedItem.id).then(function () {
+                FileService.remove(selectedItem.id).then(function () {
                     reloadFiles();
                 });
+            });
+        };
+
+        $scope.loadTags = function (file, query) {
+            return FileService.tagQuery(file.id, query);
+        };
+
+        $scope.tag = function (file, mytag) {
+            FileService.tag(file.id, mytag.text).then(function () {
+                reloadFiles();
+            });
+        };
+
+        $scope.untag = function (file, mytag) {
+            FileService.untag(file.id, mytag.text).then(function () {
+                reloadFiles();
             });
         };
 
@@ -165,7 +182,7 @@ angular.module('MindWebUi.file', [
         // Utility functions for controller
         function reloadFiles() {
             $rootScope.$emit('$routeChangeStart');
-            FileApi.list().then(function (data) {
+            FileService.list().then(function (data) {
                     $scope.files = data;
                     $rootScope.$emit('$routeChangeSuccess');
                 },

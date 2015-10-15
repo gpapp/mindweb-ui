@@ -144,6 +144,14 @@
 
             <div class="fileName">{{ item.name }}</div>
         </div>
+        <div class="tags">
+            <tags-input ng-model="item.tags"
+                        replace-spaces-with-dashes="false"
+                        on-tag-added="tag(item,$tag)"
+                        on-tag-removed="untag(item,$tag)">
+                <auto-complete source="loadTags(item,$query)"></auto-complete>
+            </tags-input>
+        </div>
         <div class="actions">
             <i class="fa fa-download" title="Download in Freeplane format" ng-click="downloadFreeplane(item)"></i>
             <i class="fa fa-share" title="Share file" ng-click="openShareModal(item)"></i>
@@ -185,7 +193,9 @@
         <div class="modal-body">
             <div class="table">
                 <div class="col-sm-3">Public</div>
-                <div class="col-sm-9" ng-class="{'text-danger':'target.isPublic!=target.newIsPublic'}"><button class="btn-xs">Change</button></div>
+                <div class="col-sm-9" ng-class="{'text-danger':'target.isPublic!=target.newIsPublic'}">
+                    <button class="btn-xs">Change</button>
+                </div>
 
                 <div class="col-sm-3">Viewers</div>
                 <div class="col-sm-4">{{target.viewers?target.viewers:"Not shared"}}</div>
@@ -241,6 +251,7 @@
             <h4 class="text-danger">
                 <i class="fa fa-2x fa-exclamation-circle"></i> Are you sure you want to permanently remove this file?
             </h4>
+
             <div class="text-danger">
                 The file will be unshared and permanently removed from everyone. Proceed with caution!
             </div>

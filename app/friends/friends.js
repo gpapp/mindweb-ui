@@ -23,7 +23,7 @@ angular.module('MindWebUi.friends', [
                 })
         }
     ])
-    .controller('friendController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileApi) {
+    .controller('friendController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileService) {
 
 
     });

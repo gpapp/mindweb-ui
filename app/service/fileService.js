@@ -4,7 +4,7 @@
 angular.module('MindWebUi.file.service', [
         'ngCookies'
     ])
-    .factory("FileApi", ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
+    .factory("FileService", ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
         function _list() {
             var deferred = $q.defer();
             $rootScope.getCurrentUser().then(
@@ -101,10 +101,23 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
+        function _tagQuery(id, tag) {
+            var defer = $q.defer();
+            var authURL = '/file/tagQuery';
+            $http.put(authURL, {id: id, query: tag}).then (
+                function (data) {
+                    defer.resolve(data);
+                },
+                function (error) {
+                    defer.reject();
+                });
+            return defer.promise;
+        }
+
         function _tag(id, tag) {
             var defer = $q.defer();
-            var authURL = '/file/tag/' + id + '/' + tag;
-            $http.get(authURL).then (
+            var authURL = '/file/tag';
+            $http.put(authURL, {id: id, tag: tag}).then (
                 function (data) {
                     defer.resolve(data);
                 },
@@ -116,8 +129,8 @@ angular.module('MindWebUi.file.service', [
 
         function _untag(id, tag) {
             var defer = $q.defer();
-            var authURL = '/file/untag/' + id + '/' + tag;
-            $http.get(authURL).then (
+            var authURL = '/file/untag';
+            $http.put(authURL, {id: id, tag: tag}).then (
                 function (data) {
                     defer.resolve(data);
                 },
@@ -188,6 +201,7 @@ angular.module('MindWebUi.file.service', [
             save: _save,
             create: _create,
             rename: _rename,
+            tagQuery: _tagQuery,
             tag: _tag,
             untag: _untag,
             exportFreeplane: _exportFreeplane,

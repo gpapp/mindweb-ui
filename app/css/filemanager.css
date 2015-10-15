@@ -9,7 +9,7 @@
 }
 
 .file-list-item {
-    width: 200px;
+    width: 300px;
     height: 100px;
     display: inline-table;
     border-right: 1px solid #ddd !important;
@@ -18,31 +18,32 @@
     margin-right: 3px !important;
 }
 
-.fileInfo.hidden{
-    display:block !important;
+.fileInfo.hidden {
+    display: block !important;
     opacity: 0;
     visibility: visible !important;
     transition: opacity 1s;
-    z-index:-1;
+    z-index: -1;
 }
-.fileInfo{
-    display:block;
-    position:absolute;
-    background:beige;
-    border:1px solid black;
-    font-size:80%;
+
+.fileInfo {
+    display: block;
+    position: absolute;
+    background: beige;
+    border: 1px solid black;
+    font-size: 80%;
     top: 25pt;
-    left:10px;
-    right:10px;
+    left: 10px;
+    right: 10px;
     padding: 3px 10px;
-    z-index:1;
+    z-index: 1;
     opacity: 1;
     transition: opacity 0.5s;
 }
 
-.fileInfo .title{
-    font-size:120%;
-    border-bottom:1px solid;
+.fileInfo .title {
+    font-size: 120%;
+    border-bottom: 1px solid;
 }
 
 .file-list-item .actions {
@@ -66,20 +67,30 @@
     display: table-cell;
     padding: 3px 5px;
 }
+
 #uploads .file .status {
     width: 10%;
 }
-#uploads .file .status .progress{
+
+#uploads .file .status .progress {
     display: flex;
     margin-bottom: 0;
 }
 
 ngf-drop.drop-box {
     border: 2px dashed lightgray;
-    width:  150px;
+    width: 150px;
     display: inline-block;
     padding: 15px 5px;
     text-align: center;
+}
+
+tags-input .tags .tag-item {
+
+}
+tags-input .tags .tag-list {
+    display: inline-block;
+    padding: 1px 1px;
 }
 
 input.scrollable-header {
