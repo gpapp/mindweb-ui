@@ -84,7 +84,7 @@ angular.module('MindWebUi.file', [
 
             modalInstance.result.then(function (selectedItem) {
                 FileService.create(selectedItem.newName).then(function () {
-                    reloadFiles();
+                    $scope.files.push(data);
                 });
             });
         };
@@ -114,6 +114,9 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
+                target.isPublic = data.isPublic;
+                target.viewers = data.viewers;
+                target.editors = data.editors;
             });
         };
         $scope.openRenameModal = function (target) {
@@ -129,8 +132,8 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileService.rename(selectedItem.id, selectedItem.newName).then(function () {
-                    reloadFiles();
+                FileService.rename(selectedItem.id, selectedItem.newName).then(function (data) {
+                    target.name = data.name;
                 });
             });
         };
@@ -148,7 +151,8 @@ angular.module('MindWebUi.file', [
 
             modalInstance.result.then(function (selectedItem) {
                 FileService.remove(selectedItem.id).then(function () {
-                    reloadFiles();
+                    $scope.files.splice($scope.files.indexOf(target),1);
+                    //reloadFiles();
                 });
             });
         };
@@ -158,14 +162,14 @@ angular.module('MindWebUi.file', [
         };
 
         $scope.tag = function (file, mytag) {
-            FileService.tag(file.id, mytag.text).then(function () {
-                reloadFiles();
+            FileService.tag(file.id, mytag.text).then(function (data) {
+                file = data;
             });
         };
 
         $scope.untag = function (file, mytag) {
-            FileService.untag(file.id, mytag.text).then(function () {
-                reloadFiles();
+            FileService.untag(file.id, mytag.text).then(function (data) {
+                file = data;
             });
         };
 

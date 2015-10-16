@@ -47,10 +47,10 @@
 }
 
 .file-list-item .actions {
-    vertical-align: bottom;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
+    /* vertical-align: bottom; */
+    /* position: static; */
+    /* bottom: 10px; */
+    /* right: 0px; */
 }
 
 #uploads {
@@ -86,11 +86,21 @@ ngf-drop.drop-box {
 }
 
 tags-input .tags .tag-item {
-
+    display: inline-block;
+    padding: 1px 5px
 }
+
 tags-input .tags .tag-list {
     display: inline-block;
     padding: 1px 1px;
+}
+
+.suggestion-list {
+    border:1px solid black;
+    border-radius: 5px;
+    padding: 1px 5px;
+    display:block;
+    
 }
 
 input.scrollable-header {
