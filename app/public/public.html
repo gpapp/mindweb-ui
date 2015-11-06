@@ -78,6 +78,7 @@
          ng-mouseover="hovered=true"
          ng-mouseleave="hovered=false">
         <div class="name" ng-click="fileOpen(item)" ui-state="infoPopup">
+            <i class="fa pull-right fa-circle"></i>
             <i class="fa fa-info-circle pull-right"
                ng-mouseover="infoPopup=true"
                ng-mouseleave="infoPopup=false"></i>
@@ -85,9 +86,9 @@
             <div class="infoPopup" ng-class="{hidden : !infoPopup}">
                 <div class="title">{{item.name}}</div>
                 <div class="version">Version: {{ item.versions.length }}</div>
-                <div class="fileDate">Created: {{ item.created | date:'medium'}}</div>
-                <div class="fileDate">Last modification:{{ item.modified | date:'medium'}}
-                </div>
+                <div class="isPublic">Visibility: {{ item.isPublic?'Public':(item.viewers||item.editors)?'Shared':'Private'}}</div>
+                <div class="fileDate">Created: {{ item.created}}</div>
+                <div class="fileDate">Last modification:{{ item.modified}}</div>
             </div>
             <i class="fa fa-file"></i>
 
