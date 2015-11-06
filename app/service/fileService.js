@@ -41,6 +41,42 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
+        function _listPublicTags(query) {
+            var deferred = $q.defer();
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.get("/file/publicFileTags/" + query).
+                    success(function (response) {
+                        deferred.resolve(response);
+                    }).
+                    error(function (err) {
+                        deferred.reject(err);
+                    });
+                },
+                function () {
+                    deferred.reject();
+                });
+            return deferred.promise;
+        }
+
+        function _listPublicFilesForTags(query, tags) {
+            var deferred = $q.defer();
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.put("/file/publicFilesForTags", {query: query, tags: tags}).
+                    success(function (response) {
+                        deferred.resolve(response);
+                    }).
+                    error(function (err) {
+                        deferred.reject(err);
+                    });
+                },
+                function () {
+                    deferred.reject();
+                });
+            return deferred.promise;
+        }
+
         function _load(id) {
             var deferred = $q.defer();
             $rootScope.getCurrentUser().then(
@@ -216,6 +252,8 @@ angular.module('MindWebUi.file.service', [
         return {
             list: _list,
             listShared: _listShared,
+            listPublicTags: _listPublicTags,
+            listPublicFilesForTags: _listPublicFilesForTags,
             load: _load,
             save: _save,
             create: _create,

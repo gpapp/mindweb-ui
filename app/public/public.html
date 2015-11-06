@@ -2,59 +2,106 @@
     <span>MindWeb - Files</span>
 </div>
 
-<div class="scrollable" ui-state="searchBar">
+<div class="scrollable">
     <div class="scrollable-content">
         <div class="section">
-            <input
-                    ng-if="Ui.active('searchBar')"
-                    type="search"
-                    class="form-control scrollable-header"
-                    placeholder="Search.."/>
-        </div>
-    </div>
-    <div class="panel-group"
-         ui-state='myAccordion'
-         ui-default='1'>
-        <div class="panel panel-default">
-            <div class="panel-heading" ui-set="{'myAccordion': 1}">
-                <h4 class="panel-title">
-                    Recent files
-                </h4>
-            </div>
-            <div ui-if="myAccordion == 1">
-                <div class="panel-body">
-                    <div class="list-group file-list">
-                        <div class="list-group-item file-list-item"
-                             ng-repeat="item in files | orderBy:'-modifieddate'"
-                             ng-include="'file_item_renderer'">
+            <div class="panel-group">
+                <div class="panel panel-default" >
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            Maps for tags
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" ui-set="{'myAccordion': 2}">
+                    <div class="panel-body">
+                        <div>
+                            <span class="tags">
+                            <div class="tags-display">
+                                <ul class="tag-list">
+                                    <li class="tag-item" ng-repeat="tag in selectedTags">
+                                        {{tag}}
+                                        <i class="fa fa-trash" ng-click="removeSelected(tag)"></i>
+                                    </li>
+                                </ul>
+                            </div>
+                            </span>
 
-                <h4 class="panel-title">
-                    All files
-                </h4>
-            </div>
-            <div ui-if="myAccordion == 2">
-                <div class="panel-body">
-                    <div class="list-group file-list">
-                        <div class="list-group-item file-list-item"
-                             ng-repeat="item in files | orderBy:'name'"
-                             ng-include="'file_item_renderer'">
+                            <div class="btn btn-default" ng-click="clearSelection()">Clear selection</div>
                         </div>
+                        <div class="list-group file-list">
+                            <div class="list-group-item file-list-item"
+                                 ng-repeat="item in files | orderBy:'name'"
+                                 ng-include="'file_item_renderer'">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <input
+                                type="search"
+                                placeholder="Search.."
+                                ng-model="filesearch"
+                                ng-model-options="{debounce:500}"
+                                ng-change="reloadFiles()"
+                        />
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Tagcloud
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="list-group tagcloud">
+                                <span class="tagcloud-item" ng-repeat="(key,value) in publicTags">
+                                    <span class="tag" ng-click="selectTag(key)">{{key}} ({{value}})</span>
+                                </span>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <input
+                                type="search"
+                                placeholder="Search.."
+                                ng-model="tagsearch"
+                                ng-model-options="{debounce:500}"
+                                ng-change="reloadTags()"
+                        />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <a class="btn btn-block btn-lg btn-primary scrollable-footer" ui-toggle='searchBar'>
-        <i class="fa fa-search"></i>
-        <span ui-hide="searchBar">Show</span>
-        <span ui-show="searchBar">Hide</span>
-        Search Bar
-    </a>
 </div>
+<script type="text/ng-template" id="file_item_renderer">
+    <div class="file-list-item-content"
+         ui-state="hovered"
+         ng-class="{selected : hovered}"
+         ng-mouseover="hovered=true"
+         ng-mouseleave="hovered=false">
+        <div class="name" ng-click="fileOpen(item)" ui-state="infoPopup">
+            <i class="fa fa-info-circle pull-right"
+               ng-mouseover="infoPopup=true"
+               ng-mouseleave="infoPopup=false"></i>
+
+            <div class="infoPopup" ng-class="{hidden : !infoPopup}">
+                <div class="title">{{item.name}}</div>
+                <div class="version">Version: {{ item.versions.length }}</div>
+                <div class="fileDate">Created: {{ item.created | date:'medium'}}</div>
+                <div class="fileDate">Last modification:{{ item.modified | date:'medium'}}
+                </div>
+            </div>
+            <i class="fa fa-file"></i>
+
+            <div class="fileName">{{ item.name }}</div>
+        </div>
+        <div class="tags">
+            <div class="tags-display">
+                <ul class="tag-list">
+                    <li class="tag-item" ng-repeat="tag in item.tags">{{tag}}</li>
+                </ul>
+            </div>
+            <div class="actions">
+                <i class="fa fa-download" title="Download in Freeplane format" ng-click="downloadFreeplane(item)"></i>
+            </div>
+        </div>
+    </div>
+</script>

@@ -6,18 +6,18 @@
 }
 
 .file-list {
-  display:inline-flex;
-  flex-wrap:wrap;
+    display: inline-flex;
+    flex-wrap: wrap;
 }
 
 .file-list-item {
     width: 250px;
-    flex-grow:1;
+    flex-grow: 1;
     border-right: 1px solid #ddd !important;
     border-bottom: 1px solid #ddd !important;
     margin-bottom: 3px !important;
     margin-right: 3px !important;
-    padding:0;
+    padding: 0;
 }
 
 .infoPopup.hidden {
@@ -48,70 +48,83 @@
     border-bottom: 1px solid;
 }
 
-.file-list-item{
-    background-color:aliceblue;
+.file-list-item {
+    background-color: aliceblue;
 }
+
 .file-list-item-content {
     display: flex;
-    flex-direction:column;
-    padding:10px;
+    flex-direction: column;
+    padding: 10px;
 }
 
 .file-list-item .actions,
-.file-list-item .tags .input  {
+.file-list-item .tags .input {
     opacity: 0;
     transition: opacity 1s, height 1s;
 }
 
 tags-input .name {
-    flex-grow:1;
+    flex-grow: 1;
 }
 
 tags-input .tags {
-/*    position:relative;*/
-    flex-grow:1;
-    display:block;
-    bottom:0px
+    /*    position:relative;*/
+    flex-grow: 1;
+    display: block;
+    bottom: 0px
 }
 
 .file-list-item .actions {
-    position:relative;
+    position: relative;
     bottom: 20px;
-    right:-160px;
-    margin-bottom:-20px;
+    text-align: right;
+    margin-bottom: -20px;
 }
 
-.file-list-item .tags.focused .input, 
+.file-list-item .tags.focused .input,
 .file-list-item .selected .actions,
-.file-list-item .selected .tags .input  {
-    opacity:100;
+.file-list-item .selected .tags .input {
+    opacity: 100;
     transition: opacity .5s;
 }
 
-.file-list-item .tags.focused .input, 
-.file-list-item .selected .tags .input  {
-    display:inline;
+.file-list-item .tags.focused .input,
+.file-list-item .selected .tags .input {
+    display: inline;
 }
 
-tags-input .tags .tag-list {
+.tags .tags-display {
+    display: inline-block;
+}
+
+.tags tags-input .tag-list,
+.tags .tags-display .tag-list {
     display: block;
     padding: 1px 1px;
 }
 
-tags-input .tags .tag-item {
+.tags tags-input .tag-item,
+.tags .tags-display .tag-item {
     display: inline-block;
     padding: 1px 5px
 }
 
-.suggestion-list {
-    border:1px solid black;
-    border-radius: 5px;
-    padding: 1px 5px;
-    display:block;
-    list-style:none;
-    position:absolute;
+.tags .tags-display .tag-item {
+    color: #fff;
+    background: #428bca;
+    border: 1px solid #357ebd;
+    border-radius: 4px;
 }
 
+.suggestion-list {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 1px 5px;
+    display: block;
+    list-style: none;
+    position: absolute;
+}
 
 #uploads {
     display: inline-table;

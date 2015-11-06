@@ -9,8 +9,8 @@ angular.module('MindWebUi', [
         'mobile-angular-ui.gestures'
     ])
     .run(
-        ['$rootScope', '$q', 'UsersApi',
-            function ($rootScope, $q, UsersApi) {
+        ['$rootScope', '$q', 'UsersApi', '$timeout',
+            function ($rootScope, $q, UsersApi, $timeout) {
                 $rootScope.openFiles = [];
 
                 $rootScope.$on("$routeChangeStart", function () {
@@ -22,7 +22,7 @@ angular.module('MindWebUi', [
                 $rootScope.$on("$applicationError", function (msg) {
                     $rootScope.error = true;
                     $rootScope.errorMsg = msg;
-                    setTimeout(function(){
+                    $timeout(function(){
                         $rootScope.error = false;
                         $rootScope.errorMsg = '';
                     },1000);

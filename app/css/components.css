@@ -14,8 +14,8 @@ h1 {
 
 .app-content-error {
     text-align: center;
-    top: 90%;
     left: 5%;
+    bottom: 55px;
     width: 90%;
     min-height: 5%;
     background-color: red;
