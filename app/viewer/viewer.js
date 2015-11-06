@@ -88,7 +88,7 @@ angular.module('MindWebUi.viewer', [
                 for (var i = 0, len = msgStack.length; i < len; i++) {
                     messages.push(msgStack[i]);
                 }
-                FileApi.save($scope.openId, messages).then(function (data) {
+                FileService.save($scope.openId, messages).then(function (data) {
                         msgStack.splice(0, data.length);
                         saveMutex = false;
                     }, function (error) {
@@ -110,7 +110,7 @@ angular.module('MindWebUi.viewer', [
             }
         });
 
-        FileApi.load($state.params.fileId).then(function (data) {
+        FileService.load($state.params.fileId).then(function (data) {
             $scope.nodes = data.content;
             $scope.nodes.rootNode.open = true;
             $scope.nodes.rootNode.$$hashKey = 'object:0';
