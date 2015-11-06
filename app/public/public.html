@@ -1,0 +1,60 @@
+<div ui-content-for="title">
+    <span>MindWeb - Files</span>
+</div>
+
+<div class="scrollable" ui-state="searchBar">
+    <div class="scrollable-content">
+        <div class="section">
+            <input
+                    ng-if="Ui.active('searchBar')"
+                    type="search"
+                    class="form-control scrollable-header"
+                    placeholder="Search.."/>
+        </div>
+    </div>
+    <div class="panel-group"
+         ui-state='myAccordion'
+         ui-default='1'>
+        <div class="panel panel-default">
+            <div class="panel-heading" ui-set="{'myAccordion': 1}">
+                <h4 class="panel-title">
+                    Recent files
+                </h4>
+            </div>
+            <div ui-if="myAccordion == 1">
+                <div class="panel-body">
+                    <div class="list-group file-list">
+                        <div class="list-group-item file-list-item"
+                             ng-repeat="item in files | orderBy:'-modifieddate'"
+                             ng-include="'file_item_renderer'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" ui-set="{'myAccordion': 2}">
+
+                <h4 class="panel-title">
+                    All files
+                </h4>
+            </div>
+            <div ui-if="myAccordion == 2">
+                <div class="panel-body">
+                    <div class="list-group file-list">
+                        <div class="list-group-item file-list-item"
+                             ng-repeat="item in files | orderBy:'name'"
+                             ng-include="'file_item_renderer'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-block btn-lg btn-primary scrollable-footer" ui-toggle='searchBar'>
+        <i class="fa fa-search"></i>
+        <span ui-hide="searchBar">Show</span>
+        <span ui-show="searchBar">Hide</span>
+        Search Bar
+    </a>
+</div>

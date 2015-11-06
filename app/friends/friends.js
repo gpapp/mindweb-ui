@@ -1,5 +1,5 @@
 angular.module('MindWebUi.friends', [
-        'MindWebUi.file.service',
+        'MindWebUi.friend.service',
         'ui.bootstrap',
         'ui.bootstrap.tpls',
         'ui.router',
@@ -23,7 +23,19 @@ angular.module('MindWebUi.friends', [
                 })
         }
     ])
-    .controller('friendController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileService) {
+    .controller('friendController', function ($rootScope, $scope, $http, $modal, $state, Upload, FriendService) {
+        reloadFriends();
 
+        // Utility functions for controller
+        function reloadFriends() {
+            $rootScope.$emit('$routeChangeStart');
+            FriendService.list().then(function (data) {
+                    $scope.files = data;
+                    $rootScope.$emit('$routeChangeSuccess');
+                },
+                function () {
+                    $rootScope.$emit('$routeChangeSuccess');
+                });
+        }
 
     });

@@ -1,5 +1,6 @@
 angular.module('MindWebUi', [
         'MindWebUi.user',
+        'MindWebUi.public',
         'MindWebUi.file',
         'MindWebUi.viewer',
         'MindWebUi.friends',
@@ -17,6 +18,12 @@ angular.module('MindWebUi', [
                 });
                 $rootScope.$on("$routeChangeSuccess", function () {
                     $rootScope.loading = false;
+                });
+                $rootScope.$on("$applicationError", function () {
+                    $rootScope.error = true;
+                    setTimeout(function(){
+                        $rootScope.error=false;
+                    },1000);
                 });
 
                 /// When a file information changes, update the file (rename)
@@ -74,7 +81,7 @@ angular.module('MindWebUi', [
     .config(function ($stateProvider) {
         $stateProvider
             .state('home', {
-                url: '',
+                url: '/home',
                 templateUrl: 'app/home.html',
                 data: {
                     requireLogin: false

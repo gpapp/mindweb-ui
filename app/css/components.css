@@ -12,6 +12,15 @@ h1 {
     position: relative;
 }
 
+.app-content-error {
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    background-color: red;
+    position: relative;
+    display:block;
+}
+
 .loading-spinner {
     position: absolute;
     font-size: 50px;

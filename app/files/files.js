@@ -25,7 +25,9 @@ angular.module('MindWebUi.file', [
         }
     ])
     .controller('fileController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileService) {
-        reloadFiles($scope);
+        $scope.loadingFiles=false;
+        $scope.loadingSharedFiles=false;
+        reloadFiles();
 
         var uploadMutex = false;
         $scope.$watch('uploadedFiles', function () {
@@ -185,13 +187,21 @@ angular.module('MindWebUi.file', [
 
         // Utility functions for controller
         function reloadFiles() {
-            $rootScope.$emit('$routeChangeStart');
+            $scope.loadingFiles=true;                        
             FileService.list().then(function (data) {
                     $scope.files = data;
-                    $rootScope.$emit('$routeChangeSuccess');
+                    $scope.loadingFiles = false;
+                },
+                function (data) {
+                    $rootScope.$emit("$applicationError","Cannot load file list");
+                });
+            $scope.loadingSharedFiles=true;                        
+            FileService.listShared().then(function (data) {
+                    $scope.sharedFiles = data;
+                    $scope.loadingSharedFiles = false;
                 },
                 function () {
-                    $rootScope.$emit('$routeChangeSuccess');
+                    $rootScope.$emit("$applicationError","Cannot load shared file list");
                 });
         }
     })

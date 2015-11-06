@@ -49,12 +49,11 @@
 }
 
 .file-list-item{
-    background-color:green;
+    background-color:aliceblue;
 }
 .file-list-item-content {
     display: flex;
     flex-direction:column;
-    background-color:aliceblue;
     padding:10px;
 }
 

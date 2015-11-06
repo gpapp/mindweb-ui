@@ -23,6 +23,24 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
+        function _listShared() {
+            var deferred = $q.defer();
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.get("/file/sharedfiles").
+                    success(function (response) {
+                        deferred.resolve(response);
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
+                },
+                function () {
+                    deferred.reject();
+                });
+            return deferred.promise;
+        }
+
         function _load(id) {
             var deferred = $q.defer();
             $rootScope.getCurrentUser().then(
@@ -197,6 +215,7 @@ angular.module('MindWebUi.file.service', [
 
         return {
             list: _list,
+            listShared: _listShared,
             load: _load,
             save: _save,
             create: _create,

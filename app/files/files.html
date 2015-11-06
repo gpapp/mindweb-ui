@@ -24,7 +24,7 @@
                         <div class="panel-body">
                             <div class="list-group file-list">
                                 <div class="list-group-item file-list-item"
-                                     ng-repeat="item in files | orderBy:'-modifieddate'"
+                                     ng-repeat="item in files | orderBy:'-modifieddate' | limitTo:10"
                                      ng-include="'file_item_renderer'">
                                 </div>
                             </div>
@@ -33,9 +33,14 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading" ui-set="{'myAccordion': 2}">
-
                         <h4 class="panel-title">
                             All files
+                            <span ng-show="loadingFiles">
+                              <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                            <span ng-show="!loadingFiles">
+                              ({{files.length}})
+                            </span>                              
                         </h4>
                     </div>
                     <div ui-if="myAccordion == 2">
@@ -54,6 +59,13 @@
 
                         <h4 class="panel-title">
                             Shared with me
+                            <span ng-show="loadingSharedFiles">
+                              <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                            <span ng-show="!loadingSharedFiles">
+                              ({{sharedFiles.length}})
+                            </span>                              
+
                         </h4>
                     </div>
                     <div ui-if="myAccordion == 3">
