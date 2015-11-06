@@ -14,7 +14,7 @@ angular.module('MindWebUi.file.service', [
                         deferred.resolve(response);
                     }).
                     error(function (err) {
-                        deferred.reject();
+                        deferred.reject(err);
                     });
                 },
                 function () {
@@ -32,7 +32,7 @@ angular.module('MindWebUi.file.service', [
                         deferred.resolve(response);
                     }).
                     error(function (err) {
-                        deferred.reject();
+                        deferred.reject(err);
                     });
                 },
                 function () {
@@ -50,7 +50,7 @@ angular.module('MindWebUi.file.service', [
                         $rootScope.$emit('openFile', response.file);
                         deferred.resolve(response);
                     }).error(function (err) {
-                        deferred.reject();
+                        deferred.reject(err);
                     });
                 },
                 function () {
@@ -68,7 +68,7 @@ angular.module('MindWebUi.file.service', [
                         deferred.resolve({body: response.data, length: changes.length});
                     }).
                     error(function (err) {
-                        deferred.reject();
+                        deferred.reject(err);
                     });
                 },
                 function () {
@@ -91,7 +91,7 @@ angular.module('MindWebUi.file.service', [
                         deferred.resolve();
                     }).
                     error(function (err) {
-                        deferred.reject();
+                        deferred.reject(err);
                     });
                 },
                 function () {

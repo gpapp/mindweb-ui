@@ -19,10 +19,12 @@ angular.module('MindWebUi', [
                 $rootScope.$on("$routeChangeSuccess", function () {
                     $rootScope.loading = false;
                 });
-                $rootScope.$on("$applicationError", function () {
+                $rootScope.$on("$applicationError", function (msg) {
                     $rootScope.error = true;
+                    $rootScope.errorMsg = msg;
                     setTimeout(function(){
-                        $rootScope.error=false;
+                        $rootScope.error = false;
+                        $rootScope.errorMsg = '';
                     },1000);
                 });
 
@@ -81,7 +83,7 @@ angular.module('MindWebUi', [
     .config(function ($stateProvider) {
         $stateProvider
             .state('home', {
-                url: '/home',
+                url: '',
                 templateUrl: 'app/home.html',
                 data: {
                     requireLogin: false

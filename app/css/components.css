@@ -14,11 +14,16 @@ h1 {
 
 .app-content-error {
     text-align: center;
-    height: 100%;
-    width: 100%;
+    top: 90%;
+    left: 5%;
+    width: 90%;
+    min-height: 5%;
     background-color: red;
-    position: relative;
-    display:block;
+    position: absolute;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 10px 15px;
+    border: 2px outset brown;
 }
 
 .loading-spinner {
