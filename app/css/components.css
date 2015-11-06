@@ -13,17 +13,11 @@ h1 {
 }
 
 .app-content-error {
-    text-align: center;
     left: 5%;
     bottom: 55px;
     width: 90%;
     min-height: 5%;
-    background-color: red;
     position: absolute;
-    display: table-cell;
-    vertical-align: middle;
-    padding: 10px 15px;
-    border: 2px outset brown;
 }
 
 .loading-spinner {

@@ -11,6 +11,7 @@
 }
 
 .file-list-item {
+    display: inline-flex;
     width: 250px;
     flex-grow: 1;
     border-right: 1px solid #ddd !important;
@@ -18,6 +19,53 @@
     margin-bottom: 3px !important;
     margin-right: 3px !important;
     padding: 0;
+    background-color: aliceblue;
+}
+
+.file-list-item-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.file-list-item .actions,
+.file-list-item .tags .input {
+    opacity: 0;
+    transition: opacity 1s, height 1s;
+}
+
+.file-list-item-content .name {
+    padding-bottom: 25px;
+    flex-grow: 5;
+}
+
+.file-list-item-content .tags {
+    /*    position:relative;*/
+    flex-grow: 1;
+    display: block;
+    bottom: 0px
+}
+
+.file-list-item .actions {
+    position: relative;
+    bottom: 20px;
+    width: 65px;
+    right: -160px;
+    text-align: right;
+    margin-bottom: -20px;
+}
+
+.file-list-item .tags.focused .input,
+.file-list-item .selected .actions,
+.file-list-item .selected .tags .input {
+    opacity: 100;
+    transition: opacity .5s;
+}
+
+.file-list-item .tags.focused .input,
+.file-list-item .selected .tags .input {
+    display: inline;
 }
 
 .infoPopup.hidden {
@@ -46,52 +94,6 @@
 .infoPopup .title {
     font-size: 120%;
     border-bottom: 1px solid;
-}
-
-.file-list-item {
-    background-color: aliceblue;
-}
-
-.file-list-item-content {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-}
-
-.file-list-item .actions,
-.file-list-item .tags .input {
-    opacity: 0;
-    transition: opacity 1s, height 1s;
-}
-
-tags-input .name {
-    flex-grow: 1;
-}
-
-tags-input .tags {
-    /*    position:relative;*/
-    flex-grow: 1;
-    display: block;
-    bottom: 0px
-}
-
-.file-list-item .actions {
-    position: relative;
-    bottom: 20px;
-    text-align: right;
-    margin-bottom: -20px;
-}
-
-.file-list-item .tags.focused .input,
-.file-list-item .selected .actions,
-.file-list-item .selected .tags .input {
-    opacity: 100;
-    transition: opacity .5s;
-}
-
-.file-list-item .tags.focused .input,
-.file-list-item .selected .tags .input {
-    display: inline;
 }
 
 .tags .tags-display {

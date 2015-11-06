@@ -40,7 +40,7 @@
                             </span>
                             <span ng-show="!loadingFiles">
                               ({{files.length}})
-                            </span>                              
+                            </span>
                         </h4>
                     </div>
                     <div ui-if="myAccordion == 2">
@@ -64,7 +64,7 @@
                             </span>
                             <span ng-show="!loadingSharedFiles">
                               ({{sharedFiles.length}})
-                            </span>                              
+                            </span>
 
                         </h4>
                     </div>
@@ -141,10 +141,12 @@
 <script type="text/ng-template" id="file_item_renderer">
     <div class="file-list-item-content"
          ui-state="hovered"
-         ng-class="{selected : hovered}"
+         ng-class="{selected : hovered, 'bg-info':item.isPublic, 'bg-success':!item.isPublic}"
          ng-mouseover="hovered=true"
          ng-mouseleave="hovered=false">
         <div class="name" ng-click="fileOpen(item)" ui-state="infoPopup">
+            <i class="fa"
+               ng-class="{'fa-user': !item.isPublic,'fa-group': !item.isPublic&&(item.viewers||item.editors),'fa-circle': item.isPublic}"></i>
             <i class="fa fa-info-circle pull-right"
                ng-mouseover="infoPopup=true"
                ng-mouseleave="infoPopup=false"></i>
@@ -207,24 +209,24 @@
             <h5 class="modal-title">{{target.name}}</h5>
         </div>
         <div class="modal-body">
-            <div class="table">
+            <table class="table">
                 <div class="col-sm-3">Public</div>
-                <div class="col-sm-9" ng-class="{'text-danger':'target.isPublic!=target.newIsPublic'}">
-                    <button class="btn-xs">Change</button>
+                <div class="col-sm-9">
+                    <input type="checkbox" ng-model="target.newIsPublic"/>
                 </div>
 
                 <div class="col-sm-3">Viewers</div>
                 <div class="col-sm-4">{{target.viewers?target.viewers:"Not shared"}}</div>
                 <div class="col-sm-5">
-                    <textarea class="" ng-model="target.viewers"></textarea>
+                    <textarea class="" ng-model="target.newViewers"></textarea>
                 </div>
 
                 <div class="col-sm-3">Editors</div>
-                <div class="col-sm-4">{{target.editors}}</div>
+                <div class="col-sm-4">{{target.editors?target.editors:"Not shared"}}</div>
                 <div class="col-sm-5">
-                    <textarea class="" ng-model="target.editors"></textarea>
+                    <textarea class="" ng-model="target.newEditors"></textarea>
                 </div>
-            </div>
+            </table>
         </div>
         <div class="modal-footer">
             <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>

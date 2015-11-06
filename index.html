@@ -107,7 +107,10 @@
             <section ui-view></section>
         </div>
     </div>
-    <div ng-show="error" class="app-content-error">
+    <div ng-show="error" class="alert alert-danger app-content-error alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         Error in application
         {{$rootScope.errorMsg}}
     </div>

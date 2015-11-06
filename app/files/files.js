@@ -25,8 +25,8 @@ angular.module('MindWebUi.file', [
         }
     ])
     .controller('fileController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileService) {
-        $scope.loadingFiles=false;
-        $scope.loadingSharedFiles=false;
+        $scope.loadingFiles = false;
+        $scope.loadingSharedFiles = false;
         reloadFiles();
 
         var uploadMutex = false;
@@ -85,7 +85,7 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileService.create(selectedItem.newName).then(function () {
+                FileService.create(selectedItem.newName).then(function (data) {
                     $scope.files.push(data);
                 });
             });
@@ -116,9 +116,17 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
-                target.isPublic = data.isPublic;
-                target.viewers = data.viewers;
-                target.editors = data.editors;
+                FileService.share(
+                    selectedItem.id,
+                    selectedItem.newIsPublic,
+                    selectedItem.newViewers,
+                    selectedItem.newEditors).then(function (data) {
+                    for (var i = 0; i < $scope.files.length; i++) {
+                        if (data.id === $scope.files[i].id) {
+                            $scope.files[i] = data;
+                        }
+                    }
+                });
             });
         };
         $scope.openRenameModal = function (target) {
@@ -153,7 +161,7 @@ angular.module('MindWebUi.file', [
 
             modalInstance.result.then(function (selectedItem) {
                 FileService.remove(selectedItem.id).then(function () {
-                    $scope.files.splice($scope.files.indexOf(target),1);
+                    $scope.files.splice($scope.files.indexOf(target), 1);
                     //reloadFiles();
                 });
             });
@@ -175,8 +183,6 @@ angular.module('MindWebUi.file', [
             });
         };
 
-        $scope.newFile = {};
-
         $scope.fileOpen = function (file) {
             $state.go('viewer.file', {fileId: file.id});
         };
@@ -187,21 +193,21 @@ angular.module('MindWebUi.file', [
 
         // Utility functions for controller
         function reloadFiles() {
-            $scope.loadingFiles=true;                        
+            $scope.loadingFiles = true;
             FileService.list().then(function (data) {
                     $scope.files = data;
                     $scope.loadingFiles = false;
                 },
                 function (data) {
-                    $rootScope.$emit("$applicationError","Cannot load file list");
+                    $rootScope.$emit("$applicationError", "Cannot load file list");
                 });
-            $scope.loadingSharedFiles=true;                        
+            $scope.loadingSharedFiles = true;
             FileService.listShared().then(function (data) {
                     $scope.sharedFiles = data;
                     $scope.loadingSharedFiles = false;
                 },
                 function () {
-                    $rootScope.$emit("$applicationError","Cannot load shared file list");
+                    $rootScope.$emit("$applicationError", "Cannot load shared file list");
                 });
         }
     })

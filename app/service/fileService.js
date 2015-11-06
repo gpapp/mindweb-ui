@@ -249,6 +249,24 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
+        function _share(fileId, isPublic, viewers, editors) {
+            var deferred = $q.defer();
+            $rootScope.getCurrentUser().then(
+                function () {
+                    $http.put('/file/share', {fileId: fileId, isPublic: isPublic, viewers: viewers, editors: editors}).
+                    success(function (response) {
+                        deferred.resolve(response);
+                    }).
+                    error(function (err) {
+                        deferred.reject();
+                    });
+                },
+                function () {
+                    deferred.reject();
+                });
+            return deferred.promise;
+        }
+
         return {
             list: _list,
             listShared: _listShared,
@@ -263,7 +281,8 @@ angular.module('MindWebUi.file.service', [
             untag: _untag,
             exportFreeplane: _exportFreeplane,
             exportODF: _exportODF,
-            remove: _delete
+            remove: _delete,
+            share: _share
         };
     }
 
