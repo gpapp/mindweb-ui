@@ -127,13 +127,17 @@
 </div>
 
 <script type="text/ng-template" id="file_item_renderer">
-    <div ui-state="filePopup">
-        <div ng-click="fileOpen(item)">
+    <div class="file-list-item-content"
+         ui-state="hovered"
+         ng-class="{selected : hovered}"
+         ng-mouseover="hovered=true"
+         ng-mouseleave="hovered=false">
+        <div class="name" ng-click="fileOpen(item)" ui-state="infoPopup">
             <i class="fa fa-info-circle pull-right"
-               ng-mouseover="filePopup=true"
-               ng-mouseleave="filePopup=false"></i>
+               ng-mouseover="infoPopup=true"
+               ng-mouseleave="infoPopup=false"></i>
 
-            <div class="fileInfo" ng-class="{hidden : !filePopup}">
+            <div class="infoPopup" ng-class="{hidden : !infoPopup}">
                 <div class="title">{{item.name}}</div>
                 <div class="version">Version: {{ item.versions.length }}</div>
                 <div class="fileDate">Created: {{ item.created | date:'medium'}}</div>
@@ -151,12 +155,12 @@
                         on-tag-removed="untag(item,$tag)">
                 <auto-complete source="loadTags(item,$query)"></auto-complete>
             </tags-input>
-        </div>
-        <div class="actions">
-            <i class="fa fa-download" title="Download in Freeplane format" ng-click="downloadFreeplane(item)"></i>
-            <i class="fa fa-share" title="Share file" ng-click="openShareModal(item)"></i>
-            <i class="fa fa-edit" title="Rename file" ng-click="openRenameModal(item)"></i>
-            <i class="fa fa-trash" title="Delete file" ng-click="openDeleteModal(item)"></i>
+            <div class="actions">
+                <i class="fa fa-download" title="Download in Freeplane format" ng-click="downloadFreeplane(item)"></i>
+                <i class="fa fa-share" title="Share file" ng-click="openShareModal(item)"></i>
+                <i class="fa fa-edit" title="Rename file" ng-click="openRenameModal(item)"></i>
+                <i class="fa fa-trash" title="Delete file" ng-click="openDeleteModal(item)"></i>
+            </div>
         </div>
     </div>
 </script>

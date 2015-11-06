@@ -6,19 +6,21 @@
 }
 
 .file-list {
+  display:inline-flex;
+  flex-wrap:wrap;
 }
 
 .file-list-item {
-    width: 300px;
-    height: 100px;
-    display: inline-table;
+    width: 250px;
+    flex-grow:1;
     border-right: 1px solid #ddd !important;
     border-bottom: 1px solid #ddd !important;
     margin-bottom: 3px !important;
     margin-right: 3px !important;
+    padding:0;
 }
 
-.fileInfo.hidden {
+.infoPopup.hidden {
     display: block !important;
     opacity: 0;
     visibility: visible !important;
@@ -26,8 +28,8 @@
     z-index: -1;
 }
 
-.fileInfo {
-    display: block;
+.infoPopup {
+    display: inline-block;
     position: absolute;
     background: beige;
     border: 1px solid black;
@@ -41,17 +43,76 @@
     transition: opacity 0.5s;
 }
 
-.fileInfo .title {
+.infoPopup .title {
     font-size: 120%;
     border-bottom: 1px solid;
 }
 
-.file-list-item .actions {
-    /* vertical-align: bottom; */
-    /* position: static; */
-    /* bottom: 10px; */
-    /* right: 0px; */
+.file-list-item{
+    background-color:green;
 }
+.file-list-item-content {
+    display: flex;
+    flex-direction:column;
+    background-color:aliceblue;
+    padding:10px;
+}
+
+.file-list-item .actions,
+.file-list-item .tags .input  {
+    opacity: 0;
+    transition: opacity 1s, height 1s;
+}
+
+tags-input .name {
+    flex-grow:1;
+}
+
+tags-input .tags {
+/*    position:relative;*/
+    flex-grow:1;
+    display:block;
+    bottom:0px
+}
+
+.file-list-item .actions {
+    position:relative;
+    bottom: 20px;
+    right:-160px;
+    margin-bottom:-20px;
+}
+
+.file-list-item .tags.focused .input, 
+.file-list-item .selected .actions,
+.file-list-item .selected .tags .input  {
+    opacity:100;
+    transition: opacity .5s;
+}
+
+.file-list-item .tags.focused .input, 
+.file-list-item .selected .tags .input  {
+    display:inline;
+}
+
+tags-input .tags .tag-list {
+    display: block;
+    padding: 1px 1px;
+}
+
+tags-input .tags .tag-item {
+    display: inline-block;
+    padding: 1px 5px
+}
+
+.suggestion-list {
+    border:1px solid black;
+    border-radius: 5px;
+    padding: 1px 5px;
+    display:block;
+    list-style:none;
+    position:absolute;
+}
+
 
 #uploads {
     display: inline-table;
@@ -83,24 +144,6 @@ ngf-drop.drop-box {
     display: inline-block;
     padding: 15px 5px;
     text-align: center;
-}
-
-tags-input .tags .tag-item {
-    display: inline-block;
-    padding: 1px 5px
-}
-
-tags-input .tags .tag-list {
-    display: inline-block;
-    padding: 1px 1px;
-}
-
-.suggestion-list {
-    border:1px solid black;
-    border-radius: 5px;
-    padding: 1px 5px;
-    display:block;
-    
 }
 
 input.scrollable-header {

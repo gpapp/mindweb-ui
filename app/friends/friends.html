@@ -8,3 +8,39 @@
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="friend_item_renderer">
+    <div ui-state="infoPopup">
+        <div ng-click="fileOpen(item)">
+            <i class="fa fa-info-circle pull-right"
+               ng-mouseover="friendPopup=true"
+               ng-mouseleave="friendPopup=false"></i>
+
+            <div class="infoPopup" ng-class="{hidden : !infoPopup}">
+                <div class="title">{{item.name}}</div>
+                <div class="version">Version: {{ item.versions.length }}</div>
+                <div class="fileDate">Created: {{ item.created | date:'medium'}}</div>
+                <div class="fileDate">Last modification:{{ item.modified | date:'medium'}}
+                </div>
+            </div>
+            <i class="fa fa-file"></i>
+
+            <div class="fileName">{{ item.name }}</div>
+        </div>
+        <div class="tags">
+            <tags-input ng-model="item.tags"
+                        replace-spaces-with-dashes="false"
+                        on-tag-added="tag(item,$tag)"
+                        on-tag-removed="untag(item,$tag)">
+                <auto-complete source="loadTags(item,$query)"></auto-complete>
+            </tags-input>
+        </div>
+        <div class="actions" ng-class="{hidden : !infoPopup}">
+            <i class="fa fa-download" title="Download in Freeplane format" ng-click="downloadFreeplane(item)"></i>
+            <i class="fa fa-share" title="Share file" ng-click="openShareModal(item)"></i>
+            <i class="fa fa-edit" title="Rename file" ng-click="openRenameModal(item)"></i>
+            <i class="fa fa-trash" title="Delete file" ng-click="openDeleteModal(item)"></i>
+        </div>
+    </div>
+</script>
+
