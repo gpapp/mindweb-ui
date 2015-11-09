@@ -1,26 +1,22 @@
 <script type="text/ng-template" id="tree_item_renderer">
-    <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node}">
+    <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node}"
+         on-short-press="longPressNode(node)" on-long-press="longPressNode(node)">
         <div class="list-group-item-heading" ng-mouseover="displayIcons=true" ng-mouseleave="displayIcons=false">
             <div ui-tree-handle class="handle">
                 <i class="fa fa-bars"></i>
-            </div>
-            <div class="bigIcons" ng-if="bigIcons">
-                ICONS
             </div>
             <div class="icons">
                 <div class="icon-block">
                     <span ng-repeat="icon in node.icon">
                         <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png"
-                             on-long-press="longPressNode(node)"
-                             ng-click="openDetails(node,'icons')"/>
+                             on-short-press="openDetails(node,'icons')"/>
                     </span>
                 </div>
             </div>
             <div class="item">
                 <markdown ng-model="node.nodeMarkdown" extensions="github, prettify"
-                          on-long-press="longPressNode(node)"
                           on-short-press="openDetails(node,'details')"></markdown>
-                <a ng-if="node.$['LINK']" title="{{node.$['LINK']}}" ng-click="jumptoLink(node.$['LINK'])">
+                <a ng-if="node.$['LINK']" title="{{node.$['LINK']}}" on-short-press="jumptoLink(node.$['LINK'])">
                     <img ng-src="/images/{{node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
                 </a>
             </div>
@@ -32,10 +28,10 @@
                         <i class="fa fa-fw fa-trash" ng-click="deleteNode(node)"></i>
                     </span>
                     <img ng-if="node.attribute" src="/images/AttributesView.png"
-                         ng-click="openDetails(node,'properties')"/>
+                         on-short-press="openDetails(node,'properties')"/>
                     <img ng-if="node.noteMarkdown" src="/images/knotes.png" ng-click="openDetails(node,'notes')"/>
                     <i class="fa" ng-class="{'fa-chevron-down': node.open, 'fa-chevron-right': !node.open}"
-                       ng-click="nodeToggleOpen(node)" ng-if="node.node"></i>
+                       on-short-press="nodeToggleOpen(node)" ng-if="node.node"></i>
                 </div>
             </div>
         </div>
@@ -45,7 +41,7 @@
 
             <div class="rule" ng-if="!node.detailOpen"></div>
             <markdown ng-model="node.detailMarkdown" extensions="github, prettify" ng-if="node.detailOpen"
-                      ng-click="openDetails(node,'details')"></markdown>
+                      on-short-press="openDetails(node,'details')"></markdown>
         </div>
     </div>
     <div class="indent" ui-tree-nodes="" ng-model="node" ng-if="node.open && node.node">
@@ -58,23 +54,24 @@
 </script>
 
 <div class="panel">
-       <div class="panel-body"
+    <div class="panel-body"
          ng-swipe-left='Ui.turnOn("detailPanel")'
          ng-swipe-right='Ui.turnOff("detailPanel")'>
         <span keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')"
-                           keyboard-prevent-default="true"></span>
+              keyboard-prevent-default="true"></span>
         <span keyboard-shortcut="down" keyboard-title="Next node" keyboard-action="selectNode('next')"
-                           keyboard-prevent-default="true"></span>
+              keyboard-prevent-default="true"></span>
         <span keyboard-shortcut="right" keyboard-title="Unfold node" keyboard-action="selectNode('unfold')"
-                           keyboard-prevent-default="true"></span>
+              keyboard-prevent-default="true"></span>
         <span keyboard-shortcut="left" keyboard-title="Fold node" keyboard-action="selectNode('fold')"
-                           keyboard-prevent-default="true"></span>
+              keyboard-prevent-default="true"></span>
         <span keyboard-shortcut="ins" keyboard-title="Add new subnode" keyboard-action="addNode('current')"
-                           keyboard-prevent-default="true"></span>
+              keyboard-prevent-default="true"></span>
         <span keyboard-shortcut="enter" keyboard-title="Add new node" keyboard-action="addNode('parent')"
-                           keyboard-prevent-default="true"></span>
+              keyboard-prevent-default="true"></span>
         <span keyboard-shortcut="del" keyboard-title="Delete node" keyboard-action="deleteNode('current')"
-                           keyboard-prevent-default="true"></span>
+              keyboard-prevent-default="true"></span>
+
         <div ui-tree class="list-group">
             <div id="tree-root" ui-tree-nodes="" ng-model="nodes.rootNode">
                 <div ng-repeat="node in nodes"

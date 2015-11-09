@@ -85,6 +85,7 @@ markdown.tab-content {
 }
 
 .nodeList {
+    padding: 5px 10px;
 }
 
 .nodeList .list-group-item-heading {
@@ -115,6 +116,11 @@ markdown.tab-content {
 .nodeList .chevron .icon-block {
     display: flex;
 }
+.nodeList .chevron .icon-block {
+    position: initial;
+    bottom: 20px;
+    right: 10px;
+}
 
 .nodeList .chevron span[name='editorIcons'] {
     display: flex;
@@ -127,15 +133,17 @@ markdown.tab-content {
 }
 
 .nodeList.active .chevron span[name='editorIcons'] {    
+    color:white;
     background-color: rgba(255,255,255,.1);
-    font-size:150%;
-    transition: font-size 1s, background-color 1s;
+    font-size:120%;
+    transition: font-size 1s, background-color 1s, color 1s;
 }
 
 .nodeList .icons img,
 .nodeList .chevron img {
     min-width: 20px;
-    padding-right: 4px;
+    min-height: 20px;    
+    padding: 2px;
 }
 
 .nodeList .detail .rule {

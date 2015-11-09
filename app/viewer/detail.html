@@ -7,21 +7,21 @@
     <div class="panel-body">
         <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.text"></textarea>
 
-        <tabset>
-            <tab active="selectedTab==='details'">
+        <uib-tabset>
+            <uib-tab active="selectedTab=='details'">
                 <tab-heading ng-click="selectTab('details')">
                     <i class='fa fa-fw fa-info'></i>Details
                 </tab-heading>
                         <textarea class="tab-pane form-control" rows="5"
                                   ng-model="currentEditor.detail"></textarea>
-            </tab>
-            <tab active="selectedTab==='notes'">
+            </uib-tab>
+            <uib-tab active="selectedTab=='notes'">
                 <tab-heading ng-click="selectTab('notes')">
                     Notes
                 </tab-heading>
                 <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.note"></textarea>
-            </tab>
-            <tab active="selectedTab==='icons'">
+            </uib-tab>
+            <uib-tab active="selectedTab=='icons'">
                 <tab-heading ng-click="selectTab('icons')">
                     <i class='fa fa-stack fa-picture-o'></i>Icons
                 </tab-heading>
@@ -45,8 +45,8 @@
                         <i class="fa fa-2x fa-plus-circle pull-right" ui-turn-on="iconDialog"></i>
                     </div>
                 </div>
-            </tab>
-            <tab active="selectedTab==='properties'">
+            </uib-tab>
+            <uib-tab active="selectedTab=='properties'">
                 <tab-heading ng-click="selectTab('properties')">
                     <i class='fa fa-fw fa-table'></i>Properties
                 </tab-heading>
@@ -65,8 +65,8 @@
                     </tr>
                     </tbody>
                 </table>
-            </tab>
-        </tabset>
+            </uib-tab>
+        </uib-tabset>
     </div>
 </div>
 <div class="debug">

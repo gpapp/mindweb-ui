@@ -130,8 +130,7 @@ angular.module('MindWebUi.viewer', [
         };
 
         $scope.longPressNode = function (node) {
-            $scope.currentNode = node;
-            $scope.bigMenu = true;
+            $scope.$emit('selectNode', {node: node});
         };
         $scope.nodeToggleOpen = function (node) {
             node.open = !node.open;
@@ -323,43 +322,58 @@ angular.module('MindWebUi.viewer', [
             $scope.$emit('fileModified', {event: 'deleteNode', parent: target.$['ID']});
         }
     })
-    .controller('detailController', function ($scope, $http) {
+    .controller('detailController', function ($scope, $http, $timeout) {
 
         $http.get('app/viewer/iconlist.json')
             .then(function (res) {
                 $scope.iconList = res.data;
             });
 
+        var nodeTimeoutPromise;
+        var detailTimeoutPromise;
+        var noteTimeoutPromise;
+        var editortimeoutDelay = 1000;
+
         $scope.$watch('currentEditor.text', function (newValue, oldValue) {
             if ($scope.currentNode.nodeMarkdown != newValue) {
                 $scope.currentNode.nodeMarkdown = newValue;
-                $scope.$emit('fileModified', {
-                    event: 'nodeText',
-                    parent: $scope.currentNode.$['ID'],
-                    payload: newValue
-                });
+                $timeout.cancel(nodeTimeoutPromise);
+                nodeTimeoutPromise = $timeout(function () {
+                    $scope.$emit('fileModified', {
+                        event: 'nodeText',
+                        parent: $scope.currentNode.$['ID'],
+                        payload: newValue
+                    });
+                }, editortimeoutDelay);
             }
         });
 
         $scope.$watch('currentEditor.detail', function (newValue, oldValue) {
             if ($scope.currentNode.detailMarkdown != newValue) {
                 $scope.currentNode.detailMarkdown = newValue;
-                $scope.$emit('fileModified', {
-                    event: 'nodeDetail',
-                    parent: $scope.currentNode.$['ID'],
-                    payload: newValue
-                });
+                $timeout.cancel(detailTimeoutPromise);
+                detailTimeoutPromise = $timeout(function () {
+                    $scope.$emit('fileModified', {
+                        event: 'nodeDetail',
+                        parent: $scope.currentNode.$['ID'],
+                        payload: newValue
+                    });
+                }, editortimeoutDelay);
             }
         });
 
         $scope.$watch('currentEditor.note', function (newValue, oldValue) {
             if ($scope.currentNode.noteMarkdown != newValue) {
                 $scope.currentNode.noteMarkdown = newValue;
-                $scope.$emit('fileModified', {
-                    event: 'nodeNote',
-                    parent: $scope.currentNode.$['ID'],
-                    payload: newValue
-                });
+                $timeout.cancel(noteTimeoutPromise);
+                noteTimeoutPromise = $timeout(function () {
+
+                    $scope.$emit('fileModified', {
+                        event: 'nodeNote',
+                        parent: $scope.currentNode.$['ID'],
+                        payload: newValue
+                    });
+                }, editortimeoutDelay);
             }
         });
 
@@ -404,6 +418,33 @@ angular.module('MindWebUi.viewer', [
             $scope.$emit('selectTab', {destination: destination});
         };
     })
+    .directive('onShortPress', function ($timeout) {
+        return {
+            restrict: 'A',
+            link: function ($scope, $elm, $attrs) {
+                function endTouch(evt) {
+                    if (!$scope.skipPress && $attrs.onShortPress) {
+                        $scope.$apply(function () {
+                            $scope.$eval($attrs.onShortPress);
+                        });
+                        evt.stopPropagation();
+                    }
+                    delete $scope.skipPress;
+                    // Prevent the onLongPress event from firing
+                    $scope.longPress = false;
+                    // If there is an on-touch-end function attached to this element, apply it
+                    if ($attrs.onTouchEnd) {
+                        $scope.$apply(function () {
+                            $scope.$eval($attrs.onTouchEnd);
+                        });
+                    }
+                }
+
+                $elm.bind('touchend', endTouch);
+                $elm.bind('mouseup', endTouch);
+            }
+        };
+    })
     .directive('onLongPress', function ($timeout) {
         return {
             restrict: 'A',
@@ -418,7 +459,7 @@ angular.module('MindWebUi.viewer', [
                             // apply the function given in on the element's on-long-press attribute
                             $scope.$apply(function () {
                                 // mark the event fired, so the short press won't execute    
-                                $scope.longPress = false;
+                                $scope.skipPress = true;
                                 $scope.$eval($attrs.onLongPress);
                             });
                         }
@@ -426,11 +467,6 @@ angular.module('MindWebUi.viewer', [
                 }
 
                 function endTouch(evt) {
-                    if ($scope.longPress && $attrs.onShortPress) {                    
-                        $scope.$apply(function () {
-                            $scope.$eval($attrs.onShortPress);
-                        });
-                    }
                     // Prevent the onLongPress event from firing
                     $scope.longPress = false;
                     // If there is an on-touch-end function attached to this element, apply it
@@ -439,6 +475,7 @@ angular.module('MindWebUi.viewer', [
                             $scope.$eval($attrs.onTouchEnd);
                         });
                     }
+                    evt.stopPropagation();
                 }
 
                 $elm.bind('touchstart', startTouch);
