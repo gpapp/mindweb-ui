@@ -37,11 +37,11 @@ angular.module('MindWebUi.viewer', [
                 });
         }
     ])
-    .controller('viewerController', function ($scope, $location, $anchorScroll, $interval, FileService) {
+    .controller('viewerController', function ($scope, $location, $anchorScroll, $interval, FileService,focus) {
         var msgStack = [];
         var saveMutex = false;
         var saveTimer = $interval(function () {
-            $scope.performSave();
+            performSave();
         }, 10000);
 
         $anchorScroll.yOffset = 50;
@@ -60,7 +60,12 @@ angular.module('MindWebUi.viewer', [
             event.stopPropagation();
         });
         $scope.$on('selectTab', function (event, data) {
-            $scope.selectedTab = data.destination;
+            if(data.destination!='content') {
+                $scope.selectedTab = data.destination;
+            } else {
+                $scope.selectedTab = 'details';
+            }
+            focus(data.destination+'ID');
             event.stopPropagation();
         });
         $scope.$on('fileModified', function (event, data) {
@@ -78,11 +83,11 @@ angular.module('MindWebUi.viewer', [
         });
         $scope.$on("$destroy", function (event) {
                 $interval.cancel(saveTimer);
-                $scope.performSave();
+                performSave();
             }
         );
 
-        $scope.performSave = function () {
+        performSave = function () {
             if (msgStack.length > 0 && !saveMutex) {
                 saveMutex = true;
                 var messages = [];
@@ -274,7 +279,7 @@ angular.module('MindWebUi.viewer', [
             flatNodes.push(newNode);
             // Make sure the node is open, so the new node is shown
             newNode.$parent.open = true;
-            $scope.currentNode = newNode;
+            $scope.$emit('selectNode', {node: newNode});
             $scope.$emit('fileModified', {event: 'newNode', parent: newNode.$parent.$['ID'], payload: newNode});
         };
         $scope.deleteNode = function (target) {
@@ -291,35 +296,27 @@ angular.module('MindWebUi.viewer', [
                 if (ptr.node && ptr.node.length > 0) {
                     ptr = ptr.node[0];
                 } else {
-                    for (var i in flatNodes) {
-                        if (ptr === flatNodes[i]) {
-                            flatNodes.splice(i, 1);
-                            break;
-                        }
-                    }
+                    flatNodes.splice(flatNodes.indexOf(ptr), 1);
                     ptr = ptr.$parent;
                     ptr.node.splice(0, 1);
                     if (ptr.node.length == 0) {
                         delete ptr.node;
+                        delete ptr.open;
                     }
-
                 }
             }
-            for (var i in flatNodes) {
-                if (target === flatNodes[i]) {
-                    flatNodes.splice(i, 1);
-                    break;
-                }
-            }
+            flatNodes.splice(flatNodes.indexOf(target), 1);
             var parent = target.$parent;
             parent.node.splice(target.$parentIndex, 1);
-            for (var i  in parent.node) {
+            for (var i=target.$parentIndex;i<parent.node.length;i++) {
                 parent.node[i].$parentIndex = i;
             }
             if (parent.node.length == 0) {
                 delete parent.node;
+                delete parent.open;
             }
             $scope.$emit('fileModified', {event: 'deleteNode', parent: target.$['ID']});
+            $scope.selectNode('prev');
         }
     })
     .controller('detailController', function ($scope, $http, $timeout) {
@@ -418,6 +415,32 @@ angular.module('MindWebUi.viewer', [
             $scope.$emit('selectTab', {destination: destination});
         };
     })
+     .factory('focus', function($timeout, $window) {
+    return function(id) {
+      // timeout makes sure that it is invoked after any other event has been triggered.
+      // e.g. click events that need to run before the focus or
+      // inputs elements that are in a disabled state but are enabled when those events
+      // are triggered.
+      $timeout(function() {
+        var element = $window.document.getElementById(id);
+        if(element)
+          element.focus();
+      });
+    };
+  })
+  .directive('eventFocus', function(focus) {
+    return function(scope, elem, attr) {
+      elem.on(attr.eventFocus, function() {
+        focus(attr.eventFocusId);
+      });
+
+      // Removes bound events in the element itself
+      // when the scope is destroyed
+      scope.$on('$destroy', function() {
+        elem.off(attr.eventFocus);
+      });
+    };
+  })
     .directive('onShortPress', function ($timeout) {
         return {
             restrict: 'A',
@@ -429,7 +452,7 @@ angular.module('MindWebUi.viewer', [
                         });
                         evt.stopPropagation();
                     }
-                    delete $scope.skipPress;
+                     $scope.skipPress=false;
                     // Prevent the onLongPress event from firing
                     $scope.longPress = false;
                     // If there is an on-touch-end function attached to this element, apply it

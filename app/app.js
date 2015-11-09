@@ -77,9 +77,7 @@ angular.module('MindWebUi', [
                     return deferred.promise;
                 }
 
-                $rootScope.getCurrentUser().then(function (data) {
-                    console.log(data);
-                });
+                $rootScope.getCurrentUser();
             }
         ])
     .config(function ($stateProvider) {

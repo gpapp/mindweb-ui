@@ -5,21 +5,21 @@
         Hide details <span class="pull-right fa fa-close"></span>
     </div>
     <div class="panel-body">
-        <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.text"></textarea>
+        <textarea id="contentID" class="tab-pane form-control" rows="5" ng-model="currentEditor.text"></textarea>
 
         <uib-tabset>
             <uib-tab active="selectedTab=='details'">
                 <tab-heading ng-click="selectTab('details')">
                     <i class='fa fa-fw fa-info'></i>Details
                 </tab-heading>
-                        <textarea class="tab-pane form-control" rows="5"
+                        <textarea id="detailsID" class="tab-pane form-control" rows="5"
                                   ng-model="currentEditor.detail"></textarea>
             </uib-tab>
             <uib-tab active="selectedTab=='notes'">
                 <tab-heading ng-click="selectTab('notes')">
                     Notes
                 </tab-heading>
-                <textarea class="tab-pane form-control" rows="5" ng-model="currentEditor.note"></textarea>
+                <textarea id="notesID" class="tab-pane form-control" rows="5" ng-model="currentEditor.note"></textarea>
             </uib-tab>
             <uib-tab active="selectedTab=='icons'">
                 <tab-heading ng-click="selectTab('icons')">
