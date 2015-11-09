@@ -37,7 +37,7 @@ angular.module('MindWebUi.viewer', [
                 });
         }
     ])
-    .controller('viewerController', function ($scope, $location, $anchorScroll, $interval, FileService,focus) {
+    .controller('viewerController', function ($scope, $location, $anchorScroll, $interval, FileService, focus) {
         var msgStack = [];
         var saveMutex = false;
         var saveTimer = $interval(function () {
@@ -60,12 +60,12 @@ angular.module('MindWebUi.viewer', [
             event.stopPropagation();
         });
         $scope.$on('selectTab', function (event, data) {
-            if(data.destination!='content') {
+            if (data.destination != 'content') {
                 $scope.selectedTab = data.destination;
             } else {
                 $scope.selectedTab = 'details';
             }
-            focus(data.destination+'ID');
+            focus(data.destination + 'ID');
             event.stopPropagation();
         });
         $scope.$on('fileModified', function (event, data) {
@@ -127,11 +127,11 @@ angular.module('MindWebUi.viewer', [
 
         // create parent/child links, build flat array to store the nodes,
         // to overcome recursion depth limitations
-        $scope.setupParent = function (node, $modelValue, $index) {
-            if (!node)return;
-            flatNodes.push(node);
-            node.$parent = $modelValue;
-            node.$parentIndex = $index;
+        $scope.setupParent = function (parent, $modelValue, $index) {
+            if (!$modelValue)return;
+            flatNodes.push($modelValue);
+            $modelValue.$parent = parent;
+            $modelValue.$parentIndex = $index;
         };
 
         $scope.longPressNode = function (node) {
@@ -308,14 +308,18 @@ angular.module('MindWebUi.viewer', [
             flatNodes.splice(flatNodes.indexOf(target), 1);
             var parent = target.$parent;
             parent.node.splice(target.$parentIndex, 1);
-            for (var i=target.$parentIndex;i<parent.node.length;i++) {
+            for (var i = target.$parentIndex; i < parent.node.length; i++) {
                 parent.node[i].$parentIndex = i;
             }
             if (parent.node.length == 0) {
                 delete parent.node;
                 delete parent.open;
             }
-            $scope.$emit('fileModified', {event: 'deleteNode', parent: target.$parent.$['ID'], payload: target.$['ID']});
+            $scope.$emit('fileModified', {
+                event: 'deleteNode',
+                parent: target.$parent.$['ID'],
+                payload: target.$['ID']
+            });
             $scope.selectNode('prev');
         }
     })
@@ -415,32 +419,32 @@ angular.module('MindWebUi.viewer', [
             $scope.$emit('selectTab', {destination: destination});
         };
     })
-     .factory('focus', function($timeout, $window) {
-    return function(id) {
-      // timeout makes sure that it is invoked after any other event has been triggered.
-      // e.g. click events that need to run before the focus or
-      // inputs elements that are in a disabled state but are enabled when those events
-      // are triggered.
-      $timeout(function() {
-        var element = $window.document.getElementById(id);
-        if(element)
-          element.focus();
-      });
-    };
-  })
-  .directive('eventFocus', function(focus) {
-    return function(scope, elem, attr) {
-      elem.on(attr.eventFocus, function() {
-        focus(attr.eventFocusId);
-      });
+    .factory('focus', function ($timeout, $window) {
+        return function (id) {
+            // timeout makes sure that it is invoked after any other event has been triggered.
+            // e.g. click events that need to run before the focus or
+            // inputs elements that are in a disabled state but are enabled when those events
+            // are triggered.
+            $timeout(function () {
+                var element = $window.document.getElementById(id);
+                if (element)
+                    element.focus();
+            });
+        };
+    })
+    .directive('eventFocus', function (focus) {
+        return function (scope, elem, attr) {
+            elem.on(attr.eventFocus, function () {
+                focus(attr.eventFocusId);
+            });
 
-      // Removes bound events in the element itself
-      // when the scope is destroyed
-      scope.$on('$destroy', function() {
-        elem.off(attr.eventFocus);
-      });
-    };
-  })
+            // Removes bound events in the element itself
+            // when the scope is destroyed
+            scope.$on('$destroy', function () {
+                elem.off(attr.eventFocus);
+            });
+        };
+    })
     .directive('onShortPress', function ($timeout) {
         return {
             restrict: 'A',
@@ -452,7 +456,7 @@ angular.module('MindWebUi.viewer', [
                         });
                         evt.stopPropagation();
                     }
-                     $scope.skipPress=false;
+                    $scope.skipPress = false;
                     // Prevent the onLongPress event from firing
                     $scope.longPress = false;
                     // If there is an on-touch-end function attached to this element, apply it

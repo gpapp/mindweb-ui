@@ -44,11 +44,12 @@
                       on-short-press="openDetails(node,'details')"></markdown>
         </div>
     </div>
-    <div class="indent" ui-tree-nodes="" ng-model="node" ng-if="node.open && node.node">
+    <div class="indent" ui-tree-nodes="" ng-model="node.node" ng-if="node.open && node.node">
+        {{myParent=node;""}}
         <div ng-repeat="node in node.node"
              ui-tree-node
              ng-include="'tree_item_renderer'"
-             ng-init="setupParent(node,$modelValue,$index); displayIcons=false">
+             ng-init="setupParent(myParent,node,$index); displayIcons=false">
         </div>
     </div>
 </script>
@@ -71,7 +72,7 @@
               keyboard-prevent-default="true"></span>
         <span keyboard-shortcut="del" keyboard-title="Delete node" keyboard-action="deleteNode('current')"
               keyboard-prevent-default="true"></span>
-        <span keyboard-shortcut="f2" keyboard-title="Edit content" keyboard-action="openDetails(node,'content')"
+        <span keyboard-shortcut="f2" keyboard-title="Edit content" keyboard-action="openDetails(currentNode,'content')"
               keyboard-prevent-default="true"></span>
 
         <div ui-tree class="list-group">
@@ -79,7 +80,7 @@
                 <div ng-repeat="node in nodes"
                      ui-tree-node
                      ng-include="'tree_item_renderer'"
-                     ng-init="setupParent(node,null,$index);">
+                     ng-init="setupParent(null,node,$index);">
                 </div>
             </div>
         </div>
