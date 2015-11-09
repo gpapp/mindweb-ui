@@ -119,12 +119,17 @@ markdown.tab-content {
 .nodeList .chevron span[name='editorIcons'] {
     display: flex;
     position: absolute;
-    background-color:white;
+    border-radius:5px;
     color:black;
     padding:2px;
-    opacity:10%;
     right: 40px;
     z-index: 20;
+}
+
+.nodeList.active .chevron span[name='editorIcons'] {    
+    background-color: rgba(255,255,255,.1);
+    font-size:150%;
+    transition: font-size 1s, background-color 1s;
 }
 
 .nodeList .icons img,

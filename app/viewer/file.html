@@ -4,24 +4,29 @@
             <div ui-tree-handle class="handle">
                 <i class="fa fa-bars"></i>
             </div>
+            <div class="bigIcons" ng-if="bigIcons">
+                ICONS
+            </div>
             <div class="icons">
                 <div class="icon-block">
                     <span ng-repeat="icon in node.icon">
                         <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png"
+                             on-long-press="longPressNode(node)"
                              ng-click="openDetails(node,'icons')"/>
                     </span>
                 </div>
             </div>
             <div class="item">
                 <markdown ng-model="node.nodeMarkdown" extensions="github, prettify"
-                          ng-click="openDetails(node,'details')"></markdown>
+                          on-long-press="longPressNode(node)"
+                          on-short-press="openDetails(node,'details')"></markdown>
                 <a ng-if="node.$['LINK']" title="{{node.$['LINK']}}" ng-click="jumptoLink(node.$['LINK'])">
                     <img ng-src="/images/{{node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
                 </a>
             </div>
             <div class="chevron">
                 <div class="icon-block">
-                    <span name="editorIcons" ng-if="displayIcons">
+                    <span name="editorIcons" ng-if="displayIcons||currentNode===node">
                         <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.$parent)"></i>
                         <i class="fa fa-fw fa-folder-o" ng-click="addNode(node)"></i>
                         <i class="fa fa-fw fa-trash" ng-click="deleteNode(node)"></i>
@@ -53,7 +58,7 @@
 </script>
 
 <div class="panel">
-    <div class="panel-body"
+       <div class="panel-body"
          ng-swipe-left='Ui.turnOn("detailPanel")'
          ng-swipe-right='Ui.turnOff("detailPanel")'>
         <span keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')"
