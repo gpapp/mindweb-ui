@@ -1,4 +1,5 @@
 angular.module('MindWebUi.viewer', [
+        'MindWebUi.public.service',
         'MindWebUi.file.service',
         'ui.router',
         'angular-markdown',
@@ -98,7 +99,7 @@ angular.module('MindWebUi.viewer', [
             }
         }
     })
-    .controller('structureController', function ($scope, $rootScope, $state, $filter, $window, FileService) {
+    .controller('structureController', function ($scope, $rootScope, $state, $filter, $window, PublicService) {
         // Array of nodes, to be used for lookups.
         var flatNodes = [];
 
@@ -110,7 +111,7 @@ angular.module('MindWebUi.viewer', [
             }
         });
 
-        FileService.load($state.params.fileId).then(function (data) {
+        PublicService.load($state.params.fileId).then(function (data) {
             $scope.nodes = data.content;
             $scope.nodes.rootNode.open = true;
             $scope.nodes.rootNode.$$hashKey = 'object:0';

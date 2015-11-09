@@ -59,19 +59,21 @@ angular.module('MindWebUi', [
 
                 $rootScope.getCurrentUser = function () {
                     var deferred = $q.defer();
-                    if ($rootScope.currentUser) {
+                    if ($rootScope.loggedIn === undefined) {
+                        UsersApi.lookup().then(
+                            function (user) {
+                                $rootScope.loggedIn = true;
+                                $rootScope.currentUser = user.data;
+                                deferred.resolve(user);
+                            },
+                            function () {
+                                $rootScope.loggedIn = false;
+                                delete $rootScope.currentUser;
+                                deferred.reject();
+                            });
+                    } else {
                         deferred.resolve($rootScope.currentUser);
-                        return deferred.promise;
                     }
-                    UsersApi.lookup().then(
-                        function (user) {
-                            $rootScope.currentUser = user.data;
-                            deferred.resolve(user);
-                        },
-                        function () {
-                            delete $rootScope.currentUser;
-                            deferred.reject();
-                        });
                     return deferred.promise;
                 }
 

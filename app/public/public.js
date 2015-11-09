@@ -1,5 +1,5 @@
 angular.module('MindWebUi.public', [
-        'MindWebUi.file.service',
+        'MindWebUi.public.service',
         'ui.bootstrap',
         'ui.bootstrap.tpls',
         'ui.router',
@@ -24,7 +24,7 @@ angular.module('MindWebUi.public', [
                 })
         }
     ])
-    .controller('publicController', function ($scope, $rootScope, $state, $filter, $window, FileService) {
+    .controller('publicController', function ($scope, $rootScope, $state, $filter, $window, PublicService) {
         $scope.loadingTags = false;
         $scope.loadingFiles = false;
         $scope.tagsearch = '';
@@ -68,7 +68,7 @@ angular.module('MindWebUi.public', [
         // Utility functions for controller
         function reloadTags() {
             $scope.loadingTags = true;
-            FileService.listPublicTags($scope.tagsearch).then(function (data) {
+            PublicService.listPublicTags($scope.tagsearch).then(function (data) {
                     $scope.publicTags = data;
                     $scope.loadingTags = false;
                 },
@@ -79,7 +79,7 @@ angular.module('MindWebUi.public', [
 
         function reloadFiles() {
             $scope.loadingFiles = true;
-            FileService.listPublicFilesForTags($scope.filesearch, $scope.selectedTags).then(function (data) {
+            PublicService.listPublicFilesForTags($scope.filesearch, $scope.selectedTags).then(function (data) {
                     $scope.files = data;
                     $scope.loadingFiles = false;
                 },

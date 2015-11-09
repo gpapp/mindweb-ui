@@ -162,7 +162,6 @@ angular.module('MindWebUi.file', [
             modalInstance.result.then(function (selectedItem) {
                 FileService.remove(selectedItem.id).then(function () {
                     $scope.files.splice($scope.files.indexOf(target), 1);
-                    //reloadFiles();
                 });
             });
         };
