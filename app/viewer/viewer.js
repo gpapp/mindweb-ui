@@ -315,7 +315,7 @@ angular.module('MindWebUi.viewer', [
                 delete parent.node;
                 delete parent.open;
             }
-            $scope.$emit('fileModified', {event: 'deleteNode', parent: target.$['ID']});
+            $scope.$emit('fileModified', {event: 'deleteNode', parent: target.$parent.$['ID'], payload: target.$['ID']});
             $scope.selectNode('prev');
         }
     })
