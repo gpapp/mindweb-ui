@@ -104,7 +104,7 @@ angular.module('MindWebUi.viewer', [
             }
         }
     })
-    .controller('structureController', function ($scope, $rootScope, $state, $filter, $window, PublicService) {
+    .controller('structureController', function ($scope, $rootScope, $state, $filter, $timeout, $window, PublicService) {
         // Array of nodes, to be used for lookups.
         var flatNodes = [];
 
@@ -321,6 +321,42 @@ angular.module('MindWebUi.viewer', [
                 payload: target.$['ID']
             });
             $scope.selectNode('prev');
+        }
+        $scope.treeOptions = {
+            dropped: function (event) {
+                var sourceNode = event.source.nodesScope.myParent;
+                var sourceIndex = event.source.index;
+                var destNode = event.dest.nodesScope.myParent;
+                var destIndex = event.dest.index;
+                var element = event.source.nodeScope.$modelValue;
+                if (sourceNode == null) {
+                    return false;
+                }
+                if (destNode == null) {
+                    return false;
+                }
+                for (var i = sourceIndex; i < sourceNode.node.length; i++) {
+                    sourceNode.node[i].$parentIndex = i;
+                }
+                if (sourceNode.node.length == 0) {
+                    delete sourceNode.node;
+                    delete sourceNode.open;
+                }
+                element.$parent = destNode;
+                for (var i = destIndex; i < destNode.node.length; i++) {
+                    destNode.node[i].$parentIndex = i;
+                }
+                $timeout(function () {
+                    $scope.$emit('fileModified', {
+                        event: 'nodeMove',
+                        parent: sourceNode.$['ID'],
+                        payload: {
+                            elementId: element.$['ID'], fromIndex: sourceIndex,
+                            toParentId: destNode.$['ID'], toIndex: destIndex
+                        }
+                    });
+                }, 0);
+            }
         }
     })
     .controller('detailController', function ($scope, $http, $timeout) {
