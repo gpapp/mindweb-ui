@@ -1,15 +1,25 @@
 <div ui-content-for="title">
-    <span>MindWeb - Files</span>
+    <span>MindWeb - Publicly shared maps</span>
 </div>
+<div ui-content-for="localMenu">
+    adsd
+</div>
+
 
 <div class="scrollable">
     <div class="scrollable-content">
         <div class="section">
             <div class="panel-group">
-                <div class="panel panel-default" >
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title">
                             Maps for tags
+                            <span ng-show="loadingFiles">
+                              <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                            <span ng-show="!loadingFiles">
+                              ({{files.length}})
+                            </span>
                         </div>
                     </div>
                     <div class="panel-body">
@@ -42,12 +52,18 @@
                                 ng-model-options="{debounce:500}"
                                 ng-change="reloadFiles()"
                         />
+                        <span ng-show="loadingFiles">
+                          <i class="fa fa-spinner fa-spin"></i>
+                        </span>
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             Tagcloud
+                            <span ng-show="loadingTags">
+                              <i class="fa fa-spinner fa-spin"></i>
+                            </span>
                         </h4>
                     </div>
                     <div class="panel-body">
@@ -65,6 +81,9 @@
                                 ng-model-options="{debounce:500}"
                                 ng-change="reloadTags()"
                         />
+                        <span ng-show="loadingTags">
+                          <i class="fa fa-spinner fa-spin"></i>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -86,7 +105,9 @@
             <div class="infoPopup" ng-class="{hidden : !infoPopup}">
                 <div class="title">{{item.name}}</div>
                 <div class="version">Version: {{ item.versions.length }}</div>
-                <div class="isPublic">Visibility: {{ item.isPublic?'Public':(item.viewers||item.editors)?'Shared':'Private'}}</div>
+                <div class="isPublic">Visibility: {{
+                    item.isPublic?'Public':(item.viewers||item.editors)?'Shared':'Private'}}
+                </div>
                 <div class="fileDate">Created: {{ item.created}}</div>
                 <div class="fileDate">Last modification:{{ item.modified}}</div>
             </div>

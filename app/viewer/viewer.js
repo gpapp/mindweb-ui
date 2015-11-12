@@ -1,11 +1,14 @@
 angular.module('MindWebUi.viewer', [
+        'ui.bootstrap',
+        'ui.bootstrap.tabs',
+        'ui.bootstrap.tpls',
+        'ui.router',
+        'ui.tree',
+        'angular-markdown',
+        'angular-keyboard',
         'MindWebUi.public.service',
         'MindWebUi.file.service',
-        'ui.router',
-        'angular-markdown',
-        'ui.bootstrap.tabs',
-        'ui.tree',
-        'angular-keyboard'
+        'MindWebUi.task.service'
     ])
     .filter('escape', function () {
         return window.encodeURIComponent;
@@ -104,11 +107,11 @@ angular.module('MindWebUi.viewer', [
             }
         }
     })
-    .controller('structureController', function ($scope, $rootScope, $state, $filter, $timeout, $window, PublicService) {
+    .controller('structureController', function ($scope, $rootScope, $state, $filter, $timeout, $window, PublicService, TaskService) {
         // Array of nodes, to be used for lookups.
         var flatNodes = [];
 
-        $rootScope.$emit('$routeChangeStart');
+        $scope.loading = true;
 
         $rootScope.$on("closeFile", function (event, file) {
             if ($state.params.fileId === file.id) {
@@ -117,10 +120,11 @@ angular.module('MindWebUi.viewer', [
         });
 
         PublicService.load($state.params.fileId).then(function (data) {
+            $scope.file = data.file;
             $scope.nodes = data.content;
             $scope.nodes.rootNode.open = true;
             $scope.nodes.rootNode.$$hashKey = 'object:0';
-            $rootScope.$emit('$routeChangeSuccess');
+            $scope.loading = false;
             $scope.$emit('openId', {id: $state.params.fileId});
             $scope.$emit('selectNode', {node: $scope.nodes.rootNode});
         });
@@ -282,6 +286,7 @@ angular.module('MindWebUi.viewer', [
             $scope.$emit('selectNode', {node: newNode});
             $scope.$emit('fileModified', {event: 'newNode', parent: newNode.$parent.$['ID'], payload: newNode});
         };
+
         $scope.deleteNode = function (target) {
             if (typeof target === 'string') {
                 target = $scope.currentNode;
@@ -321,7 +326,19 @@ angular.module('MindWebUi.viewer', [
                 payload: target.$['ID']
             });
             $scope.selectNode('prev');
-        }
+        };
+
+        $scope.parseTasks = function () {
+            TaskService.parseTasks($state.params.fileId).then(function (data) {
+                $scope.nodes = data.content;
+                $scope.nodes.rootNode.open = true;
+                $scope.nodes.rootNode.$$hashKey = 'object:0';
+                $scope.loading = false;
+                $scope.$emit('openId', {id: $state.params.fileId});
+                $scope.$emit('selectNode', {node: $scope.nodes.rootNode});
+            });
+        };
+
         $scope.treeOptions = {
             dropped: function (event) {
                 var sourceNode = event.source.nodesScope.myParent;

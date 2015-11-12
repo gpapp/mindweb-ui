@@ -1,3 +1,18 @@
+<div ui-content-for="title">
+    <span>MindWeb - {{file.name}}</span>
+</div>
+
+<div ui-content-for="localMenu">
+    <div class="list-group">
+        <div class="list-group-item">
+            <i class="fa fa-list"></i> Local menu
+        </div>
+        <a class="list-group-item" ng-click="parseTasks()">
+            <i class="fa fa-fw fa-tasks"></i>Parse tasks
+        </a>
+    </div>
+</div>
+
 <script type="text/ng-template" id="tree_item_renderer">
     <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node}"
          on-short-press="longPressNode(node)" on-long-press="longPressNode(node)">
@@ -57,7 +72,8 @@
 <div class="panel">
     <div class="panel-body"
          ng-swipe-left='Ui.turnOn("detailPanel")'
-         ng-swipe-right='Ui.turnOff("detailPanel")'>
+         ng-swipe-right='Ui.turnOff("detailPanel")'
+         ng-if="!loading">
         <span keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')"
               keyboard-prevent-default="true"></span>
         <span keyboard-shortcut="down" keyboard-title="Next node" keyboard-action="selectNode('next')"
@@ -84,5 +100,11 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="panel-body"
+         ng-swipe-left='Ui.turnOn("detailPanel")'
+         ng-swipe-right='Ui.turnOff("detailPanel")'
+         ng-if="loading">
+        <i class="fa fa-2x fa-spinner fa-spin"></i> Loading file
     </div>
 </div>

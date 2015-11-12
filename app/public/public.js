@@ -46,7 +46,7 @@ angular.module('MindWebUi.public', [
             $scope.selectedTags.push(tag);
             $scope.selectedTags = $scope.selectedTags.filter(function (v, i, a) {
                 return a.indexOf(v) === i;
-            })
+            });
             reloadFiles();
         };
 
