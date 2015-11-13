@@ -8,39 +8,9 @@ angular.module('MindWebUi.viewer.treeController', [
         'angular-keyboard',
         'MindWebUi.public.service',
         'MindWebUi.file.service',
-        'MindWebUi.task.service',
+        'MindWebUi.task.service'
     ])
-    .controller('viewerTreeController', function ($scope, $rootScope, $state, $filter, $timeout, $window, PublicService, TaskService) {
-        // Array of nodes, to be used for lookups.
-        var flatNodes = [];
-
-        $scope.loading = true;
-
-        $rootScope.$on("closeFile", function (event, file) {
-            if ($state.params.fileId === file.id) {
-                $state.go('files.list');
-            }
-        });
-
-        PublicService.load($state.params.fileId).then(function (data) {
-            $scope.file = data.file;
-            $scope.nodes = data.content;
-            $scope.nodes.rootNode.open = true;
-            $scope.nodes.rootNode.$$hashKey = 'object:0';
-            $scope.loading = false;
-            $scope.$emit('openId', {id: $state.params.fileId});
-            $scope.$emit('selectNode', {node: $scope.nodes.rootNode});
-        });
-
-        // create parent/child links, build flat array to store the nodes,
-        // to overcome recursion depth limitations
-        $scope.setupParent = function (parent, $modelValue, $index) {
-            if (!$modelValue)return;
-            flatNodes.push($modelValue);
-            $modelValue.$parent = parent;
-            $modelValue.$parentIndex = $index;
-        };
-
+    .controller('viewerTreeController', function ($scope, $rootScope, $filter, $timeout, $window) {
         $scope.longPressNode = function (node) {
             $scope.$emit('selectNode', {node: node});
         };
@@ -58,24 +28,6 @@ angular.module('MindWebUi.viewer.treeController', [
             $scope.$emit('selectTab', {destination: destination});
         };
 
-        $scope.jumptoLink = function (link) {
-            if (link[0] == '#') {
-                for (var nodeindex in flatNodes) {
-                    var node = flatNodes[nodeindex];
-                    if (node.$['ID'] === link.substr(1)) {
-                        var nodeparent = node.$parent;
-                        while (nodeparent.$parent) {
-                            nodeparent.open = true;
-                            nodeparent = nodeparent.$parent;
-                        }
-                        $scope.$emit('selectNode', {node: node});
-                        break;
-                    }
-                }
-            } else {
-                $window.open(link, '_blank');
-            }
-        };
         $scope.selectNode = function (event) {
             var currentNode = $scope.currentNode;
             switch (event) {
@@ -169,13 +121,7 @@ angular.module('MindWebUi.viewer.treeController', [
             newNode.$ = {CREATED: timeStamp, ID: 'ID_' + timeStamp, MODIFIED: timeStamp, TEXT: 'New Node'};
             newNode.nodeMarkdown = 'New Node';
             var minId = -1;
-            for (var i = flatNodes.length - 1; i >= 0; i--) {
-                var curNum = Number(flatNodes[i].$$hashKey.substr(7));
-                if (curNum > minId) {
-                    minId = curNum;
-                }
-            }
-            newNode.$$hashKey = 'object:' + (minId + 1);
+
             if (newNode.$parent.node) {
                 newNode.$parent.node.push(newNode);
             } else {
@@ -183,12 +129,12 @@ angular.module('MindWebUi.viewer.treeController', [
             }
             newNode.$parentIndex = newNode.$parent.node.length - 1;
 
-            flatNodes.push(newNode);
             // Make sure the node is open, so the new node is shown
             newNode.$parent.open = true;
             $scope.$emit('selectNode', {node: newNode});
             $scope.$emit('fileModified', {event: 'newNode', parent: newNode.$parent.$['ID'], payload: newNode});
         };
+
 
         $scope.deleteNode = function (target) {
             if (typeof target === 'string') {
@@ -197,23 +143,6 @@ angular.module('MindWebUi.viewer.treeController', [
                     return;
                 }
             }
-            var ptr = target;
-            // TODO: Do a deep tree traversal to remove the nodes under it
-            while (true) {
-                if (ptr === target && !ptr.node) break;
-                if (ptr.node && ptr.node.length > 0) {
-                    ptr = ptr.node[0];
-                } else {
-                    flatNodes.splice(flatNodes.indexOf(ptr), 1);
-                    ptr = ptr.$parent;
-                    ptr.node.splice(0, 1);
-                    if (ptr.node.length == 0) {
-                        delete ptr.node;
-                        delete ptr.open;
-                    }
-                }
-            }
-            flatNodes.splice(flatNodes.indexOf(target), 1);
             var parent = target.$parent;
             parent.node.splice(target.$parentIndex, 1);
             for (var i = target.$parentIndex; i < parent.node.length; i++) {
@@ -229,18 +158,6 @@ angular.module('MindWebUi.viewer.treeController', [
                 payload: target.$['ID']
             });
             $scope.selectNode('prev');
-        };
-
-        $scope.parseTasks = function () {
-            $scope.loading=true;
-            TaskService.parseTasks($state.params.fileId).then(function (data) {
-                $scope.nodes = data.content;
-                $scope.nodes.rootNode.open = true;
-                $scope.nodes.rootNode.$$hashKey = 'object:0';
-                $scope.loading = false;
-                $scope.$emit('openId', {id: $state.params.fileId});
-                $scope.$emit('selectNode', {node: $scope.nodes.rootNode});
-            });
         };
 
         $scope.treeOptions = {
@@ -278,6 +195,6 @@ angular.module('MindWebUi.viewer.treeController', [
                     });
                 }, 0);
             }
-        }
+        };
     })
 ;
