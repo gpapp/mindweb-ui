@@ -7,9 +7,37 @@
         <div class="list-group-item">
             <i class="fa fa-list"></i> Local menu
         </div>
-        <a class="list-group-item" ng-click="parseTasks()">
-            <i class="fa fa-fw fa-tasks"></i>Parse tasks
-        </a>
+        <div class="appear-down" ng-class='{"roll-down":!loading}'>
+            <div class="list-group-item">
+                <div class="">
+                    <i class="fa fa-binoculars"></i> View type
+                </div>
+            </div>
+            <div class="list-group-item">
+                <div class="btn-group-justified">
+                    <div class="btn btn-default">
+                        Tree
+                    </div>
+                    <div class="btn btn-default">
+                        Task
+                    </div>
+                    <div class="btn btn-default">
+                        Mindmap
+                    </div>
+                </div>
+            </div>
+            <div class="list-group-item">
+                <button class="btn btn-default" ng-click="parseTasks()">
+                    <i class="fa fa-fw fa-tasks"></i>Parse tasks
+                </button>
+                <div class="btn btn-default" ng-click="setAsProject()" ng-class"{'':isProject(currentNode}">
+                    <i class="fa fa-fw fa-list" ng-if="currentNode"></i>Mark as project
+                </div>
+                <div class="btn btn-default" ng-click="setAsProject()" ng-class"{'btn-disabled':isProject(currentNode}">
+                    <i class="fa fa-fw fa-thumb-tack" ng-if="currentNode"></i>Mark as task
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

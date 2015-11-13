@@ -82,3 +82,15 @@ h1 {
 }
 
 
+.appear-down.roll-down {
+    transition: 1s linear height, 0.3s linear opacity;
+    height:300px;  
+    opacity:1;  
+}
+
+.appear-down {
+    transition: 2s linear height, .3s linear opacity;
+    overflow:hidden;
+    height:0px;
+    opacity:0;  
+}
