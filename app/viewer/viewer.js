@@ -82,6 +82,9 @@ angular.module('MindWebUi.viewer', [
                 }
 
                 function endTouch(evt) {
+                    if (!$scope.$inPress) {
+                        return;
+                    }
                     if (!$scope.$skipShortPress && $attrs.onShortPress) {
                         $scope.$apply(function () {
                             $scope.$eval($attrs.onShortPress);
@@ -100,18 +103,19 @@ angular.module('MindWebUi.viewer', [
                 }
 
                 function skipTouch(evt) {
-                    if ($inPress) {
+                    if ($scope.$inPress) {
                         $scope.$skipShortPress = true;
-                        $inPress=false;
+                        $scope.$inPress=false;
                     }
                 }
 
-                $elm.bind('touchmove', skipTouch);
-                $elm.bind('mousemove', skipTouch);
                 $elm.bind('touchstart', startTouch);
                 $elm.bind('touchend', endTouch);
+                $elm.bind('touchmove', skipTouch);
+
                 $elm.bind('mousedown', startTouch);
                 $elm.bind('mouseup', endTouch);
+                $elm.bind('mousemove', skipTouch);
             }
         };
     })
@@ -151,16 +155,17 @@ angular.module('MindWebUi.viewer', [
                 function skipTouch(evt) {
                     if ($scope.$inPress) {
                         $scope.$skipShortPress = true;
-                        $inPress=false;
+                        $scope.$inPress=false;
                     }
                 }
 
-                $elm.bind('touchmove', skipTouch);
-                $elm.bind('mousemove', skipTouch);
                 $elm.bind('touchstart', startTouch);
                 $elm.bind('touchend', endTouch);
+                $elm.bind('touchmove', skipTouch);
+                
                 $elm.bind('mousedown', startTouch);
                 $elm.bind('mouseup', endTouch);
+                $elm.bind('mousemove', skipTouch);
             }
         };
     })
