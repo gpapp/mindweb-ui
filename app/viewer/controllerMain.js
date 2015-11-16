@@ -126,7 +126,7 @@ angular.module('MindWebUi.viewer.mainController', [
                 postLoad(data);
             });
 
-            var iconConfig = {Project: 'list', Task: 'yes', NextAction: 'bookmark', Done: 'button_ok'};
+            var iconConfig = {project: 'list', task: 'yes', nextaction: 'bookmark', done: 'button_ok'};
 
             function postLoad(data) {
                 $scope.file = data.file;
@@ -139,7 +139,7 @@ angular.module('MindWebUi.viewer.mainController', [
                             if (!node.icon) {
                                 $rootScope.$emit("$applicationError", "Icon not specified for node:" + node.nodeMarkdown);
                             } else {
-                                iconConfig[node.nodeMarkdown.replace(/^Icon:\s*/, '')] = node.icon[0].$['BUILTIN'];
+                                iconConfig[node.nodeMarkdown.replace(/^Icon:\s*/, '').toLowerCase()] = node.icon[0].$['BUILTIN'];
                             }
                         }
                         if (!node.node) return false;
@@ -167,15 +167,22 @@ angular.module('MindWebUi.viewer.mainController', [
                 $scope.loading = false;
             }
 
+            function configToIcon(icon) {
+                    if(iconConfig.hasOwnProperty(icon.toLowerCase())) {
+                        return iconConfig[icon.toLowerCase()];
+                    }
+                return null;
+            }
+
             function hasConfigIcon(node, icon) {
                 if (!node) return false;
                 if (!node.icon) return false;
-                var toSearch = iconConfig[icon];
+                var toSearch = configToIcon(icon);
                 if (!toSearch) {
                     return false;
                 }
                 for(var i=0; i<node.icon.length;i++){
-                    if(node.icon[i].$['BUILTIN'].toLowerCase()===toSearch.toLowerCase()){
+                    if(node.icon[i].$['BUILTIN']===toSearch){
                         return true;
                     }
                 }
@@ -184,15 +191,15 @@ angular.module('MindWebUi.viewer.mainController', [
 
             function addConfigIcon(node, icon) {
                 if (!node) return;
-                var toSearch = iconConfig[icon];
+                var toSearch = configToIcon(icon);
                 if (!toSearch) {
                     return;
                 }
                 if (!node.icon) {
-                    node.icon = [{'$': {BUILTIN: toSearch}}];
+                    node.icon = [];
                 }
                 for(var i=0; i<node.icon.length;i++){
-                    if(node.icon[i].$['BUILTIN'].toLowerCase()===toSearch.toLowerCase()){
+                    if(node.icon[i].$['BUILTIN']===toSearch){
                         return;
                     }
                 }
