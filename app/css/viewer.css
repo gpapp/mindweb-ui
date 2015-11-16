@@ -89,27 +89,33 @@ markdown.tab-content {
 }
 
 .nodeList .list-group-item-heading {
-    display: table;
+    display: flex;
+    flex-direction: row;
     width: 100%;
     overflow: auto;
+    flex-wrap: nowrap;
 }
 
-.nodeList .handle,
-.nodeList .icons,
-.nodeList .item,
-.nodeList .chevron {
-    display: table-cell;
-    vertical-align: top;
+.nodeList .item {
+    flex-grow: 100;
+    flex-basis: 100px;
 }
 
 .nodeList .handle,
 .nodeList .icons,
 .nodeList .chevron {
-    width: 0.1px;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .nodeList .handle {
-    padding-right: 8px;
+    padding-right:5px;
+}
+
+.nodeList .chevron {
+}
+
+.nodeList .icons {
 }
 
 .nodeList .icons .icon-block,

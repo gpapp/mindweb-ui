@@ -79,11 +79,6 @@ angular.module('MindWebUi.viewer.mainController', [
                 $scope.nodes.$['viewType'] = viewType;
             };
 
-            $scope.canEdit = function () {
-                // TODO: Add proper edit right validation here (owner or in editors)
-                return true;
-            };
-
             $scope.isProject = function (node) {
                 return hasConfigIcon(node, 'Project');
             };
@@ -112,7 +107,7 @@ angular.module('MindWebUi.viewer.mainController', [
                 if (link[0] == '#') {
                     walknodes($scope.nodes.rootNode, function (node) {
                         if (node.$['ID'] === link.substr(1)) {
-                            var nodeparent = node.$parent;
+                            var nodeparent = node;
                             while (nodeparent.$parent) {
                                 nodeparent.open = true;
                                 nodeparent = nodeparent.$parent;
@@ -135,6 +130,7 @@ angular.module('MindWebUi.viewer.mainController', [
 
             function postLoad(data) {
                 $scope.file = data.file;
+                $scope.editable = data.editable;
                 $scope.nodes = data.content;
                 $scope.nodes.rootNode.open = true;
                 $scope.nodes.rootNode.$$hashKey = 'object:0';
@@ -157,9 +153,13 @@ angular.module('MindWebUi.viewer.mainController', [
                 );
                 $scope.$emit('openId', {id: $state.params.fileId});
                 // TODO: Select anchored node else select rootNode
-                selectNode($scope.nodes.rootNode);
+                if ($location.$$hash.indexOf("ID_")==0) {
+                    $scope.jumptoLink("#"+$location.$$hash)    ;
+                } else {
+                    selectNode($scope.nodes.rootNode);                        
+                }
 
-                if ($scope.canEdit()){
+                if ($scope.editable){
                     saveTimer = $interval(function () {
                         performSave();
                     }, 10000);
