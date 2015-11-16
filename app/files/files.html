@@ -148,7 +148,7 @@
          ng-mouseleave="hovered=false">
         <div class="name" ng-click="fileOpen(item)" ui-state="infoPopup">
             <i class="fa pull-right"
-               ng-class="{'fa-user': !item.isPublic,'fa-group': !item.isPublic&&(item.viewers||item.editors),'fa-circle': item.isPublic}"></i>
+               ng-class="{'fa-user': !item.isPublic,'fa-group': !item.isPublic&&(item.viewers||item.editors),'fa-globe': item.isPublic}"></i>
             <i class="fa fa-info-circle pull-right"
                ng-mouseover="infoPopup=true"
                ng-mouseleave="infoPopup=false"></i>

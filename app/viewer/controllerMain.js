@@ -22,9 +22,7 @@ angular.module('MindWebUi.viewer.mainController', [
                   TaskService) {
             var msgStack = [];
             var saveMutex = false;
-            var saveTimer = $interval(function () {
-                performSave();
-            }, 10000);
+            var saveTimer;
 
             $anchorScroll.yOffset = 50;
             $rootScope.$on("closeFile", function (event, file) {
@@ -63,8 +61,10 @@ angular.module('MindWebUi.viewer.mainController', [
                 event.stopPropagation();
             });
             $scope.$on("$destroy", function (event) {
-                    $interval.cancel(saveTimer);
-                    performSave();
+                    if(saveTimer){
+                        $interval.cancel(saveTimer);
+                        performSave();
+                    }
                 }
             );
 
@@ -78,6 +78,12 @@ angular.module('MindWebUi.viewer.mainController', [
             $scope.setViewType = function (viewType) {
                 $scope.nodes.$['viewType'] = viewType;
             };
+
+            $scope.canEdit = function () {
+                // TODO: Add proper edit right validation here (owner or in editors)
+                return true;
+            };
+
             $scope.isProject = function (node) {
                 return hasConfigIcon(node, 'Project');
             };
@@ -150,7 +156,14 @@ angular.module('MindWebUi.viewer.mainController', [
                     }
                 );
                 $scope.$emit('openId', {id: $state.params.fileId});
+                // TODO: Select anchored node else select rootNode
                 selectNode($scope.nodes.rootNode);
+
+                if ($scope.canEdit()){
+                    saveTimer = $interval(function () {
+                        performSave();
+                    }, 10000);
+                }
                 $scope.loading = false;
             }
 

@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-            <div class="list-group-item">
+            <div class="list-group-item" ng-if="canEdit()">
                 <button class="btn btn-default" ng-click="parseTasks()">
                     <i class="fa fa-fw fa-tasks"></i>Parse tasks
                 </button>
