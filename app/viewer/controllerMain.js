@@ -48,6 +48,60 @@ angular.module('MindWebUi.viewer.mainController', [
                 event.stopPropagation();
             });
             $scope.$on('fileModified', function (event, data) {
+                if (data.event === 'deleteNode') {
+                    walknodes(findNodeById(data.payload),function(node){
+                        var config = /Icon:\s*(.*)/.exec(node.nodeMarkdown)[1].toLowerCase();
+                        var configIcon = configToIcon(config);
+                        delete iconConfig[config];
+                        if (defaultIconConfig[config]) {
+                            iconConfig[config] = defaultIconConfig[config];
+                            if (node.icon) {
+                                var oldIcon = node.icon[0].$['BUILTIN'];
+                                if (oldIcon != defaultIconConfig[config]) {
+                                    replaceIcon(oldIcon, defaultIconConfig[config]);
+                                }
+                            }
+                        }
+                        return false;
+                    });
+                }
+                if (data.event === 'nodeText' || data.event === 'nodeModifyIcons') {
+                    var node = findNodeById(data.parent);
+                    if (data.event === 'nodeText' && /Icon: /.test(data.oldValue)) {
+                        var config = /Icon:\s*(.*)/.exec(data.oldValue)[1].toLowerCase();
+                        var configIcon = configToIcon(config);
+                        delete iconConfig[config];
+                        if (defaultIconConfig[config]) {
+                            iconConfig[config] = defaultIconConfig[config];
+                            if (node.icon) {
+                                var oldIcon = node.icon[0].$['BUILTIN'];
+                                if (oldIcon != defaultIconConfig[config]) {
+                                    replaceIcon(oldIcon, defaultIconConfig[config]);
+                                }
+                            }
+                        }
+                    }
+                    if (/Icon: /.test(node.nodeMarkdown)) {
+                        var config = /Icon:\s*(.*)/.exec(node.nodeMarkdown)[1].toLowerCase();
+                        var configIcon = configToIcon(config);
+                        var newIcon = configIcon;
+                        if (node.icon) {
+                            newIcon = node.icon[0].$['BUILTIN'];
+                        } else {
+                            if (defaultIconConfig[config]) {
+                                newIcon = defaultIconConfig[config];
+                            }
+                        }
+                        if (configIcon != newIcon) {
+                            if (setConfigIcon(config, newIcon)) {
+                                replaceIcon(configIcon, newIcon);
+                            } else {
+                                addConfigIcon(node, config);
+                            }
+                        }
+
+                    }
+                }
                 // remove circular references
                 if (data.payload && typeof data.payload == 'object') {
                     var nodeCopy = (data.payload instanceof Array) ? [] : {};
@@ -61,7 +115,7 @@ angular.module('MindWebUi.viewer.mainController', [
                 event.stopPropagation();
             });
             $scope.$on("$destroy", function (event) {
-                    if(saveTimer){
+                    if (saveTimer) {
                         $interval.cancel(saveTimer);
                         performSave();
                     }
@@ -89,13 +143,13 @@ angular.module('MindWebUi.viewer.mainController', [
                 return hasConfigIcon(node, 'Done');
             };
             $scope.markProject = function (node) {
-                addConfigIcon(node,'Project');
+                addConfigIcon(node, 'Project');
             };
             $scope.markTask = function (node) {
-                addConfigIcon(node,'Task');
+                addConfigIcon(node, 'Task');
             };
-            $scope.markDone = function (node,status) {
-                status?addConfigIcon(node,'Done'):removeConfigIcon(node,'Done');
+            $scope.markDone = function (node, status) {
+                status ? addConfigIcon(node, 'Done') : removeConfigIcon(node, 'Done');
             };
             $scope.parseTasks = function () {
                 $scope.loading = true;
@@ -105,18 +159,10 @@ angular.module('MindWebUi.viewer.mainController', [
             };
             $scope.jumptoLink = function (link) {
                 if (link[0] == '#') {
-                    walknodes($scope.nodes.rootNode, function (node) {
-                        if (node.$['ID'] === link.substr(1)) {
-                            var nodeparent = node;
-                            while (nodeparent.$parent) {
-                                nodeparent.open = true;
-                                nodeparent = nodeparent.$parent;
-                            }
-                            selectNode(node);
-                            return true;
-                        }
-                        return false;
-                    })
+                    var node = findNodeById(link.substr(1));
+                    if (node) {
+                        selectNode(node);
+                    }
                 } else {
                     $window.open(link, '_blank');
                 }
@@ -126,11 +172,12 @@ angular.module('MindWebUi.viewer.mainController', [
                 postLoad(data);
             });
 
+            var defaultIconConfig = {project: 'list', task: 'yes', nextaction: 'bookmark', done: 'button_ok'};
             var iconConfig = {project: 'list', task: 'yes', nextaction: 'bookmark', done: 'button_ok'};
 
             function postLoad(data) {
                 $scope.file = data.file;
-                $scope.editable = data.editable;
+                $scope.editable = $scope.file.editable;
                 $scope.nodes = data.content;
                 $scope.nodes.rootNode.open = true;
                 $scope.nodes.rootNode.$$hashKey = 'object:0';
@@ -139,7 +186,7 @@ angular.module('MindWebUi.viewer.mainController', [
                             if (!node.icon) {
                                 $rootScope.$emit("$applicationError", "Icon not specified for node:" + node.nodeMarkdown);
                             } else {
-                                iconConfig[node.nodeMarkdown.replace(/^Icon:\s*/, '').toLowerCase()] = node.icon[0].$['BUILTIN'];
+                                setConfigIcon(node.nodeMarkdown.replace(/^Icon:\s*/, '').toLowerCase(), node.icon[0].$['BUILTIN']);
                             }
                         }
                         if (!node.node) return false;
@@ -153,13 +200,13 @@ angular.module('MindWebUi.viewer.mainController', [
                 );
                 $scope.$emit('openId', {id: $state.params.fileId});
                 // TODO: Select anchored node else select rootNode
-                if ($location.$$hash.indexOf("ID_")==0) {
-                    $scope.jumptoLink("#"+$location.$$hash)    ;
+                if ($location.$$hash.indexOf("ID_") == 0) {
+                    $scope.jumptoLink("#" + $location.$$hash);
                 } else {
-                    selectNode($scope.nodes.rootNode);                        
+                    selectNode($scope.nodes.rootNode);
                 }
 
-                if ($scope.editable){
+                if ($scope.editable) {
                     saveTimer = $interval(function () {
                         performSave();
                     }, 10000);
@@ -167,10 +214,65 @@ angular.module('MindWebUi.viewer.mainController', [
                 $scope.loading = false;
             }
 
-            function configToIcon(icon) {
-                    if(iconConfig.hasOwnProperty(icon.toLowerCase())) {
-                        return iconConfig[icon.toLowerCase()];
+            function setConfigIcon(name, value) {
+                var retval = false;
+                if (iconConfig[name.toLowerCase()]) {
+                    for (var i in iconConfig) {
+                        if (!iconConfig.hasOwnProperty(i)) continue;
+                        if (iconConfig[i] === value) {
+                            $rootScope.$emit('$applicationError', 'Trying to reuse icon for ' + name);
+                            return false;
+                        }
                     }
+                    retval = true;
+                }
+                iconConfig[name.toLowerCase()] = value;
+                return retval;
+            }
+
+            function findNodeById(idStr) {
+                var foundNode = null;
+                walknodes($scope.nodes.rootNode, function (node) {
+                    if (node.$['ID'] === idStr) {
+                        var nodeparent = node;
+                        while (nodeparent.$parent) {
+                            nodeparent.open = true;
+                            nodeparent = nodeparent.$parent;
+                        }
+                        foundNode = node;
+                        return true;
+                    }
+                    return false;
+                });
+                return foundNode;
+            }
+
+            function replaceIcon(oldIcon, newIcon) {
+                walknodes($scope.nodes.rootNode, function (node) {
+                    if (node.icon && !/^Icon:/.test(node.nodeMarkdown)) {
+                        var changed = false;
+                        for (var i = 0; i < node.icon.length; i++) {
+                            if (node.icon[i].$['BUILTIN'] === oldIcon) {
+                                changed = true;
+                                node.icon[i].$['BUILTIN'] = newIcon;
+                            }
+                        }
+                        if (changed) {
+                            $scope.$emit('fileModified', {
+                                event: 'nodeModifyIcons',
+                                parent: node.$['ID'],
+                                payload: node.icon
+                            });
+                        }
+                    }
+                    return false;
+                });
+            }
+
+            function configToIcon(icon) {
+                if (iconConfig.hasOwnProperty(icon.toLowerCase())) {
+                    return iconConfig[icon.toLowerCase()];
+                }
                 return null;
             }
 
@@ -181,8 +283,8 @@ angular.module('MindWebUi.viewer.mainController', [
                 if (!toSearch) {
                     return false;
                 }
-                for(var i=0; i<node.icon.length;i++){
-                    if(node.icon[i].$['BUILTIN']===toSearch){
+                for (var i = 0; i < node.icon.length; i++) {
+                    if (node.icon[i].$['BUILTIN'] === toSearch) {
                         return true;
                     }
                 }
@@ -198,14 +300,15 @@ angular.module('MindWebUi.viewer.mainController', [
                 if (!node.icon) {
                     node.icon = [];
                 }
-                for(var i=0; i<node.icon.length;i++){
-                    if(node.icon[i].$['BUILTIN']===toSearch){
+                for (var i = 0; i < node.icon.length; i++) {
+                    if (node.icon[i].$['BUILTIN'] === toSearch) {
                         return;
                     }
                 }
                 node.icon.unshift({'$': {BUILTIN: toSearch}});
                 $scope.$emit('fileModified', {event: 'nodeModifyIcons', parent: node.$['ID'], payload: node.icon});
             }
+
             function removeConfigIcon(node, icon) {
                 if (!node) return;
                 if (!node.icon) return;
@@ -213,12 +316,12 @@ angular.module('MindWebUi.viewer.mainController', [
                 if (!toSearch) {
                     return;
                 }
-                for(var i=0; i<node.icon.length;i++){
-                    if(node.icon[i].$['BUILTIN'].toLowerCase()===toSearch.toLowerCase()){
-                        node.icon.splice(i,1);
+                for (var i = 0; i < node.icon.length; i++) {
+                    if (node.icon[i].$['BUILTIN'].toLowerCase() === toSearch.toLowerCase()) {
+                        node.icon.splice(i, 1);
                     }
                 }
-                if(node.icon.length==0){
+                if (node.icon.length == 0) {
                     delete node.icon;
                 }
                 $scope.$emit('fileModified', {event: 'nodeModifyIcons', parent: node.$['ID'], payload: node.icon});

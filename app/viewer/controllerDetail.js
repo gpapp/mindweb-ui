@@ -23,14 +23,15 @@ angular.module('MindWebUi.viewer.detailController', [
         var editortimeoutDelay = 1000;
 
         $scope.$watch('currentEditor.text', function (newValue, oldValue) {
-            if ($scope.currentNode.nodeMarkdown != newValue) {
+            if ($scope.currentNode.nodeMarkdown != newValue) {                  
                 $scope.currentNode.nodeMarkdown = newValue;
                 $timeout.cancel(nodeTimeoutPromise);
                 nodeTimeoutPromise = $timeout(function () {
                     $scope.$emit('fileModified', {
                         event: 'nodeText',
                         parent: $scope.currentNode.$['ID'],
-                        payload: newValue
+                        payload: newValue,
+                        oldValue: oldValue
                     });
                 }, editortimeoutDelay);
             }
@@ -44,7 +45,8 @@ angular.module('MindWebUi.viewer.detailController', [
                     $scope.$emit('fileModified', {
                         event: 'nodeDetail',
                         parent: $scope.currentNode.$['ID'],
-                        payload: newValue
+                        payload: newValue,
+                        oldValue: oldValue
                     });
                 }, editortimeoutDelay);
             }
@@ -59,7 +61,8 @@ angular.module('MindWebUi.viewer.detailController', [
                     $scope.$emit('fileModified', {
                         event: 'nodeNote',
                         parent: $scope.currentNode.$['ID'],
-                        payload: newValue
+                        payload: newValue,
+                        oldValue: oldValue
                     });
                 }, editortimeoutDelay);
             }
