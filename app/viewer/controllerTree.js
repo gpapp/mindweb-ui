@@ -155,7 +155,8 @@ angular.module('MindWebUi.viewer.treeController', [
             $scope.$emit('fileModified', {
                 event: 'deleteNode',
                 parent: target.$parent.$['ID'],
-                payload: target.$['ID']
+                payload: target.$['ID'],
+                oldValue: target
             });
             $scope.selectNode('prev');
         };

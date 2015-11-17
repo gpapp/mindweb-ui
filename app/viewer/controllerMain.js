@@ -1,3 +1,5 @@
+const IconRegExp = /^Icon:\s*(.*)/;
+
 angular.module('MindWebUi.viewer.mainController', [
         'ui.bootstrap',
         'ui.bootstrap.tabs',
@@ -49,26 +51,45 @@ angular.module('MindWebUi.viewer.mainController', [
             });
             $scope.$on('fileModified', function (event, data) {
                 if (data.event === 'deleteNode') {
-                    walknodes(findNodeById(data.payload),function(node){
-                        var config = /Icon:\s*(.*)/.exec(node.nodeMarkdown)[1].toLowerCase();
+                    walknodes(data.oldValue, function (node) {
+                        var parseResult = IconRegExp.exec(node.nodeMarkdown);
+                        if (!parseResult) {
+                            return false;
+                        }
+                        var config = parseResult[1].toLowerCase();
                         var configIcon = configToIcon(config);
                         delete iconConfig[config];
-                        if (defaultIconConfig[config]) {
+                        // TODO walk the tree to find a fitting replacement, fall back to defaultIconConfig
+                        var newIcon = null;
+                        walknodes($scope.nodes.rootNode, function (innerNode) {
+                            var parseResult = IconRegExp.exec(innerNode.nodeMarkdown);
+                            if (!parseResult) {
+                                return false;
+                            }
+                            var newConfig = parseResult[1].toLowerCase();
+                            if (config === newConfig && innerNode.icon) {
+                                newIcon = innerNode.icon[0].$['BUILTIN'];
+                            }
+                            // Parse the entire tree
+                            return false;
+                        });
+                        var oldIcon = node.icon[0].$['BUILTIN'];
+                        if (!newIcon && defaultIconConfig[config]) {
                             iconConfig[config] = defaultIconConfig[config];
                             if (node.icon) {
-                                var oldIcon = node.icon[0].$['BUILTIN'];
-                                if (oldIcon != defaultIconConfig[config]) {
-                                    replaceIcon(oldIcon, defaultIconConfig[config]);
-                                }
+                                newIcon = defaultIconConfig[config];
                             }
+                        }
+                        if (newIcon && oldIcon != newIcon) {
+                            replaceIcon(oldIcon, newIcon);
                         }
                         return false;
                     });
                 }
                 if (data.event === 'nodeText' || data.event === 'nodeModifyIcons') {
                     var node = findNodeById(data.parent);
-                    if (data.event === 'nodeText' && /Icon: /.test(data.oldValue)) {
-                        var config = /Icon:\s*(.*)/.exec(data.oldValue)[1].toLowerCase();
+                    if (data.event === 'nodeText' && IconRegExp.test(data.oldValue)) {
+                        var config = IconRegExp.exec(data.oldValue)[1].toLowerCase();
                         var configIcon = configToIcon(config);
                         delete iconConfig[config];
                         if (defaultIconConfig[config]) {
@@ -81,8 +102,8 @@ angular.module('MindWebUi.viewer.mainController', [
                             }
                         }
                     }
-                    if (/Icon: /.test(node.nodeMarkdown)) {
-                        var config = /Icon:\s*(.*)/.exec(node.nodeMarkdown)[1].toLowerCase();
+                    if (IconRegExp.test(node.nodeMarkdown)) {
+                        var config = IconRegExp.exec(node.nodeMarkdown)[1].toLowerCase();
                         var configIcon = configToIcon(config);
                         var newIcon = configIcon;
                         if (node.icon) {
@@ -110,6 +131,7 @@ angular.module('MindWebUi.viewer.mainController', [
                     delete nodeCopy.$parentIndex;
                     data.payload = nodeCopy;
                 }
+                delete data.oldValue;
                 $scope.msgStack = msgStack;
                 msgStack.push(data);
                 event.stopPropagation();
@@ -162,6 +184,12 @@ angular.module('MindWebUi.viewer.mainController', [
                     var node = findNodeById(link.substr(1));
                     if (node) {
                         selectNode(node);
+                        // Open all parent nodes
+                        var nodeparent = node;
+                        while (nodeparent.$parent) {
+                            nodeparent.open = true;
+                            nodeparent = nodeparent.$parent;
+                        }
                     }
                 } else {
                     $window.open(link, '_blank');
@@ -182,11 +210,11 @@ angular.module('MindWebUi.viewer.mainController', [
                 $scope.nodes.rootNode.open = true;
                 $scope.nodes.rootNode.$$hashKey = 'object:0';
                 walknodes($scope.nodes.rootNode, function (node) {
-                        if (/^Icon: /.test(node.nodeMarkdown)) {
+                        if (IconRegExp.test(node.nodeMarkdown)) {
                             if (!node.icon) {
                                 $rootScope.$emit("$applicationError", "Icon not specified for node:" + node.nodeMarkdown);
                             } else {
-                                setConfigIcon(node.nodeMarkdown.replace(/^Icon:\s*/, '').toLowerCase(), node.icon[0].$['BUILTIN']);
+                                setConfigIcon(node.nodeMarkdown.replace(IconRegExp, '$1').toLowerCase(), node.icon[0].$['BUILTIN']);
                             }
                         }
                         if (!node.node) return false;
@@ -234,11 +262,6 @@ angular.module('MindWebUi.viewer.mainController', [
                 var foundNode = null;
                 walknodes($scope.nodes.rootNode, function (node) {
                     if (node.$['ID'] === idStr) {
-                        var nodeparent = node;
-                        while (nodeparent.$parent) {
-                            nodeparent.open = true;
-                            nodeparent = nodeparent.$parent;
-                        }
                         foundNode = node;
                         return true;
                     }
@@ -249,7 +272,7 @@ angular.module('MindWebUi.viewer.mainController', [
 
             function replaceIcon(oldIcon, newIcon) {
                 walknodes($scope.nodes.rootNode, function (node) {
-                    if (node.icon && !/^Icon:/.test(node.nodeMarkdown)) {
+                    if (node.icon && !IconRegExp.test(node.nodeMarkdown)) {
                         var changed = false;
                         for (var i = 0; i < node.icon.length; i++) {
                             if (node.icon[i].$['BUILTIN'] === oldIcon) {

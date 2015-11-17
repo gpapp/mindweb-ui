@@ -86,7 +86,7 @@ angular.module('MindWebUi.file', [
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileService.create(selectedItem.newName,selectedItem.newIsPublic).then(function (data) {
+                FileService.create(selectedItem.newName, selectedItem.newIsPublic).then(function (data) {
                     $scope.files.push(data);
                 });
             });
