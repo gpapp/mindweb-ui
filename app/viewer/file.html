@@ -128,8 +128,7 @@
             <div id="tree-root" ui-tree-nodes="" ng-model="nodes.rootNode">
                 <div ng-repeat="node in nodes"
                      ui-tree-node
-                     ng-include="'tree_item_renderer'"
-                     ng-init="setupParent(null,node,$index);">
+                     ng-include="'tree_item_renderer'">
                 </div>
             </div>
         </div>

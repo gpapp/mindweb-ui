@@ -219,7 +219,7 @@ angular.module('MindWebUi.viewer.mainController', [
                         }
                         if (!node.node) return false;
                         for (var i = 0; i < node.node.length; i++) {
-                            curNode = node.node[i];
+                            var curNode = node.node[i];
                             curNode.$parent = node;
                             curNode.$parentIndex = i;
                         }

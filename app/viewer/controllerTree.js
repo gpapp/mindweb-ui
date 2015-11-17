@@ -163,16 +163,16 @@ angular.module('MindWebUi.viewer.treeController', [
 
         $scope.treeOptions = {
             dropped: function (event) {
-                var sourceNode = event.source.nodesScope.myParent;
-                var sourceIndex = event.source.index;
-                var destNode = event.dest.nodesScope.myParent;
-                var destIndex = event.dest.index;
                 var element = event.source.nodeScope.$modelValue;
+                var sourceNode = event.source.nodesScope.$nodeScope.$modelValue;
+                var sourceIndex = event.source.index;
+                var destNode = event.dest.nodesScope.$nodeScope.$modelValue;
+                var destIndex = event.dest.index;
                 if (sourceNode == null) {
-                    return false;
+                    sourceNode=$scope.$parent.nodes.rootNode;
                 }
                 if (destNode == null) {
-                    return false;
+                    destNode=$scope.$parent.nodes.rootNode;
                 }
                 for (var i = sourceIndex; i < sourceNode.node.length; i++) {
                     sourceNode.node[i].$parentIndex = i;
@@ -194,7 +194,7 @@ angular.module('MindWebUi.viewer.treeController', [
                             toParentId: destNode.$['ID'], toIndex: destIndex
                         }
                     });
-                }, 0);
+                }, 10);
             }
         };
     })
