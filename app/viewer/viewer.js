@@ -1,16 +1,9 @@
 angular.module('MindWebUi.viewer', [
-        'ui.bootstrap',
-        'ui.bootstrap.tabs',
-        'ui.bootstrap.tpls',
         'ui.router',
-        'ui.tree',
-        'angular-markdown',
-        'angular-keyboard',
-        'MindWebUi.public.service',
-        'MindWebUi.file.service',
-        'MindWebUi.task.service',
         'MindWebUi.viewer.mainController',
         'MindWebUi.viewer.treeController',
+        'MindWebUi.viewer.taskController',
+        'MindWebUi.viewer.mindmapController',
         'MindWebUi.viewer.detailController'
     ])
     .filter('escape', function () {
@@ -32,10 +25,20 @@ angular.module('MindWebUi.viewer', [
                 .state('viewer.file', {
                     url: '/{fileId:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}',
                     views: {
-                        '': {
-                            templateUrl: 'app/viewer/file.html',
+                        'tree@viewer': {
+                            templateUrl: 'app/viewer/tree.html',
                             controller: 'viewerTreeController',
                             controllerAs: 'viewerTreeController'
+                        },
+                        'task@viewer': {
+                            templateUrl: 'app/viewer/task.html',
+                            controller: 'viewerTaskController',
+                            controllerAs: 'viewerTaskController'
+                        },
+                        'mindmap@viewer': {
+                            templateUrl: 'app/viewer/mindmap.html',
+                            controller: 'viewerMindmapController',
+                            controllerAs: 'viewerMindmapController'
                         },
                         'detail@viewer': {
                             templateUrl: 'app/viewer/detail.html',

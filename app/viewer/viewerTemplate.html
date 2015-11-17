@@ -1,6 +1,8 @@
 <div id="viewerTable">
     <div id="nodePane" ui-class="{'detailOpen': detailPanel}">
-        <section ui-view></section>
+        <section ui-view="tree" ng-if="getViewType()=='tree'"></section>
+        <section ui-view="task" ng-if="getViewType()=='task'"></section>
+        <section ui-view="mindmap" ng-if="getViewType()=='mindmap'"></section>
     </div>
     <div id="detailPane" ui-state="detailPanel" ui-if="detailPanel">
         <section ui-view="detail"></section>

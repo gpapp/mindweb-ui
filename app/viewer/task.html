@@ -1,0 +1,163 @@
+<div ui-content-for="title">
+    <span>MindWeb - {{file.name}}</span>
+</div>
+
+<div ui-content-for="localMenu">
+    <div class="list-group">
+        <div class="list-group-item">
+            <i class="fa fa-list"></i> Local menu
+        </div>
+        <div class="appear-down" ng-class='{"roll-down":!loading}'>
+            <div class="list-group-item">
+                <div class="">
+                    <i class="fa fa-binoculars"></i> View type
+                </div>
+            </div>
+            <div class="list-group-item">
+                <div class="btn-group-justified">
+                    <div class="btn btn-default" ng-class="{'btn-primary': getViewType()==='tree'}" ng-click="setViewType('tree')">
+                        Tree
+                    </div>
+                    <div class="btn btn-default" ng-class="{'btn-primary': getViewType()==='task'}" ng-click="setViewType('task')">
+                        Task
+                    </div>
+                    <div class="btn btn-default" ng-class="{'btn-primary': getViewType()==='mindmap'}" ng-click="setViewType('mindmap')">
+                        Mindmap
+                    </div>
+                </div>
+            </div>
+            <div class="list-group-item">
+                <div class="">
+                    <i class="fa fa-sort"></i>Group by
+                </div>
+            </div>
+            <div class="list-group-item">
+                <div class="btn-group-justified">
+                    <div class="btn btn-default" ng-class="{'btn-primary': getTaskViewType()==='project'}" ng-click="setTaskViewType('project')">
+                        Project
+                    </div>
+                    <div class="btn btn-default" ng-class="{'btn-primary': getTaskViewType()==='responsible'}" ng-click="setTaskViewType('responsible')">
+                        Responsible
+                    </div>
+                    <div class="btn btn-default" ng-class="{'btn-primary': getTaskViewType()==='context'}" ng-click="setTaskViewType('context')">
+                        Context
+                    </div>
+                    <div class="btn btn-default" ng-class="{'btn-primary': getTaskViewType()==='timeline'}" ng-click="setTaskViewType('timeline')">
+                        Timeline
+                    </div>
+                </div>
+            </div>
+            <div class="list-group-item" ng-if="editable">
+                <button class="btn btn-default" ng-click="parseTasks()">
+                    <i class="fa fa-fw fa-tasks"></i>Parse tasks
+                </button>
+                <button class="btn btn-default" ng-click="markProject(currentNode)" ng-hide="isProject(currentNode)">
+                    <i class="fa fa-fw fa-list" ng-if="currentNode"></i>Mark as project
+                </button>
+                <button class="btn btn-default" ng-click="markTask(currentNode)" ng-hide="isTask(currentNode)">
+                    <i class="fa fa-fw fa-thumb-tack" ng-if="currentNode"></i>Mark as task
+                </button>
+                <button class="btn btn-default" ng-click="markDone(currentNode,true)" ng-hide="!isTask(currentNode)||isDone(currentNode)">
+                    <i class="fa fa-fw fa-check" ng-if="currentNode"></i>Mark as done
+                </button>
+                <button class="btn btn-default" ng-click="markDone(currentNode,false)" ng-hide="!isTask(currentNode)||!isDone(currentNode)">
+                    <i class="fa fa-fw fa-check" ng-if="currentNode"></i>Unmark as done
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="tree_item_renderer">
+    <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node}"
+         on-short-press="longPressNode(node)" on-long-press="longPressNode(node)">
+        <div class="list-group-item-heading" ng-mouseover="displayIcons=true" ng-mouseleave="displayIcons=false">
+            <div ui-tree-handle class="handle" ng-if="node.$parent">
+                <i class="fa fa-bars"></i>
+            </div>
+            <div class="icons">
+                <div class="icon-block">
+                    <span ng-repeat="icon in node.icon">
+                        <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png"
+                             on-short-press="openDetails(node,'icons')"/>
+                    </span>
+                </div>
+            </div>
+            <div class="item">
+                <markdown ng-model="node.nodeMarkdown" extensions="github, prettify"
+                          on-short-press="openDetails(node,'content')"></markdown>
+                <a ng-if="node.$['LINK']" title="{{node.$['LINK']}}" on-short-press="jumptoLink(node.$['LINK'])">
+                    <img ng-src="/images/{{node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
+                </a>
+            </div>
+            <div class="chevron">
+                <div class="icon-block">
+                    <span name="editorIcons" ng-if="editable&&(displayIcons||currentNode===node)">
+                        <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.$parent)"></i>
+                        <i class="fa fa-fw fa-folder-o" ng-click="addNode(node)"></i>
+                        <i class="fa fa-fw fa-trash" ng-click="deleteNode(node)"></i>
+                    </span>
+                    <img ng-if="node.attribute" src="/images/AttributesView.png"
+                         on-short-press="openDetails(node,'properties')"/>
+                    <img ng-if="node.noteMarkdown" src="/images/knotes.png" ng-click="openDetails(node,'notes')"/>
+                    <i class="fa" ng-class="{'fa-chevron-down': node.open, 'fa-chevron-right': !node.open}"
+                       on-short-press="nodeToggleOpen(node)" ng-if="node.node"></i>
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item-text detail" ng-if="node.detailMarkdown">
+            <i class="fa pull-left" ng-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}"
+               ng-click="detailToggleOpen(node)"></i>
+
+            <div class="rule" ng-if="!node.detailOpen"></div>
+            <markdown ng-model="node.detailMarkdown" extensions="github, prettify" ng-if="node.detailOpen"
+                      on-short-press="openDetails(node,'details')"></markdown>
+        </div>
+    </div>
+    <div class="indent" ui-tree-nodes="" ng-model="node.node" ng-if="node.open && node.node">
+        <div ng-repeat="node in node.node"
+             ui-tree-node
+             ng-include="'tree_item_renderer'"
+             ng-init="displayIcons=false">
+        </div>
+    </div>
+</script>
+
+<div class="panel">
+    <div class="panel-body"
+         ng-swipe-left='Ui.turnOn("detailPanel")'
+         ng-swipe-right='Ui.turnOff("detailPanel")'
+         ng-if="!loading">
+        <span keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')"
+              keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="down" keyboard-title="Next node" keyboard-action="selectNode('next')"
+              keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="right" keyboard-title="Unfold node" keyboard-action="selectNode('unfold')"
+              keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="left" keyboard-title="Fold node" keyboard-action="selectNode('fold')"
+              keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="ins" keyboard-title="Add new subnode" keyboard-action="addNode('current')"
+              keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="enter" keyboard-title="Add new node" keyboard-action="addNode('parent')"
+              keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="del" keyboard-title="Delete node" keyboard-action="deleteNode('current')"
+              keyboard-prevent-default="true"></span>
+        <span keyboard-shortcut="f2" keyboard-title="Edit content" keyboard-action="openDetails(currentNode,'content')"
+              keyboard-prevent-default="true"></span>
+
+        <div ui-tree="treeOptions" class="list-group">
+            <div id="tree-root" ui-tree-nodes="" ng-model="nodes.rootNode">
+                <div ng-repeat="node in nodes"
+                     ui-tree-node
+                     ng-include="'tree_item_renderer'">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body"
+         ng-swipe-left='Ui.turnOn("detailPanel")'
+         ng-swipe-right='Ui.turnOff("detailPanel")'
+         ng-if="loading">
+        <i class="fa fa-2x fa-spinner fa-spin"></i> Loading file
+    </div>
+</div>

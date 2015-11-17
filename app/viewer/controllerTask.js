@@ -1,13 +1,17 @@
-angular.module('MindWebUi.viewer.treeController', [
+angular.module('MindWebUi.viewer.taskController', [
         'ui.bootstrap',
         'ui.bootstrap.tabs',
         'ui.bootstrap.tpls',
         'ui.router',
         'ui.tree',
         'angular-markdown',
-        'angular-keyboard'
+        'angular-keyboard',
+        'MindWebUi.node.service'
     ])
-    .controller('viewerTreeController', function ($scope, $rootScope, $filter, $timeout) {
+    .controller('viewerTaskController', function ($scope, $rootScope, $filter, $timeout,NodeService) {
+
+        inifializeTasklist();
+
         $scope.longPressNode = function (node) {
             $scope.$emit('selectNode', {node: node});
         };
@@ -166,10 +170,10 @@ angular.module('MindWebUi.viewer.treeController', [
                 var destNode = event.dest.nodesScope.$nodeScope.$modelValue;
                 var destIndex = event.dest.index;
                 if (sourceNode == null) {
-                    sourceNode=$scope.$parent.nodes.rootNode;
+                    sourceNode = $scope.$parent.nodes.rootNode;
                 }
                 if (destNode == null) {
-                    destNode=$scope.$parent.nodes.rootNode;
+                    destNode = $scope.$parent.nodes.rootNode;
                 }
                 for (var i = sourceIndex; i < sourceNode.node.length; i++) {
                     sourceNode.node[i].$parentIndex = i;
@@ -194,5 +198,22 @@ angular.module('MindWebUi.viewer.treeController', [
                 }, 10);
             }
         };
+
+        $scope.getTaskViewType = function () {
+            if (!$scope.$parent.$parent.loading) {
+                return NodeService.getAttribute( $scope.nodes.rootNode,'taskViewType','project');
+            }
+        };
+        $scope.setTaskViewType = function (viewType) {
+            NodeService.setAttribute($scope, $scope.nodes.rootNode,'taskViewType',viewType);
+        };
+
+        function inifializeTasklist() {
+            console.log('intitialize');
+            $scope.tasklist = [];
+            NodeService.walknodes($scope.nodes.rootNode,function(){
+                return false;
+            })
+        }
     })
 ;
