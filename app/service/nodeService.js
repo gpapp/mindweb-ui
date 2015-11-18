@@ -38,9 +38,9 @@ angular.module('MindWebUi.node.service', [])
                 return retval;
             }
 
-            function _configToIcon(icon) {
-                if (iconConfig.hasOwnProperty(icon.toLowerCase())) {
-                    return iconConfig[icon.toLowerCase()];
+            function _configToIcon(configKey) {
+                if (iconConfig.hasOwnProperty(configKey.toLowerCase())) {
+                    return iconConfig[configKey.toLowerCase()];
                 }
                 return null;
             }
@@ -256,6 +256,7 @@ angular.module('MindWebUi.node.service', [])
             return {
                 loadConfig: _loadConfig,
                 addConfigIcon: _addConfigIcon,
+                configToIcon: _configToIcon,
                 setConfigIcon: _setConfigIcon,
                 hasConfigIcon: _hasConfigIcon,
                 removeConfigIcon: _removeConfigIcon,

@@ -31,8 +31,8 @@
 </div>
 
 <script type="text/ng-template" id="task_item_renderer">
-    <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node}"
-         on-short-press="longPressNode(node)" on-long-press="longPressNode(node)">
+    <div id='{{node.node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node.node}"
+         on-long-press="longPressNode(node)">
 
         <div class="list-group-item-heading" ng-mouseover="displayIcons=true" ng-mouseleave="displayIcons=false">
             <div ui-tree-handle class="handle" ng-if="node.node.$parent">
@@ -48,23 +48,25 @@
             </div>
             <div class="item">
                 <markdown ng-model="node.node.nodeMarkdown" extensions="github, prettify"
-                          on-short-press="openDetails(node,'content')"></markdown>
-                <a ng-if="node.$['LINK']" title="{{node.$['LINK']}}" on-short-press="jumptoLink(node.$['LINK'])">
-                    <img ng-src="/images/{{node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
+                          on-short-press="openDetails(node.node,'content')"></markdown>
+                <a ng-if="node.$['LINK']" title="{{node.node.$['LINK']}}"
+                   on-short-press="jumptoLink(node.node.$['LINK'])">
+                    <img ng-src="/images/{{node.node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
                 </a>
             </div>
             <div class="chevron">
                 <div class="icon-block">
-                    <span name="editorIcons" ng-if="editable&&(displayIcons||currentNode===node)">
-                        <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.$parent)"></i>
-                        <i class="fa fa-fw fa-folder-o" ng-click="addNode(node)"></i>
-                        <i class="fa fa-fw fa-trash" ng-click="deleteNode(node)"></i>
+                    <span name="editorIcons" ng-if="editable&&(displayIcons||currentNode===node.node)">
+                        <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.node.$parent)"></i>
+                        <i class="fa fa-fw fa-folder-o" ng-click="addNode(node.node)"></i>
+                        <i class="fa fa-fw fa-trash" ng-click="deleteNode(node.node)"></i>
                     </span>
-                    <img ng-if="node.attribute" src="/images/AttributesView.png"
-                         on-short-press="openDetails(node,'properties')"/>
-                    <img ng-if="node.noteMarkdown" src="/images/knotes.png" ng-click="openDetails(node,'notes')"/>
+                    <img ng-if="node.node.attribute" src="/images/AttributesView.png"
+                         on-short-press="openDetails(node.node,'properties')"/>
+                    <img ng-if="node.node.noteMarkdown" src="/images/knotes.png"
+                         ng-click="openDetails(node.node,'notes')"/>
                     <i class="fa" ng-class="{'fa-chevron-down': node.node.open, 'fa-chevron-right': !node.node.open}"
-                       on-short-press="nodeToggleOpen(node.node)" ng-if="node.nodes"></i>
+                       on-short-press="nodeToggleOpen(node.node)" ng-if="node.node.node"></i>
                 </div>
             </div>
         </div>
@@ -78,21 +80,20 @@
                       on-short-press="openDetails(node.node,'details')"></markdown>
         </div>
     </div>
-    <div class="indent" ui-tree-nodes="" ng-model="projectList|filter:isParentComparator(node)" ng-if="node.node.open">
+    <div class="indent" ui-tree-nodes="" ng-model="projectList" ng-if="node.projects && node.node.open">
         <div ng-repeat="node in projectList|filter:isParentComparator(node)"
              ui-tree-node
              ng-include="'task_item_renderer'"
              ng-init="displayIcons=false">
         </div>
     </div>
-    <div class="indent" ui-tree-nodes="" ng-model="taskList|filter:isParentComparator(node)" ng-if="node.node.open">
+    <div class="indent" ui-tree-nodes="" ng-model="taskList" ng-if="node.nodes && node.node.open">
         <div ng-repeat="node in taskList|filter:isParentComparator(node)"
              ui-tree-node
              ng-include="'task_item_renderer'"
              ng-init="displayIcons=false">
         </div>
     </div>
-
 </script>
 
 <div class="panel">
@@ -117,15 +118,79 @@
         <span keyboard-shortcut="f2" keyboard-title="Edit content" keyboard-action="openDetails(currentNode,'content')"
               keyboard-prevent-default="true"></span>
 
-        <div ui-tree="treeOptions" class="list-group">
+
+        <div class="list-group" ng-if="getTaskViewType()!=='project'">
+            <div class="list-group-item-heading" ng-repeat="(key,value) in getGroupedTasks()">
+                <div class="list-group-item nodeList">
+                    <img ng-if="getTaskViewType()=='context' && hasConfigIcon('@'+key)" ng-src="/images/icons/{{hasConfigIcon('@'+key)}}.png">
+                    <i class="fa fa-fw fa-user" ng-if="getTaskViewType()!='context' || !hasConfigIcon('@'+key)" ></i>
+                    {{key}}
+                </div>
+                <div class="indent">
+                <div class="list-group-item nodeList" ng-repeat="node in value"
+                 ng-class="{active : currentNode===node.node}">
+                    <div class="list-group-item-heading" ng-mouseover="displayIcons=true"
+                         ng-mouseleave="displayIcons=false">
+                        <div class="handle" ng-if="node.node.$parent">
+                            <i class="fa fa-bars"></i>
+                        </div>
+                        <div class="icons">
+                            <div class="icon-block">
+                    <span ng-repeat="icon in node.node.icon">
+                        <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png"
+                             on-short-press="openDetails(node.node,'icons')"/>
+                    </span>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <markdown ng-model="node.node.nodeMarkdown" extensions="github, prettify"
+                                      on-short-press="openDetails(node.node,'content')"></markdown>
+                            <a ng-if="node.$['LINK']" title="{{node.node.$['LINK']}}"
+                               on-short-press="jumptoLink(node.node.$['LINK'])">
+                                <img ng-src="/images/{{node.node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
+                            </a>
+                        </div>
+                        <div class="chevron">
+                            <div class="icon-block">
+                    <span name="editorIcons" ng-if="editable&&(displayIcons||currentNode===node.node)">
+                        <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.node.$parent)"></i>
+                        <i class="fa fa-fw fa-folder-o" ng-click="addNode(node.node)"></i>
+                        <i class="fa fa-fw fa-trash" ng-click="deleteNode(node.node)"></i>
+                    </span>
+                                <img ng-if="node.node.attribute" src="/images/AttributesView.png"
+                                     on-short-press="openDetails(node.node,'properties')"/>
+                                <img ng-if="node.node.noteMarkdown" src="/images/knotes.png"
+                                     ng-click="openDetails(node.node,'notes')"/>
+                                <i class="fa"
+                                   ng-class="{'fa-chevron-down': node.node.open, 'fa-chevron-right': !node.node.open}"
+                                   on-short-press="nodeToggleOpen(node.node)" ng-if="node.node.node"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item-text detail" ng-if="node.node.detailMarkdown">
+                        <i class="fa pull-left"
+                           ng-class="{'fa-chevron-down':node.node.detailOpen, 'fa-chevron-right':!node.node.detailOpen}"
+                           ng-click="detailToggleOpen(node.node)"></i>
+
+                        <div class="rule" ng-if="!node.node.detailOpen"></div>
+                        <markdown ng-model="node.node.detailMarkdown" extensions="github, prettify"
+                                  ng-if="node.node.detailOpen"
+                                  on-short-press="openDetails(node.node,'details')"></markdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div ui-tree="treeOptions" class="list-group" ng-if="getTaskViewType()==='project'">
             <div id="tree-root" ui-tree-nodes="" ng-model="projectList">
                 <div ng-repeat="node in projectList|filter:isParentComparator(null)"
                      ui-tree-node
-                     ng-include="'task_item_renderer'"
+                     ng-include="'task_item_renderer'"></div>
+                <div ng-repeat="node in taskList|filter:isParentComparator(null)"
+                     ui-tree-node
+                     ng-include="'task_item_renderer'"></div>
             </div>
-            <div ng-repeat="node in taskList|filter:isParentComparator(null)"
-                 ui-tree-node
-                 ng-include="'task_item_renderer'"
         </div>
     </div>
 </div>

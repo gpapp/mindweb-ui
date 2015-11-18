@@ -209,6 +209,10 @@ angular.module('MindWebUi.viewer.taskController', [
         };
 
 
+        $scope.hasConfigIcon = function (key) {
+            return NodeService.configToIcon(key);
+        };
+
         $scope.isParentComparator = function (parentNode) {
             return function (node, index, array) {
                 if (!node.project && !parentNode) {
@@ -219,6 +223,94 @@ angular.module('MindWebUi.viewer.taskController', [
                 }
                 return node.project.node.$['ID'] === parentNode.node.$['ID'];
             }
+        };
+
+        var lastGroup;
+        var groups;
+        $scope.getGroupedTasks = function () {
+            var type = $scope.getTaskViewType();
+            if (lastGroup != type) {
+                groups = {};
+                lastGroup = type;
+            }
+            for (var i = 0; i < $scope.taskList.length; i++) {
+                var curNode = $scope.taskList[i];
+                switch (type) {
+                    case 'responsible':
+                        var responsibleText = NodeService.getAttribute(curNode.node, 'Who');
+                        if (responsibleText) {
+                            var responsibleList = responsibleText.split(',');
+                            for (var j = 0; j < responsibleList.length; j++) {
+                                var list = groups[responsibleList[j]];
+                                if (!list) {
+                                    list = [];
+                                    groups[responsibleList[j]] = list;
+                                }
+                                if (list.indexOf(curNode) < 0) {
+                                    list.push(curNode);
+                                }
+                            }
+                        } else {
+                            var list = groups['Undefined'];
+                            if (!list) {
+                                list = [];
+                                groups['Undefined'] = list;
+                            }
+                            if (list.indexOf(curNode) < 0) {
+                                list.push(curNode);
+                            }
+                        }
+                        break;
+                    case 'timeline':
+                        var due = NodeService.getAttribute(curNode.node, 'When');
+                        if (due) {
+                            var list = groups[due];
+                            if (!list) {
+                                list = [];
+                                groups[due] = list;
+                            }
+                            if (list.indexOf(curNode) < 0) {
+                                list.push(curNode);
+                            }
+                        } else {
+                            var list = groups['Undefined'];
+                            if (!list) {
+                                list = [];
+                                groups['Undefined'] = list;
+                            }
+                            if (list.indexOf(curNode) < 0) {
+                                list.push(curNode);
+                            }
+                        }
+                        break;
+                    case 'context':
+                        var contextText = NodeService.getAttribute(curNode.node, 'Where');
+                        if (contextText) {
+                            var contextList = contextText.split(',');
+                            for (var j = 0; j < contextList.length; j++) {
+                                var list = groups[contextList[j]];
+                                if (!list) {
+                                    list = [];
+                                    groups[contextList[j]] = list;
+                                }
+                                if (list.indexOf(curNode) < 0) {
+                                    list.push(curNode);
+                                }
+                            }
+                        } else {
+                            var list = groups['Undefined'];
+                            if (!list) {
+                                list = [];
+                                groups['Undefined'] = list;
+                            }
+                            if (list.indexOf(curNode) < 0) {
+                                list.push(curNode);
+                            }
+                        }
+                        break;
+                }
+            }
+            return groups;
         };
 
         function findTaskProjectNode(taskNode) {
@@ -259,6 +351,10 @@ angular.module('MindWebUi.viewer.taskController', [
                 var parentPrj = findNodeInProjects(ptr);
                 if (parentPrj) {
                     lastPrj.project = parentPrj;
+                    if (!parentPrj.projects) {
+                        parentPrj.projects = [];
+                    }
+                    parentPrj.projects.push(lastPrj);
                     lastPrj = parentPrj;
                 }
                 ptr = ptr.$parent;
@@ -278,12 +374,15 @@ angular.module('MindWebUi.viewer.taskController', [
                 parentProject = projectFromNode(projectNode);
                 $scope.projectList.push(parentProject);
             }
+            if (!parentProject.nodes) {
+                parentProject.nodes = [];
+            }
+            parentProject.nodes.push(newTask);
             newTask.project = parentProject;
             return newTask;
         }
 
-        function inifializeTasklist() {
-            console.log('intitialize');
+        function inifializeTasklist() {          
             $scope.taskList = [];
             $scope.projectList = [];
             NodeService.walknodes($scope.nodes.rootNode, function (node) {
