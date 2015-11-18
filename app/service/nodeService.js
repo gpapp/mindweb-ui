@@ -45,10 +45,10 @@ angular.module('MindWebUi.node.service', [])
                 return null;
             }
 
-            function _hasConfigIcon(node, icon) {
+            function _hasConfigIcon(node, configName) {
                 if (!node) return false;
                 if (!node.icon) return false;
-                var toSearch = _configToIcon(icon);
+                var toSearch = _configToIcon(configName);
                 if (!toSearch) {
                     return false;
                 }
@@ -255,6 +255,7 @@ angular.module('MindWebUi.node.service', [])
 
             return {
                 loadConfig: _loadConfig,
+                addConfigIcon: _addConfigIcon,
                 setConfigIcon: _setConfigIcon,
                 hasConfigIcon: _hasConfigIcon,
                 removeConfigIcon: _removeConfigIcon,

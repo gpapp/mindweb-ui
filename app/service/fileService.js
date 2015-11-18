@@ -70,7 +70,7 @@ angular.module('MindWebUi.file.service', [
                         editors: editors
                     }).
                     success(function (response) {
-                        deferred.resolve();
+                        deferred.resolve(response);
                     }).
                     error(function (err) {
                         deferred.reject(err);

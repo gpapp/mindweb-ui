@@ -1,3 +1,49 @@
+<div ui-content-for="localMenu">
+    <div class="list-group">
+        <div class="list-group-item">
+            <i class="fa fa-list"></i> Local menu
+        </div>
+        <div class="appear-down" ng-class='{"roll-down":!loading}'>
+            <div class="list-group-item">
+                <div class="">
+                    <i class="fa fa-binoculars"></i> View type
+                </div>
+            </div>
+            <div class="list-group-item">
+                <div class="btn-group-justified">
+                    <div class="btn btn-default" ng-class="{'btn-primary': getViewType()==='tree'}" ng-click="setViewType('tree')">
+                        Tree
+                    </div>
+                    <div class="btn btn-default" ng-class="{'btn-primary': getViewType()==='task'}" ng-click="setViewType('task')">
+                        Task
+                    </div>
+                    <div class="btn btn-default" ng-class="{'btn-primary': getViewType()==='mindmap'}" ng-click="setViewType('mindmap')">
+                        Mindmap
+                    </div>
+                </div>
+            </div>
+            <div ui-yield-to="viewSubmenu"></div>
+            <div class="list-group-item" ng-if="editable">
+                <button class="btn btn-default" ng-click="parseTasks()">
+                    <i class="fa fa-fw fa-tasks"></i>Parse tasks
+                </button>
+                <button class="btn btn-default" ng-click="markProject(currentNode)" ng-hide="isProject(currentNode)">
+                    <i class="fa fa-fw fa-list" ng-if="currentNode"></i>Mark as project
+                </button>
+                <button class="btn btn-default" ng-click="markTask(currentNode)" ng-hide="isTask(currentNode)">
+                    <i class="fa fa-fw fa-thumb-tack" ng-if="currentNode"></i>Mark as task
+                </button>
+                <button class="btn btn-default" ng-click="markDone(currentNode,true)" ng-hide="!isTask(currentNode)||isDone(currentNode)">
+                    <i class="fa fa-fw fa-check" ng-if="currentNode"></i>Mark as done
+                </button>
+                <button class="btn btn-default" ng-click="markDone(currentNode,false)" ng-hide="!isTask(currentNode)||!isDone(currentNode)">
+                    <i class="fa fa-fw fa-check" ng-if="currentNode"></i>Unmark as done
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="viewerTable">
     <div id="nodePane" ui-class="{'detailOpen': detailPanel}">
         <section ui-view="tree" ng-if="getViewType()=='tree'"></section>

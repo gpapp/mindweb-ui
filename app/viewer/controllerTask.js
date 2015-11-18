@@ -8,12 +8,12 @@ angular.module('MindWebUi.viewer.taskController', [
         'angular-keyboard',
         'MindWebUi.node.service'
     ])
-    .controller('viewerTaskController', function ($scope, $rootScope, $filter, $timeout,NodeService) {
+    .controller('viewerTaskController', function ($scope, $rootScope, $filter, $timeout, NodeService) {
 
         inifializeTasklist();
 
         $scope.longPressNode = function (node) {
-            $scope.$emit('selectNode', {node: node});
+            $scope.$emit('selectNode', node);
         };
         $scope.nodeToggleOpen = function (node) {
             node.open = !node.open;
@@ -201,17 +201,108 @@ angular.module('MindWebUi.viewer.taskController', [
 
         $scope.getTaskViewType = function () {
             if (!$scope.$parent.$parent.loading) {
-                return NodeService.getAttribute( $scope.nodes.rootNode,'taskViewType','project');
+                return NodeService.getAttribute($scope.nodes.rootNode, 'taskViewType', 'project');
             }
         };
         $scope.setTaskViewType = function (viewType) {
-            NodeService.setAttribute($scope, $scope.nodes.rootNode,'taskViewType',viewType);
+            NodeService.setAttribute($scope, $scope.nodes.rootNode, 'taskViewType', viewType);
         };
+
+
+        $scope.isParentComparator = function (parentNode) {
+            return function (node, index, array) {
+                if (!node.project && !parentNode) {
+                    return true;
+                }
+                if (!node.project || !parentNode) {
+                    return false;
+                }
+                return node.project.node.$['ID'] === parentNode.node.$['ID'];
+            }
+        };
+
+        function findTaskProjectNode(taskNode) {
+            var ptr = taskNode.$parent;
+            while (ptr.$parent) {
+                if (NodeService.hasConfigIcon(ptr, 'Project')) {
+                    return ptr;
+                }
+                ptr = ptr.$parent;
+            }
+            return taskNode.$parent;
+        }
+
+
+        function findNodeInTasks(node) {
+            for (var i = 0; i < $scope.taskList.length; i++) {
+                if (node.$['ID'] === $scope.taskList[i].node.$['ID']) {
+                    return $scope.taskList[i];
+                }
+            }
+            return null;
+        }
+
+        function findNodeInProjects(node) {
+            for (var i = 0; i < $scope.projectList.length; i++) {
+                if (node.$['ID'] === $scope.projectList[i].node.$['ID']) {
+                    return $scope.projectList[i];
+                }
+            }
+            return null;
+        }
+
+        function projectFromNode(node) {
+            var foundNode = {node: node};
+            var ptr = node.$parent;
+            var lastPrj = foundNode;
+            while (ptr) {
+                var parentPrj = findNodeInProjects(ptr);
+                if (parentPrj) {
+                    lastPrj.project = parentPrj;
+                    lastPrj = parentPrj;
+                }
+                ptr = ptr.$parent;
+            }
+            return foundNode;
+        }
+
+        function taskFromNode(node) {
+            // Find task in projects first
+            var newTask = findNodeInProjects(node);
+            if (!newTask) {
+                newTask = {node: node};
+            }
+            var projectNode = findTaskProjectNode(node);
+            var parentProject = findNodeInProjects(projectNode);
+            if (!parentProject) {
+                parentProject = projectFromNode(projectNode);
+                $scope.projectList.push(parentProject);
+            }
+            newTask.project = parentProject;
+            return newTask;
+        }
 
         function inifializeTasklist() {
             console.log('intitialize');
-            $scope.tasklist = [];
-            NodeService.walknodes($scope.nodes.rootNode,function(){
+            $scope.taskList = [];
+            $scope.projectList = [];
+            NodeService.walknodes($scope.nodes.rootNode, function (node) {
+                if (NodeService.hasConfigIcon(node, "task")) {
+                    var newTask = taskFromNode(node);
+                    $scope.taskList.push(newTask);
+                }
+                if (NodeService.hasConfigIcon(node, "project")) {
+                    var newPrj = findNodeInTasks(node);
+                    if (newPrj) {
+                        $scope.projectList.push(newPrj);
+                    } else {
+                        newPrj = findNodeInProjects(node);
+                    }
+                    if (!newPrj) {
+                        newPrj = projectFromNode(node);
+                        $scope.projectList.push(newPrj);
+                    }
+                }
                 return false;
             })
         }
