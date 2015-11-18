@@ -161,9 +161,6 @@
                                      on-short-press="openDetails(node.node,'properties')"/>
                                 <img ng-if="node.node.noteMarkdown" src="/images/knotes.png"
                                      ng-click="openDetails(node.node,'notes')"/>
-                                <i class="fa"
-                                   ng-class="{'fa-chevron-down': node.node.open, 'fa-chevron-right': !node.node.open}"
-                                   on-short-press="nodeToggleOpen(node.node)" ng-if="node.node.node"></i>
                             </div>
                         </div>
                     </div>
