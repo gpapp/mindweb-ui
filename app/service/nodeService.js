@@ -26,7 +26,7 @@ angular.module('MindWebUi.node.service', [])
                 var retval = false;
                 if (iconConfig[name.toLowerCase()]) {
                     for (var i in iconConfig) {
-                        if (!iconConfig.hasOwnProperty(i)) continue;
+                        if (!iconConfig.hasOwnProperty(i) || i===name) continue;
                         if (iconConfig[i] === value) {
                             $rootScope.$emit('$applicationError', 'Trying to reuse icon for ' + name);
                             return false;
