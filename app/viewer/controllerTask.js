@@ -163,6 +163,9 @@ angular.module('MindWebUi.viewer.taskController', [
         };
 
         $scope.treeOptions = {
+                beforeDrag: function (event){
+                        return false;
+                },
             dropped: function (event) {
                 var element = event.source.nodeScope.$modelValue;
                 var sourceNode = event.source.nodesScope.$nodeScope.$modelValue;

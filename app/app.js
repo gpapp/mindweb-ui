@@ -19,13 +19,21 @@ angular.module('MindWebUi', [
                 $rootScope.$on("$routeChangeSuccess", function () {
                     $rootScope.loading = false;
                 });
-                $rootScope.$on("$applicationError", function (msg) {
+                $rootScope.$on("$applicationInfo", function (event, msg) {
+                    $rootScope.info = true;
+                    $rootScope.infoMsg = msg;
+                    $timeout(function () {
+                        $rootScope.info = false;
+                        $rootScope.infoMsg = '';
+                    }, 30000);
+                });
+                $rootScope.$on("$applicationError", function (event, msg) {
                     $rootScope.error = true;
                     $rootScope.errorMsg = msg;
-                    $timeout(function(){
+                    $timeout(function () {
                         $rootScope.error = false;
                         $rootScope.errorMsg = '';
-                    },1000);
+                    }, 30000);
                 });
 
                 /// When a file information changes, update the file (rename)
@@ -75,15 +83,15 @@ angular.module('MindWebUi', [
                         deferred.resolve($rootScope.currentUser);
                     }
                     return deferred.promise;
-                }
+                };
 
                 $rootScope.getCurrentUser();
             }
         ])
-    .config(function ($stateProvider) {
+    .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('home', {
-                url: '',
+                url: '/!',
                 templateUrl: 'app/home.html',
                 data: {
                     requireLogin: false
@@ -100,5 +108,6 @@ angular.module('MindWebUi', [
                 url: '/login',
                 controller: 'loginController'
             })
+        $urlRouterProvider.otherwise('/!');
     })
 ;

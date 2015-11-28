@@ -20,6 +20,14 @@ h1 {
     position: absolute;
 }
 
+.app-content-info {
+    left: 5%;
+    bottom: 55px;
+    width: 90%;
+    min-height: 5%;
+    position: absolute;
+}
+
 .loading-spinner {
     position: absolute;
     font-size: 50px;

@@ -21,7 +21,8 @@
     "angular-ui-tree": "~2.9.0",
     "angular-keyboard": "gampleman/angular-keyboard",
     "file-saver-js": "*",
-    "ng-tags-input": "~3.0.0"
+    "ng-tags-input": "~3.0.0",
+    "angular-clipboard": "~1.1.2"
   },
   "resolutions": {
     "angular": "~1.4.7"

@@ -1,8 +1,6 @@
 <div ui-content-for="title">
     <span>MindWeb - Files</span>
 </div>
-<div ui-content-for="localMenu">
-</div>
 
 <div class="scrollable" ui-state="searchBar">
     <div class="scrollable-content">
@@ -150,7 +148,12 @@
          ng-class="{selected : hovered, 'bg-info':item.isPublic, 'bg-success':!item.isPublic}"
          ng-mouseover="hovered=true"
          ng-mouseleave="hovered=false">
-        <div class="name" ng-click="fileOpen(item)" ui-state="infoPopup">
+        <div class="name" ui-state="infoPopup">
+            <i class="fa pull-right "
+               clipboard
+               text="clipboardLink(item)"
+               onSuccess="linkToClipboard()"
+               ng-class="{'fa-share': item.isShareable}"></i>
             <i class="fa pull-right"
                ng-class="{'fa-user': !item.isPublic,'fa-group': !item.isPublic&&(item.viewers||item.editors),'fa-globe': item.isPublic}"></i>
             <i class="fa fa-info-circle pull-right"
@@ -160,6 +163,7 @@
             <div class="infoPopup" ng-class="{hidden : !infoPopup}">
                 <div class="title">{{item.name}}</div>
                 <div class="version">Version: {{ item.versions.length }}</div>
+                <div class="isShareable">Shareable as link: {{item.isShareable}}</div>
                 <div class="isPublic">Visibility: {{
                     item.isPublic?'Public':(item.viewers||item.editors)?'Shared':'Private'}}
                 </div>
@@ -169,7 +173,7 @@
             </div>
             <i class="fa fa-file"></i>
 
-            <div class="fileName">{{ item.name }}</div>
+            <div class="fileName" ng-click="fileOpen(item)">{{ item.name }}</div>
         </div>
         <div class="tags">
             <tags-input ng-model="item.tags"
@@ -200,13 +204,20 @@
                     <div class="col-sm-8 ">
                         <input id="newName" type="text" class="form-control" ng-model="target.newName">
                     </div>
-                    <div class="control-label col-sm-1">.mm</div>
+                    <div class="control-label col-sm-1">.
+                    mm</div>
                 </div>
 
                 <div class="form-group">
-                    <label for="isPublic" class="col-sm-3">Public</label>
+                    <label for="createIsShareable" class="col-sm-3">Shareable as link</label>
                     <div class="col-sm-9">
-                        <input id="isPublic" type="checkbox" ng-model="target.newIsPublic"/>
+                        <input id="createIsShareable" type="checkbox" ng-model="target.newIsShareable"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="createIsPublic" class="col-sm-3">Public</label>
+                    <div class="col-sm-9">
+                        <input id="createIsPublic" type="checkbox" ng-model="target.newIsPublic"/>
                     </div>
                 </div>
             </form>
@@ -225,11 +236,17 @@
             <h5 class="modal-title">{{target.name}}</h5>
         </div>
         <div class="modal-body">
-            <form  class="form-horizontal">
+            <form class="form-horizontal">
                 <div class="form-group">
-                    <label for="isPublic" class="col-sm-3">Public</label>
+                    <label for="shareIsShareable" class="col-sm-3">Shareable as link</label>
                     <div class="col-sm-9">
-                        <input id="isPublic" type="checkbox" ng-model="target.newIsPublic"/>
+                        <input id="shareIsShareable" type="checkbox" ng-model="target.newIsShareable"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="shareIsPublic" class="col-sm-3">Public</label>
+                    <div class="col-sm-9">
+                        <input id="shareIsPublic" type="checkbox" ng-model="target.newIsPublic"/>
                     </div>
                 </div>
 
@@ -270,7 +287,8 @@
                     <div class="control-label col-sm-8 ">
                         <input class="form-control disabled" ng-model="target.newName">
                     </div>
-                    <div class="control-label col-sm-1">.mm</div>
+                    <div class="control-label col-sm-1">.
+                    mm</div>
                 </div>
             </div>
         </div>

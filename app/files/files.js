@@ -4,7 +4,8 @@ angular.module('MindWebUi.file', [
         'ui.bootstrap.tpls',
         'ui.router',
         'ngFileUpload',
-        'ngTagsInput'
+        'ngTagsInput',
+        'angular-clipboard'
     ])
     .config(['$stateProvider',
         function ($stateProvider) {
@@ -24,7 +25,7 @@ angular.module('MindWebUi.file', [
                 })
         }
     ])
-    .controller('fileController', function ($rootScope, $scope, $http, $modal, $state, Upload, FileService) {
+    .controller('fileController', function ($rootScope, $scope, $http, $modal, $location, $state, Upload, FileService) {
         $scope.loadingFiles = false;
         $scope.loadingSharedFiles = false;
         reloadFiles();
@@ -119,6 +120,7 @@ angular.module('MindWebUi.file', [
             modalInstance.result.then(function (selectedItem) {
                 FileService.share(
                     selectedItem.id,
+                    selectedItem.newIsShareable,
                     selectedItem.newIsPublic,
                     selectedItem.newViewers,
                     selectedItem.newEditors).then(function (data) {
@@ -177,6 +179,17 @@ angular.module('MindWebUi.file', [
             });
         };
 
+        $scope.clipboardLink = function (file) {
+            if (!file) {
+                return '';
+            }
+            return /^(.*)#\/.*/.exec($location.absUrl())[1] + '#/viewer/' + file.id;
+        };
+
+        $scope.linkToClipboard = function () {
+            $rootScope.$emit('$applicationInfo', 'URL copied to clipboard');
+        };
+
         $scope.untag = function (file, mytag) {
             FileService.untag(file.id, mytag.text).then(function (data) {
                 file = data;
@@ -193,27 +206,33 @@ angular.module('MindWebUi.file', [
 
         // Utility functions for controller
         function reloadFiles() {
-            $scope.loadingFiles = true;
-            FileService.list().then(function (data) {
-                    $scope.files = data;
-                    $scope.loadingFiles = false;
-                },
+            $rootScope.getCurrentUser().then (
                 function (data) {
-                    $rootScope.$emit("$applicationError", "Cannot load file list");
-                });
-            $scope.loadingSharedFiles = true;
-            FileService.listShared().then(function (data) {
-                    $scope.sharedFiles = data;
-                    $scope.loadingSharedFiles = false;
-                },
-                function () {
-                    $rootScope.$emit("$applicationError", "Cannot load shared file list");
-                });
+                    if (!data) return;
+                    $scope.loadingFiles = true;
+                    FileService.list().then(function (data) {
+                            $scope.files = data;
+                            $scope.loadingFiles = false;
+                        },
+                        function (data) {
+                            $rootScope.$emit("$applicationError", "Cannot load file list");
+                        });
+                    $scope.loadingSharedFiles = true;
+                    FileService.listShared().then(function (data) {
+                            $scope.sharedFiles = data;
+                            $scope.loadingSharedFiles = false;
+                        },
+                        function () {
+                            $rootScope.$emit("$applicationError", "Cannot load shared file list");
+                        });
+                }
+            );
         }
     })
     .controller('fileActionController', function ($scope, $modalInstance, target) {
         $scope.target = target;
         $scope.target.newName = $scope.target.name.replace(new RegExp("^(.*)\.mm$"), "$1");
+        $scope.target.newIsShareable = $scope.target.isShareable;
         $scope.target.newIsPublic = $scope.target.isPublic;
         $scope.target.newViewers = $scope.target.viewers;
         $scope.target.newEditors = $scope.target.editors;

@@ -51,25 +51,31 @@ angular.module('MindWebUi.viewer.mainController', [
                 event.stopPropagation();
             });
             $scope.$on('fileModified', function (event, data) {
-                if (data.event === 'deleteNode') {
-                    NodeService.nodeDeleteHook($scope, $scope.nodes.rootNode, data.oldValue);
-                }
-                if (data.event === 'nodeText' || data.event === 'nodeModifyIcons') {
-                    var node = NodeService.findNodeById($scope.nodes.rootNode, data.parent);
-                    NodeService.nodeChangeHook($scope, $scope.nodes.rootNode, node, data.oldValue);
-                }
-                // remove circular references
-                if (data.payload && typeof data.payload == 'object') {
-                    var nodeCopy = (data.payload instanceof Array) ? [] : {};
-                    angular.copy(data.payload, nodeCopy);
-                    delete nodeCopy.$parent;
-                    delete nodeCopy.$parentIndex;
-                    data.payload = nodeCopy;
-                }
-                delete data.oldValue;
-                $scope.msgStack = msgStack;
-                msgStack.push(data);
-                event.stopPropagation();
+                $rootScope.getCurrentUser().then(
+                    function (user) {
+                        if (user) {
+                            if (data.event === 'deleteNode') {
+                                NodeService.nodeDeleteHook($scope, $scope.nodes.rootNode, data.oldValue);
+                            }
+                            if (data.event === 'nodeText' || data.event === 'nodeModifyIcons') {
+                                var node = NodeService.findNodeById($scope.nodes.rootNode, data.parent);
+                                NodeService.nodeChangeHook($scope, $scope.nodes.rootNode, node, data.oldValue);
+                            }
+                            // remove circular references
+                            if (data.payload && typeof data.payload == 'object') {
+                                var nodeCopy = (data.payload instanceof Array) ? [] : {};
+                                angular.copy(data.payload, nodeCopy);
+                                delete nodeCopy.$parent;
+                                delete nodeCopy.$parentIndex;
+                                data.payload = nodeCopy;
+                            }
+                            delete data.oldValue;
+                            $scope.msgStack = msgStack;
+                            msgStack.push(data);
+                        }
+                        event.stopPropagation();
+                    }
+                )
             });
             $scope.$on("$destroy", function (event) {
                     if (saveTimer) {

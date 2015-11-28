@@ -59,12 +59,13 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
-        function _create(name, isPublic, viewers, editors) {
+        function _create(name, isShareable, isPublic, viewers, editors) {
             var deferred = $q.defer();
             $rootScope.getCurrentUser().then(
                 function () {
                     $http.post('/file/create', {
                         name: name,
+                        isShareable: isShareable,
                         isPublic: isPublic,
                         viewers: viewers,
                         editors: editors
@@ -195,11 +196,17 @@ angular.module('MindWebUi.file.service', [
             return deferred.promise;
         }
 
-        function _share(fileId, isPublic, viewers, editors) {
+        function _share(fileId, isShareable, isPublic, viewers, editors) {
             var deferred = $q.defer();
             $rootScope.getCurrentUser().then(
                 function () {
-                    $http.put('/file/share', {fileId: fileId, isPublic: isPublic, viewers: viewers, editors: editors}).
+                    $http.put('/file/share', {
+                        fileId: fileId,
+                        isShareable: isShareable,
+                        isPublic: isPublic,
+                        viewers: viewers,
+                        editors: editors
+                    }).
                     success(function (response) {
                         deferred.resolve(response);
                     }).

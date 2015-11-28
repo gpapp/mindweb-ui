@@ -48,6 +48,9 @@
     <script src="app/lib/showdown/compressed/extensions/prettify.min.js"></script>
     <script src="app/lib/angular-markdown/angular.markdown.js"></script>
 
+    <!--Clipboard management-->
+    <script src="app/lib/angular-clipboard/angular-clipboard.js"></script>
+
     <script src="app/app.js"></script>
 
     <!-- Service factories -->
@@ -115,13 +118,18 @@
         <div class="app-content">
             <section ui-view></section>
         </div>
-    </div>
-    <div ng-show="error" class="alert alert-danger app-content-error alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        Error in application
-        {{$rootScope.errorMsg}}
+        <div ng-show="info" class="alert alert-info app-content-info alert-dismissible">
+            <i class="fa fa-2x fa-info"></i> {{infoMsg}}
+            <button type="button" class="close" ng-click="info=false">
+                <span>&times;</span>
+            </button>
+        </div>
+        <div ng-show="error" class="alert alert-danger app-content-error alert-dismissible">
+            <i class="fa fa-2x fa-exclamation"></i> Error in application {{errorMsg}}
+            <button type="button" class="close" ng-click="alert=false">
+                <span>&times;</span>
+            </button>
+        </div>
     </div>
 </div>
 <!-- ~ .app -->

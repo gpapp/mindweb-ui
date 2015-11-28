@@ -159,7 +159,7 @@ angular.module('MindWebUi.node.service', [])
                         if (_setConfigIcon(configKey, newIcon)) {
                             _replaceIcon(editScope, rootNode, configIcon, newIcon);
                         } else {
-                            _addConfigIcon(node, configKey);
+                            _addConfigIcon(editScope, node, configKey);
                         }
                     }
                 }
