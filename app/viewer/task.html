@@ -120,63 +120,72 @@
 
 
         <div class="list-group" ng-if="getTaskViewType()!=='project'">
-            <div class="list-group-item-heading" ng-repeat="(key,value) in getGroupedTasks()">
-                <div class="list-group-item nodeList">
-                    <img ng-if="getTaskViewType()=='context' && hasConfigIcon('@'+key)" ng-src="/images/icons/{{hasConfigIcon('@'+key)}}.png">
-                    <i class="fa fa-fw fa-user" ng-if="getTaskViewType()!='context' || !hasConfigIcon('@'+key)" ></i>
-                    {{key}}
-                </div>
-                <div class="indent">
-                <div class="list-group-item nodeList" ng-repeat="node in value"
-                 ng-class="{active : currentNode===node.node}">
-                    <div class="list-group-item-heading" ng-mouseover="displayIcons=true"
-                         ng-mouseleave="displayIcons=false">
-                        <div class="handle" ng-if="node.node.$parent">
-                            <i class="fa fa-bars"></i>
+            <div class="list-group-item nodeList" ng-repeat="(key,value) in getGroupedTasks()" ng-init="open=false">
+                <div class="list-group-item-heading">
+                    <div class="item"><img ng-if="getTaskViewType()=='context' && hasConfigIcon('@'+key)"
+                                           ng-src="/images/icons/{{hasConfigIcon('@'+key)}}.png">
+                        <i class="fa fa-fw fa-user" ng-if="getTaskViewType()!='context' || !hasConfigIcon('@'+key)"></i>
+                        <span>{{key}} ({{value.length}})</span>
+                    </div>
+                    <div class="chevron">
+
+                        <div class="icon-block">
+                            <i class="fa pull-right" ng-class="{'fa-chevron-down': open, 'fa-chevron-right': !open}"
+                               ng-click="open=!open"></i>
                         </div>
-                        <div class="icons">
-                            <div class="icon-block">
+                    </div>
+                </div>
+                <div class="indent" ng-if="open">
+                    <div class="list-group-item nodeList" ng-repeat="node in value"
+                         ng-class="{active : currentNode===node.node}">
+                        <div class="list-group-item-heading" ng-mouseover="displayIcons=true"
+                             ng-mouseleave="displayIcons=false">
+                            <div class="handle" ng-if="node.node.$parent">
+                                <i class="fa fa-bars"></i>
+                            </div>
+                            <div class="icons">
+                                <div class="icon-block">
                     <span ng-repeat="icon in node.node.icon">
                         <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png"
                              on-short-press="openDetails(node.node,'icons')"/>
                     </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <markdown ng-model="node.node.nodeMarkdown" extensions="github, prettify"
-                                      on-short-press="openDetails(node.node,'content')"></markdown>
-                            <a ng-if="node.$['LINK']" title="{{node.node.$['LINK']}}"
-                               on-short-press="jumptoLink(node.node.$['LINK'])">
-                                <img ng-src="/images/{{node.node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
-                            </a>
-                        </div>
-                        <div class="chevron">
-                            <div class="icon-block">
+                            <div class="item">
+                                <markdown ng-model="node.node.nodeMarkdown" extensions="github, prettify"
+                                          on-short-press="openDetails(node.node,'content')"></markdown>
+                                <a ng-if="node.$['LINK']" title="{{node.node.$['LINK']}}"
+                                   on-short-press="jumptoLink(node.node.$['LINK'])">
+                                    <img ng-src="/images/{{node.node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
+                                </a>
+                            </div>
+                            <div class="chevron">
+                                <div class="icon-block">
                     <span name="editorIcons" ng-if="editable&&(displayIcons||currentNode===node.node)">
                         <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.node.$parent)"></i>
                         <i class="fa fa-fw fa-folder-o" ng-click="addNode(node.node)"></i>
                         <i class="fa fa-fw fa-trash" ng-click="deleteNode(node.node)"></i>
                     </span>
-                                <img ng-if="node.node.attribute" src="/images/AttributesView.png"
-                                     on-short-press="openDetails(node.node,'properties')"/>
-                                <img ng-if="node.node.noteMarkdown" src="/images/knotes.png"
-                                     ng-click="openDetails(node.node,'notes')"/>
+                                    <img ng-if="node.node.attribute" src="/images/AttributesView.png"
+                                         on-short-press="openDetails(node.node,'properties')"/>
+                                    <img ng-if="node.node.noteMarkdown" src="/images/knotes.png"
+                                         ng-click="openDetails(node.node,'notes')"/>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="list-group-item-text detail" ng-if="node.node.detailMarkdown">
-                        <i class="fa pull-left"
-                           ng-class="{'fa-chevron-down':node.node.detailOpen, 'fa-chevron-right':!node.node.detailOpen}"
-                           ng-click="detailToggleOpen(node.node)"></i>
+                        <div class="list-group-item-text detail" ng-if="node.node.detailMarkdown">
+                            <i class="fa pull-left"
+                               ng-class="{'fa-chevron-down':node.node.detailOpen, 'fa-chevron-right':!node.node.detailOpen}"
+                               ng-click="detailToggleOpen(node.node)"></i>
 
-                        <div class="rule" ng-if="!node.node.detailOpen"></div>
-                        <markdown ng-model="node.node.detailMarkdown" extensions="github, prettify"
-                                  ng-if="node.node.detailOpen"
-                                  on-short-press="openDetails(node.node,'details')"></markdown>
+                            <div class="rule" ng-if="!node.node.detailOpen"></div>
+                            <markdown ng-model="node.node.detailMarkdown" extensions="github, prettify"
+                                      ng-if="node.node.detailOpen"
+                                      on-short-press="openDetails(node.node,'details')"></markdown>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
 
         <div ui-tree="treeOptions" class="list-group" ng-if="getTaskViewType()==='project'">

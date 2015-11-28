@@ -75,40 +75,34 @@ angular.module('MindWebUi.viewer', [
             });
         };
     })
-    .directive('onShortPress', function ($timeout) {
+    .directive('onShortPress', function ($timeout, $rootScope) {
         return {
             restrict: 'A',
             link: function ($scope, $elm, $attrs) {
                 function startTouch(evt) {
                     // Locally scoped variable that will keep track of the long press
-                    $scope.$inPress = true;
+                    $rootScope.$inPress = true;
                 }
 
                 function endTouch(evt) {
-                    if (!$scope.$inPress) {
+                    if (!$rootScope.$inPress) {
                         return;
                     }
-                    if (!$scope.$skipShortPress && $attrs.onShortPress) {
+                    $rootScope.$skipShortPress = false;
+                    // Prevent the onLongPress event from firing
+                    $rootScope.$inPress = false;
+                    if (!$rootScope.$skipShortPress && $attrs.onShortPress) {
                         $scope.$apply(function () {
                             $scope.$eval($attrs.onShortPress);
                         });
                         evt.stopPropagation();
                     }
-                    $scope.$skipShortPress = false;
-                    // Prevent the onLongPress event from firing
-                    $scope.$inPress = false;
-                    // If there is an on-touch-end function attached to this element, apply it
-                    if ($attrs.onTouchEnd) {
-                        $scope.$apply(function () {
-                            $scope.$eval($attrs.onTouchEnd);
-                        });
-                    }
                 }
 
                 function skipTouch(evt) {
-                    if ($scope.$inPress) {
-                        $scope.$skipShortPress = true;
-                        $scope.$inPress=false;
+                    if ($rootScope.$inPress) {
+                        $rootScope.$skipShortPress = true;
+                        $rootScope.$inPress=false;
                     }
                 }
 
@@ -122,21 +116,22 @@ angular.module('MindWebUi.viewer', [
             }
         };
     })
-    .directive('onLongPress', function ($timeout) {
+    .directive('onLongPress', function ($timeout, $rootScope) {
         return {
             restrict: 'A',
             link: function ($scope, $elm, $attrs) {
                 function startTouch(evt) {
                     // Locally scoped variable that will keep track of the long press
-                    $scope.$inPress = true;
+                    $rootScope.$inPress = true;
                     // We'll set a timeout for 600 ms for a long press
                     $timeout(function () {
-                        if ($scope.$inPress) {
+                        if ($rootScope.$inPress) {
                             // If the touchend event hasn't fired,
                             // apply the function given in on the element's on-long-press attribute
                             $scope.$apply(function () {
                                 // mark the event fired, so the short press won't execute    
-                                $scope.$skipShortPress = true;
+                                $rootScope.$inPress = false;
+                                $rootScope.$skipShortPress = true;
                                 $scope.$eval($attrs.onLongPress);
                             });
                         }
@@ -144,8 +139,11 @@ angular.module('MindWebUi.viewer', [
                 }
 
                 function endTouch(evt) {
+                    if (!$rootScope.$inPress) {
+                        return;
+                    }
                     // Prevent the onLongPress event from firing
-                    $scope.$inPress = false;
+                    $rootScope.$inPress = false;
                     // If there is an on-touch-end function attached to this element, apply it
                     if ($attrs.onTouchEnd) {
                         $scope.$apply(function () {
@@ -156,9 +154,9 @@ angular.module('MindWebUi.viewer', [
                 }
 
                 function skipTouch(evt) {
-                    if ($scope.$inPress) {
-                        $scope.$skipShortPress = true;
-                        $scope.$inPress=false;
+                    if ($rootScope.$inPress) {
+                        $rootScope.$skipShortPress = true;
+                        $rootScope.$inPress=false;
                     }
                 }
 

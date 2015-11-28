@@ -141,8 +141,9 @@ markdown.tab-content {
 .nodeList.active .chevron span[name='editorIcons'] {    
     color:white;
     background-color: rgba(255,255,255,.1);
-    font-size:120%;
-    transition: font-size 1s, background-color 1s, color 1s;
+    font-size:200%;
+    transition: background-color 1s, transform 2s 3s;
+    transform: scale(0.6);
 }
 
 .nodeList .icons img,
