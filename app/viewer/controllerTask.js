@@ -13,7 +13,7 @@ angular.module('MindWebUi.viewer.taskController', [
         inifializeTasklist();
 
         $scope.longPressNode = function (node) {
-            $scope.$emit('selectNode', node);
+            $scope.$emit('selectNode', {node: node.node});
         };
         $scope.nodeToggleOpen = function (node) {
             node.open = !node.open;
@@ -30,78 +30,149 @@ angular.module('MindWebUi.viewer.taskController', [
         };
 
         $scope.selectNode = function (event) {
-            var currentNode = $scope.currentNode;
+            var currentNode = findNodeInTasks($scope.currentNode);
+            if (!currentNode) {
+                currentNode = findNodeInProjects($scope.currentNode);
+            }
+            var rootNodes = [];
+            var rootIndex = -1;
+            var parentProjectIndex = -1;
+            var parentNodeIndex = -1;
+            if (currentNode.project) {
+                if (currentNode.project.nodes) {
+                    parentNodeIndex = currentNode.project.nodes.indexOf(currentNode);
+                }
+                if (currentNode.project.projects) {
+                    parentProjectIndex = currentNode.project.projects.indexOf(currentNode);
+                }
+            }
+            for (var i = 0; i < $scope.projectList.length; i++) {
+                if (!$scope.projectList[i].project) {
+                    if ($scope.projectList[i] == currentNode) {
+                        rootIndex = rootNodes.length;
+                    }
+                    rootNodes.push($scope.projectList[i]);
+                }
+            }
+
             switch (event) {
                 case 'prev':
-                    if (!currentNode.$parent) {
+                    if (rootIndex == 0) {
                         break;
                     }
-                    if (currentNode.$parentIndex == 0) {
-                        // if it's the first node, select it's parent as next
-                        $scope.$emit('selectNode', {node: currentNode.$parent});
+                    if (rootIndex > 0 && !rootNodes[rootIndex - 1].node.open) {
+                        $scope.$emit('selectNode', {node: rootNodes[rootIndex - 1].node});
                     } else {
-                        // find the previous node, or it`s last open child
-                        if (!currentNode.$parent.node[currentNode.$parentIndex - 1].open) {
-                            $scope.$emit('selectNode', {node: currentNode.$parent.node[currentNode.$parentIndex - 1]});
-                        } else {
-                            //dig down to last open child
-                            var ptr = currentNode.$parent.node[currentNode.$parentIndex - 1];
-                            outside:
-                                do {
-                                    for (var i = ptr.node.length - 1; i >= 0; i++) {
-                                        if (ptr.node[i].open) {
-                                            ptr = ptr.node[i];
-                                            break;
-                                        } else {
-                                            $scope.$emit('selectNode', {node: ptr.node[i]});
-                                            break outside;
-                                        }
-                                    }
-                                } while (true);
+                        //dig down to last open child
+                        var ptr = currentNode.project;
+                        if (!ptr) {
+                            ptr = rootNodes[rootIndex - 1];
+                        } else if (parentNodeIndex > 0) {
+                            ptr = ptr.nodes[parentNodeIndex - 1];
+                        } else if (parentProjectIndex > 0) {
+                            ptr = ptr.projects[parentProjectIndex - 1];
+                        } else if (parentNodeIndex == 0) {
+                            if (ptr.projects) {
+                                ptr = ptr.projects[ptr.projects.length - 1];
+                            } else {
+                                $scope.$emit('selectNode', {node: ptr.node});
+                                break;
+                            }
+                        } else if (parentProjectIndex == 0) {
+                            $scope.$emit('selectNode', {node: ptr.node});
+                            break;
                         }
+                        do {
+                            var ptrProjectIndex = ptr.projects ? ptr.projects.indexOf(ptr) : -1;
+                            var ptrNodeIndex = ptr.nodes ? ptr.nodes.indexOf(ptr) : -1;
+                            if (!ptr.node.open || (!ptr.nodes && !ptr.projects)) {
+                                $scope.$emit('selectNode', {node: ptr.node});
+                                break;
+                            }
+                            if (ptr.nodes) {
+                                if (ptr.nodes[ptr.nodes.length - 1].node.open) {
+                                    ptr = ptr.nodes[ptr.nodes.length - 1];
+                                } else {
+                                    $scope.$emit('selectNode', {node: ptr.nodes[ptr.nodes.length - 1].node});
+                                    break;
+                                }
+                            }
+                            if (ptr.projects) {
+                                if (ptr.projects[ptr.projects.length - 1].node.open) {
+                                    ptr = ptr.projects[ptr.projects.length - 1];
+                                } else {
+                                    $scope.$emit('selectNode', {node: ptr.projects[ptr.projects.length - 1].node});
+                                    break;
+                                }
+
+                            }
+                        } while (true);
                     }
                     break;
                 case 'next':
-                    if (!currentNode.$parent && !currentNode.open) {
-                        break;
-                    }
-                    if (currentNode.node && currentNode.open) {
-                        $scope.$emit('selectNode', {node: currentNode.node[0]});
-                    } else if (currentNode.$parentIndex < currentNode.$parent.node.length - 1) {
-                        // if it's the last node, select it's parent's sibling as next
-                        $scope.$emit('selectNode', {node: currentNode.$parent.node[currentNode.$parentIndex + 1]});
+                    if (!currentNode.project && !currentNode.node.open) {
+                        if (rootIndex < rootNodes.length - 1) {
+                            $scope.$emit('selectNode', {node: rootNodes[rootIndex + 1].node});
+                        }
+                    } else if (currentNode.projects && currentNode.node.open) {
+                        $scope.$emit('selectNode', {node: currentNode.projects[0].node});
+                    } else if (currentNode.nodes && currentNode.node.open) {
+                        $scope.$emit('selectNode', {node: currentNode.nodes[0].node});
+                    } else if (currentNode.project.projects && parentProjectIndex >= 0 && parentProjectIndex < currentNode.project.projects.length - 1) {
+                        $scope.$emit('selectNode', {node: currentNode.project.projects[parentProjectIndex + 1].node});
+                    } else if (currentNode.project.projects && parentProjectIndex >= 0 && parentProjectIndex == currentNode.project.projects.length - 1 && currentNode.project.nodes) {
+                        $scope.$emit('selectNode', {node: currentNode.project.nodes[0].node});
+                    } else if (currentNode.project.nodes && parentNodeIndex >= 0 && parentNodeIndex < currentNode.project.nodes.length - 1) {
+                        $scope.$emit('selectNode', {node: currentNode.project.nodes[parentNodeIndex + 1].node});
                     } else {
-                        var ptr = currentNode.$parent;
+                        var ptr = currentNode.project;
                         do {
-                            if (!ptr.$parent) {
+                            if (!ptr.project) {
+                                rootIndex = rootNodes.indexOf(ptr);
+                                if (rootIndex < rootNodes.length - 1) {
+                                    $scope.$emit('selectNode', {node: rootNodes[rootIndex + 1].node});
+                                }
                                 break;
                             }
-                            if (ptr.$parentIndex + 1 == ptr.$parent.node.length) {
-                                ptr = ptr.$parent;
+                            var ptrProjectIndex = ptr.project.projects ? ptr.project.projects.indexOf(ptr) : -1;
+                            var ptrNodeIndex = ptr.project.nodes ? ptr.project.nodes.indexOf(ptr) : -1;
+                            if (ptrProjectIndex >= 0 && ptrProjectIndex < ptr.project.projects.length - 1) {
+                                $scope.$emit('selectNode', {node: ptr.project.projects[ptrProjectIndex + 1].node});
+                            } else if (ptrNodeIndex >= 0 && ptrNodeIndex < ptr.project.nodes.length - 1) {
+                                $scope.$emit('selectNode', {node: ptr.project.nodes[ptrNodeIndex + 1].node});
+                            } else if (ptrProjectIndex >= 0 && ptrProjectIndex == ptr.project.projects.length - 1) {
+                                if (ptr.project.nodes) {
+                                    $scope.$emit('selectNode', {node: ptr.project.nodes[0].node});
+
+                                } else {
+                                    ptr = ptr.project;
+                                    continue;
+                                }
+                            } else if (ptrNodeIndex >= 0 && ptrNodeIndex == ptr.project.nodes.length - 1) {
+                                ptr = ptr.project;
                                 continue;
                             }
-                            $scope.$emit('selectNode', {node: ptr.$parent.node[ptr.$parentIndex + 1]});
                             break;
                         } while (true);
                     }
                     break;
                 case 'fold':
                     if (currentNode.node) {
-                        currentNode.open = false;
+                        currentNode.node.open = false;
                         $scope.$emit('fileModified', {
                             event: 'nodeFold',
-                            parent: currentNode.$['ID'],
-                            payload: currentNode.open
+                            parent: currentNode.node.$['ID'],
+                            payload: false
                         });
                     }
                     break;
                 case 'unfold':
                     if (currentNode.node) {
-                        currentNode.open = true;
+                        currentNode.node.open = true;
                         $scope.$emit('fileModified', {
                             event: 'nodeFold',
-                            parent: currentNode.$['ID'],
-                            payload: currentNode.open
+                            parent: currentNode.node.$['ID'],
+                            payload: true
                         });
                     }
                     break;
@@ -163,9 +234,9 @@ angular.module('MindWebUi.viewer.taskController', [
         };
 
         $scope.treeOptions = {
-                beforeDrag: function (event){
-                        return false;
-                },
+            beforeDrag: function (event) {
+                return false;
+            },
             dropped: function (event) {
                 var element = event.source.nodeScope.$modelValue;
                 var sourceNode = event.source.nodesScope.$nodeScope.$modelValue;
@@ -367,7 +438,10 @@ angular.module('MindWebUi.viewer.taskController', [
 
         function taskFromNode(node) {
             // Find task in projects first
-            var newTask = findNodeInProjects(node);
+            var newTask = findNodeInTasks(node);
+            if (!newTask) {
+                var newTask = findNodeInProjects(node);
+            }
             if (!newTask) {
                 newTask = {node: node};
             }
@@ -385,7 +459,7 @@ angular.module('MindWebUi.viewer.taskController', [
             return newTask;
         }
 
-        function inifializeTasklist() {          
+        function inifializeTasklist() {
             $scope.taskList = [];
             $scope.projectList = [];
             NodeService.walknodes($scope.nodes.rootNode, function (node) {

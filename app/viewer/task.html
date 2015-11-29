@@ -57,9 +57,9 @@
             <div class="chevron">
                 <div class="icon-block">
                     <span name="editorIcons" ng-if="editable&&(displayIcons||currentNode===node.node)">
-                        <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.node.$parent)"></i>
-                        <i class="fa fa-fw fa-folder-o" ng-click="addNode(node.node)"></i>
-                        <i class="fa fa-fw fa-trash" ng-click="deleteNode(node.node)"></i>
+                        <i class="fa fa-fw fa-tasks" tooltip="Add subproject" ng-click="addProject(node)"></i>
+                        <i class="fa fa-fw fa-plus-circle" tooltip="Add subtask" ng-click="addTask(node)"></i>
+                        <i class="fa fa-fw fa-trash" tooltip="Delete node" ng-click="deleteNode(node.node)"></i>
                     </span>
                     <img ng-if="node.node.attribute" src="/images/AttributesView.png"
                          on-short-press="openDetails(node.node,'properties')"/>

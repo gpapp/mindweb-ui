@@ -135,15 +135,17 @@ markdown.tab-content {
     color:black;
     padding:2px;
     right: 40px;
-    z-index: 20;
+    z-index: 20;  
+    font-size:200%;
 }
 
-.nodeList.active .chevron span[name='editorIcons'] {    
+.nodeList.active .chevron span[name='editorIcons'] {
     color:white;
-    background-color: rgba(255,255,255,.1);
-    font-size:200%;
-    transition: background-color 1s, transform 2s 3s;
-    transform: scale(0.6);
+    background-color: rgba(255,255,255,.1);    
+    transition: background-color 1s, font-size 2s 3s, transform 2s 3s, opacity 2s 3s;
+    opacity: .5;
+    font-size:100%;
+    transform: translateY(20px) translateX(32px);
 }
 
 .nodeList .icons img,
