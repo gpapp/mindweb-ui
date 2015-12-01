@@ -33,6 +33,7 @@
 <script type="text/ng-template" id="task_item_renderer">
     <div id='{{node.node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node.node}"
          on-long-press="longPressNode(node)">
+        <div class="list-group-item-heading">
             <div ui-tree-handle class="handle" ng-if="node.node.$parent">
                 <i class="fa fa-bars"></i>
             </div>
@@ -47,8 +48,7 @@
             <div class="item">
                 <markdown ng-model="node.node.nodeMarkdown" extensions="github, prettify"
                           on-short-press="openDetails(node.node,'content')"></markdown>
-                <a ng-if="node.$['LINK']" title="{{node.node.$['LINK']}}"
-                   on-short-press="jumptoLink(node.node.$['LINK'])">
+                <a ng-if="node.$['LINK']" title="{{node.node.$['LINK']}}" on-short-press="jumptoLink(node.node.$['LINK'])">
                     <img ng-src="/images/{{node.node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
                 </a>
             </div>
@@ -68,15 +68,16 @@
                 </div>
             </div>
         </div>
-        <div class="list-group-item-text detail" ng-if="node.node.detailMarkdown">
-            <i class="fa pull-left"
-               ng-class="{'fa-chevron-down':node.node.detailOpen, 'fa-chevron-right':!node.node.detailOpen}"
-               ng-click="detailToggleOpen(node.node)"></i>
+    </div>
+    <div class="list-group-item-text detail" ng-if="node.node.detailMarkdown">
+        <i class="fa pull-left"
+           ng-class="{'fa-chevron-down':node.node.detailOpen, 'fa-chevron-right':!node.node.detailOpen}"
+           ng-click="detailToggleOpen(node.node)"></i>
 
-            <div class="rule" ng-if="!node.node.detailOpen"></div>
-            <markdown ng-model="node.node.detailMarkdown" extensions="github, prettify" ng-if="node.node.detailOpen"
-                      on-short-press="openDetails(node.node,'details')"></markdown>
-        </div>
+        <div class="rule" ng-if="!node.node.detailOpen"></div>
+        <markdown ng-model="node.node.detailMarkdown" extensions="github, prettify" ng-if="node.node.detailOpen"
+                  on-short-press="openDetails(node.node,'details')"></markdown>
+    </div>
     </div>
     <div class="indent" ui-tree-nodes="" ng-model="projectList" ng-if="node.projects && node.node.open">
         <div ng-repeat="node in projectList|filter:isParentComparator(node)"
@@ -124,7 +125,6 @@
                         <span>{{key}} ({{value.length}})</span>
                     </div>
                     <div class="chevron">
-
                         <div class="icon-block">
                             <i class="fa pull-right" ng-class="{'fa-chevron-down': open, 'fa-chevron-right': !open}"
                                ng-click="open=!open"></i>
@@ -140,10 +140,10 @@
                             </div>
                             <div class="icons">
                                 <div class="icon-block">
-                    <span ng-repeat="icon in node.node.icon">
-                        <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png"
-                             on-short-press="openDetails(node.node,'icons')"/>
-                    </span>
+                                    <span ng-repeat="icon in node.node.icon">
+                                        <img ng-src="/images/icons/{{icon.$['BUILTIN']|escape}}.png"
+                                             on-short-press="openDetails(node.node,'icons')"/>
+                                    </span>
                                 </div>
                             </div>
                             <div class="item">
