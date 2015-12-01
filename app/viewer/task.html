@@ -48,7 +48,8 @@
             <div class="item">
                 <markdown ng-model="node.node.nodeMarkdown" extensions="github, prettify"
                           on-short-press="openDetails(node.node,'content')"></markdown>
-                <a ng-if="node.$['LINK']" title="{{node.node.$['LINK']}}" on-short-press="jumptoLink(node.node.$['LINK'])">
+                <a ng-if="node.$['LINK']" title="{{node.node.$['LINK']}}"
+                   on-short-press="jumptoLink(node.node.$['LINK'])">
                     <img ng-src="/images/{{node.node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
                 </a>
             </div>
@@ -156,11 +157,11 @@
                             </div>
                             <div class="chevron">
                                 <div class="icon-block">
-                    <span name="editorIcons" ng-if="editable&&(displayIcons||currentNode===node.node)">
-                        <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.node.$parent)"></i>
-                        <i class="fa fa-fw fa-folder-o" ng-click="addNode(node.node)"></i>
-                        <i class="fa fa-fw fa-trash" ng-click="deleteNode(node.node)"></i>
-                    </span>
+                                    <span name="editorIcons" ng-if="editable">
+                                        <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.node.$parent)"></i>
+                                        <i class="fa fa-fw fa-folder-o" ng-click="addNode(node.node)"></i>
+                                        <i class="fa fa-fw fa-trash" ng-click="deleteNode(node.node)"></i>
+                                    </span>
                                     <img ng-if="node.node.attribute" src="/images/AttributesView.png"
                                          on-short-press="openDetails(node.node,'properties')"/>
                                     <img ng-if="node.node.noteMarkdown" src="/images/knotes.png"
