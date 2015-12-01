@@ -8,7 +8,7 @@
 <script type="text/ng-template" id="tree_item_renderer">
     <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node}"
          on-short-press="longPressNode(node)" on-long-press="longPressNode(node)">
-        <div class="list-group-item-heading" ng-mouseover="displayIcons=true" ng-mouseleave="displayIcons=false">
+        <div class="list-group-item-heading">
             <div ui-tree-handle class="handle" ng-if="node.$parent">
                 <i class="fa fa-bars"></i>
             </div>
@@ -29,7 +29,7 @@
             </div>
             <div class="chevron">
                 <div class="icon-block">
-                    <span name="editorIcons" ng-if="editable&&(displayIcons||currentNode===node)">
+                    <span name="editorIcons" ng-if="editable">
                         <i class="fa fa-fw fa-folder-o" tooltip="Add sibling" ng-click="addNode(node.$parent)"></i>
                         <i class="fa fa-fw fa-plus-circle"  tooltip="Add child" ng-click="addNode(node)"></i>
                         <i class="fa fa-fw fa-trash" tooltip="Delete node" ng-click="deleteNode(node)"></i>
@@ -54,8 +54,7 @@
     <div class="indent" ui-tree-nodes="" ng-model="node.node" ng-if="node.open && node.node">
         <div ng-repeat="node in node.node"
              ui-tree-node
-             ng-include="'tree_item_renderer'"
-             ng-init="displayIcons=false">
+             ng-include="'tree_item_renderer'">
         </div>
     </div>
 </script>

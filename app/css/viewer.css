@@ -129,14 +129,26 @@ markdown.tab-content {
 }
 
 .nodeList .chevron span[name='editorIcons'] {
+    display: none;
+    font-size:200%;
+}
+
+.nodeList:hover .chevron span[name='editorIcons'] {
     display: flex;
     position: absolute;
     border-radius:5px;
     color:black;
     padding:2px;
     right: 40px;
-    z-index: 20;  
+    z-index: 20;
+    font-size:100%;
+}
+
+.nodeList.active:hover .chevron span[name='editorIcons'] {
+    opacity: 1.0;
     font-size:200%;
+    transform: translateY(0px) translateX(0px);
+    transition: font-size 2s 3s, transform 2s 3s, opacity 2s 3s;
 }
 
 .nodeList.active .chevron span[name='editorIcons'] {

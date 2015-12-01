@@ -34,7 +34,7 @@
     <div id='{{node.node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node.node}"
          on-long-press="longPressNode(node)">
 
-        <div class="list-group-item-heading" ng-mouseover="displayIcons=true" ng-mouseleave="displayIcons=false">
+        <div class="list-group-item-heading">
             <div ui-tree-handle class="handle" ng-if="node.node.$parent">
                 <i class="fa fa-bars"></i>
             </div>
