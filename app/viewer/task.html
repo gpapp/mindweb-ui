@@ -33,8 +33,6 @@
 <script type="text/ng-template" id="task_item_renderer">
     <div id='{{node.node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node.node}"
          on-long-press="longPressNode(node)">
-
-        <div class="list-group-item-heading">
             <div ui-tree-handle class="handle" ng-if="node.node.$parent">
                 <i class="fa fa-bars"></i>
             </div>
@@ -56,7 +54,7 @@
             </div>
             <div class="chevron">
                 <div class="icon-block">
-                    <span name="editorIcons" ng-if="editable&&(displayIcons||currentNode===node.node)">
+                    <span name="editorIcons" ng-if="editable">
                         <i class="fa fa-fw fa-tasks" tooltip="Add subproject" ng-click="addProject(node)"></i>
                         <i class="fa fa-fw fa-plus-circle" tooltip="Add subtask" ng-click="addTask(node)"></i>
                         <i class="fa fa-fw fa-trash" tooltip="Delete node" ng-click="deleteNode(node.node)"></i>
@@ -83,15 +81,13 @@
     <div class="indent" ui-tree-nodes="" ng-model="projectList" ng-if="node.projects && node.node.open">
         <div ng-repeat="node in projectList|filter:isParentComparator(node)"
              ui-tree-node
-             ng-include="'task_item_renderer'"
-             ng-init="displayIcons=false">
+             ng-include="'task_item_renderer'">
         </div>
     </div>
     <div class="indent" ui-tree-nodes="" ng-model="taskList" ng-if="node.nodes && node.node.open">
         <div ng-repeat="node in taskList|filter:isParentComparator(node)"
              ui-tree-node
-             ng-include="'task_item_renderer'"
-             ng-init="displayIcons=false">
+             ng-include="'task_item_renderer'">
         </div>
     </div>
 </script>
@@ -138,8 +134,7 @@
                 <div class="indent" ng-if="open">
                     <div class="list-group-item nodeList" ng-repeat="node in value"
                          ng-class="{active : currentNode===node.node}">
-                        <div class="list-group-item-heading" ng-mouseover="displayIcons=true"
-                             ng-mouseleave="displayIcons=false">
+                        <div class="list-group-item-heading">
                             <div class="handle" ng-if="node.node.$parent">
                                 <i class="fa fa-bars"></i>
                             </div>

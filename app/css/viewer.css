@@ -129,11 +129,6 @@ markdown.tab-content {
 }
 
 .nodeList .chevron span[name='editorIcons'] {
-    display: none;
-    font-size:200%;
-}
-
-.nodeList:hover .chevron span[name='editorIcons'] {
     display: flex;
     position: absolute;
     border-radius:5px;
@@ -141,19 +136,28 @@ markdown.tab-content {
     padding:2px;
     right: 40px;
     z-index: 20;
+    opacity: 0;
+    font-size:150%;
+    transform: translateY(0px) translateX(0px);
+}
+
+.nodeList:hover .chevron span[name='editorIcons'] {
+    opacity: 1.0;
     font-size:100%;
+    transition: font-size 2s 3s, transform 2s 3s;
+    transform: translateY(20px) translateX(32px);
 }
 
 .nodeList.active:hover .chevron span[name='editorIcons'] {
-    opacity: 1.0;
-    font-size:200%;
+    opacity: 1;
+    font-size:150%;
     transform: translateY(0px) translateX(0px);
-    transition: font-size 2s 3s, transform 2s 3s, opacity 2s 3s;
+    transition:none;
 }
 
 .nodeList.active .chevron span[name='editorIcons'] {
     color:white;
-    background-color: rgba(255,255,255,.1);    
+    background-color: rgba(255,255,255,.1);
     transition: background-color 1s, font-size 2s 3s, transform 2s 3s, opacity 2s 3s;
     opacity: .5;
     font-size:100%;
@@ -163,7 +167,7 @@ markdown.tab-content {
 .nodeList .icons img,
 .nodeList .chevron img {
     min-width: 20px;
-    min-height: 20px;    
+    min-height: 20px;
     padding: 2px;
 }
 
