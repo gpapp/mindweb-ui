@@ -102,6 +102,7 @@ angular.module('MindWebUi.viewer.detailController', [
             } else {
                 node.icon = [{'$': {BUILTIN: name}}];
             }
+            $scope.iconDialog=false;
             $scope.$emit('fileModified', {event: 'nodeModifyIcons', parent: node.$['ID'], payload: node.icon});
         };
 
