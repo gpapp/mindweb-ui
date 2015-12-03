@@ -144,7 +144,7 @@ markdown.tab-content {
 .nodeList:hover .chevron span[name='editorIcons'] {
     opacity: 1.0;
     font-size:100%;
-    transition: font-size 2s 3s, transform 2s 3s;
+    transition: font-size 2s 1s, transform 2s 1s;
     transform: translateY(20px) translateX(32px);
 }
 
@@ -158,7 +158,7 @@ markdown.tab-content {
 .nodeList.active .chevron span[name='editorIcons'] {
     color:white;
     background-color: rgba(255,255,255,.1);
-    transition: background-color 1s, font-size 2s 3s, transform 2s 3s, opacity 2s 3s;
+    transition: background-color 1s 2s, font-size 1s 2s, transform 1s 2s, opacity 1s 2s;
     opacity: .5;
     font-size:100%;
     transform: translateY(20px) translateX(32px);
@@ -171,22 +171,26 @@ markdown.tab-content {
     padding: 2px;
 }
 
-.nodeList .detail .rule {
-    height: 5pt;
-    border-bottom: 1px solid lightgray;
-    margin-bottom: 10pt;
-    margin-left: 10pt;
-}
 
 .nodeList .detail markdown {
     display: block;
+    transition: max-height 1s 0s, font-size 1s 0s, opacity 1s 0s;
+    max-height:300px;
+    overflow:auto;
     background-color: ghostwhite;
     color: black;
     border: 1px solid black;
     padding: 5px;
-    max-height: 300px;
-    overflow: auto;
 }
+
+.nodeList .detail .collapsed markdown {
+    transition: max-height 1s 0s,font-size 1s 0s, opacity 1s 0s;
+    font-size:50%;
+    overflow:hidden;
+    max-height:0;
+    opacity: .2;
+}
+
 
 /* Detail styles */
 #detail-icon .icon {
