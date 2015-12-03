@@ -79,7 +79,7 @@ markdown {
 markdown.tab-content {
     border: 1px solid lightgray;
     padding: 0.5em 1em;
-    height: 8em;
+    max-height: 50vh;
     overflow: auto;
     display: block;
 }
