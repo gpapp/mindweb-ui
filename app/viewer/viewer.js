@@ -106,8 +106,8 @@ angular.module('MindWebUi.viewer', [
                     }
                 }
 
-                $elm.bind('touchstart', startTouch);
-                $elm.bind('touchend', endTouch);
+                //$elm.bind('touchstart', startTouch);
+                //$elm.bind('touchend', endTouch);
                 $elm.bind('touchmove', skipTouch);
 
                 $elm.bind('mousedown', startTouch);
@@ -160,8 +160,8 @@ angular.module('MindWebUi.viewer', [
                     }
                 }
 
-                $elm.bind('touchstart', startTouch);
-                $elm.bind('touchend', endTouch);
+                //$elm.bind('touchstart', startTouch);
+                //$elm.bind('touchend', endTouch);
                 $elm.bind('touchmove', skipTouch);
                 
                 $elm.bind('mousedown', startTouch);
