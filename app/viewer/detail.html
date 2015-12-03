@@ -17,7 +17,7 @@
                 <textarea id="detailsID" class="tab-pane form-control" rows="5"
                           ng-if="editable"
                           ng-model="currentEditor.detail"></textarea>
-                <markdown class="tab-pane form-control" ng-model="currentEditor.detail" ng-if="!editable"></markdown>
+                <markdown class="tab-pane tab-content" ng-model="currentEditor.detail" ng-if="!editable"></markdown>
             </uib-tab>
             <uib-tab active="selectedTab=='notes'" ng-if="editable||currentEditor.note">
                 <tab-heading ng-click="selectTab('notes')">
@@ -26,7 +26,7 @@
                 <textarea id="notesID" class="tab-pane form-control" rows="5"
                           ng-if="editable"
                           ng-model="currentEditor.note"></textarea>
-                <markdown class="tab-pane form-control" ng-model="currentEditor.note" ng-if="!editable"></markdown>
+                <markdown class="tab-pane tab-content" ng-model="currentEditor.note" ng-if="!editable"></markdown>
             </uib-tab>
             <uib-tab active="selectedTab=='icons'" ng-if="editable||currentNode.icon">
                 <tab-heading ng-click="selectTab('icons')">
