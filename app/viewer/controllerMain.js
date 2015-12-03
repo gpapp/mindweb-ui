@@ -114,6 +114,19 @@ angular.module('MindWebUi.viewer.mainController', [
             $scope.markDone = function (node, status) {
                 status ? NodeService.addConfigIcon($scope, node, 'Done') : NodeService.removeConfigIcon($scope, node, 'Done');
             };
+
+            $scope.downloadFreeplane = function (target) {
+                FileService.exportFreeplane($scope.file.id).then(
+                    function (data) {
+                        var blob = new Blob([data], {type: 'application/x-freemind'});
+                        saveAs(blob, $scope.file.name);
+                    },
+                    function (error) {
+                        alert("Cannot save file:" + error);
+                    }
+                )
+            };
+
             $scope.parseTasks = function () {
                 $scope.loading = true;
                 TaskService.parseTasks($state.params.fileId).then(function (data) {
