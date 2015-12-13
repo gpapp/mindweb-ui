@@ -5,7 +5,7 @@ angular.module('MindWebUi.viewer.mainController', [
         'ui.router',
         'ui.tree',
         'angular-markdown',
-        'angular-keyboard',
+        'cfp.hotkeys',
         'MindWebUi.public.service',
         'MindWebUi.file.service',
         'MindWebUi.task.service',
@@ -18,14 +18,31 @@ angular.module('MindWebUi.viewer.mainController', [
                   $location,
                   $anchorScroll,
                   $interval,
+                  $timeout,
                   NodeService,
                   FileService,
                   PublicService,
-                  TaskService) {
+                  TaskService,
+                  SharedState,
+                  hotkeys,
+                  focusElement) {
             const IconRegExp = /^Icon:\s*(.*)/;
             var msgStack = [];
             var saveMutex = false;
             var saveTimer;
+
+            bindKeys();
+
+            $scope.$on('mobile-angular-ui.state.changed.iconDialog', function (e, newVal, oldVal) {
+                if (newVal === false) {
+                    bindKeys();
+                }
+            });
+            $scope.$on('mobile-angular-ui.state.changed.detailPanel', function (e, newVal, oldVal) {
+                if (newVal === false) {
+                    bindKeys();
+                }
+            });
 
             $anchorScroll.yOffset = 50;
             $rootScope.$on("closeFile", function (event, file) {
@@ -47,7 +64,8 @@ angular.module('MindWebUi.viewer.mainController', [
                 } else {
                     $scope.selectedTab = 'details';
                 }
-                focus(data.destination + 'ID');
+                focusElement(data.destination + 'ID', data.selectAll);
+                SharedState.turnOn('detailPanel');
                 event.stopPropagation();
             });
             $scope.$on('fileModified', function (event, data) {
@@ -129,6 +147,8 @@ angular.module('MindWebUi.viewer.mainController', [
 
             $scope.parseTasks = function () {
                 $scope.loading = true;
+                //TODO: BAD ASYNC
+                performSave();
                 TaskService.parseTasks($state.params.fileId).then(function (data) {
                     postLoad(data);
                 });
@@ -185,6 +205,67 @@ angular.module('MindWebUi.viewer.mainController', [
                     }, 10000);
                 }
                 $scope.loading = false;
+            }
+
+            function bindKeys() {
+                hotkeys.bindTo($scope)
+                    .add({
+                        combo: ['?', 'alt+h'],
+                        description: 'Show help',
+                        persistent: false,
+                        callback: function (event, hotkey) {
+                            hotkeys.toggleCheatSheet();
+                        }
+                    })
+                    .add({
+                        combo: 'f2',
+                        description: 'Edit content',
+                        allowIn: ['TEXTAREA'],
+                        persistent: false,
+                        callback: function () {
+                            $scope.$emit('selectTab', {destination: 'content'});
+                        }
+                    })
+                    .add({
+                        combo: 'shift+f2',
+                        description: 'Edit detail',
+                        allowIn: ['TEXTAREA'],
+                        persistent: false,
+                        callback: function () {
+                            $scope.$emit('selectTab', {destination: 'details'});
+                        }
+                    })
+                    .add({
+                        combo: 'ctrl+shift+f2',
+                        description: 'Edit notes',
+                        allowIn: ['TEXTAREA'],
+                        persistent: false,
+                        callback: function () {
+                            $scope.$emit('selectTab', {destination: 'notes'});
+                        }
+                    })
+                    .add({
+                        combo: 'ctrl+f2',
+                        description: 'Edit icons',
+                        allowIn: ['TEXTAREA'],
+                        persistent: false,
+                        callback: function () {
+                            $scope.$emit('selectTab', {destination: 'icons'});
+                            $timeout(function () {
+                                SharedState.turnOn('iconDialog');
+                            }, 100);
+                        }
+                    })
+                    .add({
+                        combo: 'f9',
+                        description: 'Edit properties',
+                        allowIn: ['TEXTAREA'],
+                        persistent: false,
+                        callback: function () {
+                            $scope.$emit('selectTab', {destination: 'properties'});
+                        }
+                    })
+                ;
             }
 
             function selectNode(node) {

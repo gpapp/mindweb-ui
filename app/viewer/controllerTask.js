@@ -5,12 +5,25 @@ angular.module('MindWebUi.viewer.taskController', [
         'ui.router',
         'ui.tree',
         'angular-markdown',
-        'angular-keyboard',
+        'cfp.hotkeys',
         'MindWebUi.node.service'
     ])
-    .controller('viewerTaskController', function ($scope, $rootScope, $filter, $timeout, NodeService) {
+    .controller('viewerTaskController', function ($scope, $rootScope, $filter, $timeout, hotkeys, NodeService) {
 
-        inifializeTasklist();
+        $scope.$on('mobile-angular-ui.state.changed.iconDialog', function (e, newVal, oldVal) {
+            if (newVal === false) {
+                bindKeys();
+            }
+        });
+        $scope.$on('mobile-angular-ui.state.changed.detailPanel', function (e, newVal, oldVal) {
+            if (newVal === false) {
+                bindKeys();
+            }
+        });
+
+
+        initializeTasklist();
+        bindKeys();
 
         $scope.longPressNode = function (node) {
             $scope.$emit('selectNode', {node: node.node});
@@ -178,7 +191,7 @@ angular.module('MindWebUi.viewer.taskController', [
                     break;
             }
         };
-        $scope.addNode = function (target) {
+        $scope.addTask = function (target) {
             var newNode = {};
             var timeStamp = new Date().getTime();
             if (typeof target === 'string') {
@@ -187,11 +200,12 @@ angular.module('MindWebUi.viewer.taskController', [
                     newNode.$parent = $scope.currentNode;
                 }
             } else {
-                newNode.$parent = target;
+                newNode.$parent = target.node;
             }
 
-            newNode.$ = {CREATED: timeStamp, ID: 'ID_' + timeStamp, MODIFIED: timeStamp, TEXT: 'New Node'};
-            newNode.nodeMarkdown = 'New Node';
+            newNode.$ = {CREATED: timeStamp, ID: 'ID_' + timeStamp, MODIFIED: timeStamp, TEXT: 'New Task'};
+            newNode.nodeMarkdown = 'New Task';
+            NodeService.addConfigIcon($scope, newNode, 'task');
             var minId = -1;
 
             if (newNode.$parent.node) {
@@ -203,7 +217,45 @@ angular.module('MindWebUi.viewer.taskController', [
 
             // Make sure the node is open, so the new node is shown
             newNode.$parent.open = true;
+            var newTask = taskFromNode(newNode);
+
+            $scope.taskList.push(newTask);
             $scope.$emit('selectNode', {node: newNode});
+            $scope.$emit('selectTab', {destination: 'content', selectAll: true});
+            $scope.$emit('fileModified', {event: 'newNode', parent: newNode.$parent.$['ID'], payload: newNode});
+        };
+
+        $scope.addProject = function (target) {
+            var newNode = {};
+            var timeStamp = new Date().getTime();
+            if (typeof target === 'string') {
+                newNode.$parent = target === 'current' ? $scope.currentNode : $scope.currentNode.$parent;
+                if (!newNode.$parent) {
+                    newNode.$parent = $scope.currentNode;
+                }
+            } else {
+                newNode.$parent = target.node;
+            }
+
+            newNode.$ = {CREATED: timeStamp, ID: 'ID_' + timeStamp, MODIFIED: timeStamp, TEXT: 'New Project'};
+            newNode.nodeMarkdown = 'New Project';
+            NodeService.addConfigIcon($scope, newNode, 'project');
+            var minId = -1;
+
+            if (newNode.$parent.node) {
+                newNode.$parent.node.push(newNode);
+            } else {
+                newNode.$parent.node = [newNode];
+            }
+            newNode.$parentIndex = newNode.$parent.node.length - 1;
+
+            // Make sure the node is open, so the new node is shown
+            newNode.$parent.open = true;
+            var newTask = projectFromNode(newNode);
+
+            $scope.projectList.push(newTask);
+            $scope.$emit('selectNode', {node: newNode});
+            $scope.$emit('selectTab', {destination: 'content', selectAll: true});
             $scope.$emit('fileModified', {event: 'newNode', parent: newNode.$parent.$['ID'], payload: newNode});
         };
 
@@ -211,12 +263,11 @@ angular.module('MindWebUi.viewer.taskController', [
         $scope.deleteNode = function (target) {
             if (typeof target === 'string') {
                 target = $scope.currentNode;
-                if (!target.$parent) {
-                    return;
-                }
             }
-            var parent = target.$parent;
-            parent.node.splice(target.$parentIndex, 1);
+            var cur = findNodeInTasks(target);
+            // remove from real tree
+            var parent = cur.node.$parent;
+            parent.node.splice(cur.node.$parentIndex, 1);
             for (var i = target.$parentIndex; i < parent.node.length; i++) {
                 parent.node[i].$parentIndex = i;
             }
@@ -224,6 +275,22 @@ angular.module('MindWebUi.viewer.taskController', [
                 delete parent.node;
                 delete parent.open;
             }
+            // remove from task tree
+            if (cur.project.projects) {
+                cur.project.projects.splice(cur.project.projects.indexOf(cur), 1);
+            }
+            if (cur.project.nodes) {
+                cur.project.nodes.splice(cur.project.nodes.indexOf(cur), 1);
+            }
+            if ($scope.projectList.indexOf(cur) > 0) {
+                $scope.projectList.splice($scope.projectList.indexOf(cur), 1);
+
+            }
+            if ($scope.taskList.indexOf(cur) > 0) {
+                $scope.taskList.splice($scope.taskList.indexOf(cur), 1);
+
+            }
+
             $scope.$emit('fileModified', {
                 event: 'deleteNode',
                 parent: target.$parent.$['ID'],
@@ -296,6 +363,18 @@ angular.module('MindWebUi.viewer.taskController', [
                     return false;
                 }
                 return node.project.node.$['ID'] === parentNode.node.$['ID'];
+            }
+        };
+
+        $scope.isTaskOnly = function (parentNode) {
+            return function (node, index, array) {
+                if (!node.project) {
+                    return true;
+                }
+                if (!node.project.projects) {
+                    return true;
+                }
+                return node.project.projects.indexOf(node) > -1;
             }
         };
 
@@ -459,7 +538,7 @@ angular.module('MindWebUi.viewer.taskController', [
             return newTask;
         }
 
-        function inifializeTasklist() {
+        function initializeTasklist() {
             $scope.taskList = [];
             $scope.projectList = [];
             NodeService.walknodes($scope.nodes.rootNode, function (node) {
@@ -482,5 +561,67 @@ angular.module('MindWebUi.viewer.taskController', [
                 return false;
             })
         }
-    })
-;
+
+        function bindKeys() {
+            hotkeys.bindTo($scope)
+                .add({
+                    combo: 'up',
+                    description: 'Previous node',
+                    callback: function () {
+                        $scope.selectNode('prev')
+                    }
+                })
+                .add({
+                    combo: 'down',
+                    description: 'Next node',
+                    callback: function () {
+                        $scope.selectNode('next')
+                    }
+                })
+                .add({
+                    combo: 'right',
+                    description: 'Unfold node',
+                    callback: function () {
+                        $scope.selectNode('unfold');
+                    }
+                })
+                .add({
+                    combo: 'left',
+                    description: 'Fold node',
+                    callback: function () {
+                        $scope.selectNode('fold');
+                    }
+                })
+                .add({
+                    combo: 'space',
+                    description: 'Display details',
+                    callback: function () {
+                        $scope.detailToggleOpen($scope.currentNode);
+                    }
+                })
+                .add({
+                    combo: 'enter',
+                    description: 'Add subtask',
+                    callback: function () {
+                        $scope.addTask('current');
+                    }
+                })
+                .add({
+                    combo: 'ins',
+                    description: 'Add subproject',
+                    callback: function () {
+                        $scope.addProject('current');
+                    }
+                })
+                .add({
+                    combo: 'del',
+                    description: 'Remove node',
+                    callback: function () {
+                        $scope.deleteNode('current');
+                    }
+                })
+            ;
+
+
+        }
+    });

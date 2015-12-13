@@ -5,7 +5,7 @@ angular.module('MindWebUi.viewer.mindmapController', [
         'ui.router',
         'ui.tree',
         'angular-markdown',
-        'angular-keyboard'
+        'cfp.hotkeys'
     ])
     .controller('viewerMindmapController', function ($scope, $rootScope, $filter, $timeout, $window) {
     })

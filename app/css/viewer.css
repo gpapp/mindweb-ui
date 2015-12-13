@@ -137,22 +137,23 @@ markdown.tab-content {
     right: 40px;
     z-index: 20;
     opacity: 0;
-    font-size:150%;
-    transform: translateY(0px) translateX(0px);
+    font-size:100%;
+    transform: translateY(15px) translateX(32px);
+    transition: opacity 1s 0s, transform .5s 0s, font-size .5s 0s;
 }
 
 .nodeList:hover .chevron span[name='editorIcons'] {
     opacity: 1.0;
-    font-size:100%;
-    transition: font-size 2s 1s, transform 2s 1s;
-    transform: translateY(15px) translateX(32px);
+    font-size:150%;
+    transition: opacity 1s 0s, transform .5s 0s;
+    transform: translateY(0px) translateX(0px);
 }
 
 .nodeList.active:hover .chevron span[name='editorIcons'] {
     opacity: 1;
     font-size:150%;
     transform: translateY(0px) translateX(0px);
-    transition:none;
+    transition: opacity 1s 0s, transform .5s 0s, font-size .5s 0s;
 }
 
 .nodeList.active .chevron span[name='editorIcons'] {
@@ -213,6 +214,11 @@ markdown.tab-content {
 #iconSelectList .iconSelectCell {
     display: inline-flex;
     padding: 10px;
+}
+
+#iconSelectList .iconSelectCell.selected {
+    border:1px solid black;
+    padding: 9px;
 }
 
 #iconSelectList .iconSelectIcon {

@@ -5,9 +5,22 @@ angular.module('MindWebUi.viewer.treeController', [
         'ui.router',
         'ui.tree',
         'angular-markdown',
-        'angular-keyboard'
+        'cfp.hotkeys'
     ])
-    .controller('viewerTreeController', function ($scope, $rootScope, $filter, $timeout) {
+    .controller('viewerTreeController', function ($scope, $rootScope, $filter, $timeout, hotkeys) {
+        bindKeys();
+
+        $scope.$on('mobile-angular-ui.state.changed.iconDialog', function (e, newVal, oldVal) {
+            if (newVal === false) {
+                bindKeys();
+            }
+        });
+        $scope.$on('mobile-angular-ui.state.changed.detailPanel', function (e, newVal, oldVal) {
+            if (newVal === false) {
+                bindKeys();
+            }
+        });
+
         $scope.longPressNode = function (node) {
             $scope.$emit('selectNode', {node: node});
         };
@@ -20,7 +33,6 @@ angular.module('MindWebUi.viewer.treeController', [
             $scope.$emit('fileModified', {event: 'nodeDetailFold', parent: node.$['ID'], payload: node.detailOpen});
         };
         $scope.openDetails = function (node, destination) {
-            $rootScope.Ui.turnOn('detailPanel');
             $scope.$emit('selectNode', {node: node});
             $scope.$emit('selectTab', {destination: destination});
         };
@@ -129,6 +141,7 @@ angular.module('MindWebUi.viewer.treeController', [
             // Make sure the node is open, so the new node is shown
             newNode.$parent.open = true;
             $scope.$emit('selectNode', {node: newNode});
+            $scope.$emit('selectTab', {destination: 'content', selectAll: true});
             $scope.$emit('fileModified', {event: 'newNode', parent: newNode.$parent.$['ID'], payload: newNode});
         };
 
@@ -166,10 +179,10 @@ angular.module('MindWebUi.viewer.treeController', [
                 var destNode = event.dest.nodesScope.$nodeScope.$modelValue;
                 var destIndex = event.dest.index;
                 if (sourceNode == null) {
-                    sourceNode=$scope.$parent.nodes.rootNode;
+                    sourceNode = $scope.$parent.nodes.rootNode;
                 }
                 if (destNode == null) {
-                    destNode=$scope.$parent.nodes.rootNode;
+                    destNode = $scope.$parent.nodes.rootNode;
                 }
                 for (var i = sourceIndex; i < sourceNode.node.length; i++) {
                     sourceNode.node[i].$parentIndex = i;
@@ -194,5 +207,68 @@ angular.module('MindWebUi.viewer.treeController', [
                 }, 10);
             }
         };
+
+        function bindKeys() {
+
+            hotkeys.bindTo($scope)
+                .add({
+                    combo: 'up',
+                    description: 'Previous node',
+                    callback: function () {
+                        $scope.selectNode('prev')
+                    }
+                })
+                .add({
+                    combo: 'down',
+                    description: 'Next node',
+                    callback: function () {
+                        $scope.selectNode('next')
+                    }
+                })
+                .add({
+                    combo: 'right',
+                    description: 'Unfold node',
+                    callback: function () {
+                        $scope.selectNode('unfold');
+                    }
+                })
+                .add({
+                    combo: 'left',
+                    description: 'Fold node',
+                    callback: function () {
+                        $scope.selectNode('fold');
+                    }
+                })
+                .add({
+                    combo: 'space',
+                    description: 'Display details',
+                    callback: function () {
+                        $scope.detailToggleOpen($scope.currentNode);
+                    }
+                })
+                .add({
+                    combo: 'enter',
+                    description: 'Add subnode',
+                    callback: function () {
+                        $scope.addNode('current');
+                    }
+                })
+                .add({
+                    combo: 'ins',
+                    description: 'Add sibling',
+                    callback: function () {
+                        $scope.selectNode('parent');
+                    }
+                })
+                .add({
+                    combo: 'del',
+                    description: 'Delete node',
+                    callback: function () {
+                        $scope.deleteNode('current');
+                    }
+                })
+            ;
+        }
+
     })
 ;

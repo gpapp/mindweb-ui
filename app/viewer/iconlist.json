@@ -1,35 +1,35 @@
 [
   {
     "shortcut": "+",
-    "description": "",
+    "description": "Yes",
     "link": "images/icons/button_ok.png",
     "name": "button_ok"
   },
   {
     "shortcut": "-",
-    "description": "",
+    "description": "No",
     "link": "images/icons/button_cancel.png",
     "name": "button_cancel"
   },
   {
-    "description": "",
+    "description": "Warning",
     "link": "images/icons/messagebox_warning.png",
     "name": "messagebox_warning"
   },
   {
     "shortcut": "!",
-    "description": "",
+    "description": "Important",
     "link": "images/icons/yes.png",
     "name": "yes"
   },
   {
     "shortcut": "?",
-    "description": "",
+    "description": "Question",
     "link": "images/icons/help.png",
     "name": "help"
   },
   {
-    "description": "",
+    "description": "Attach",
     "link": "images/icons/attach.png",
     "name": "attach"
   },
@@ -75,7 +75,7 @@
   },
   {
     "shortcut": "x",
-    "description": "",
+    "description": "Error",
     "link": "images/icons/clanbomber.png",
     "name": "clanbomber"
   },

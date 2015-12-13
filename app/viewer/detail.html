@@ -1,9 +1,9 @@
 <div class="panel panel-primary">
-    <div class="panel-heading panel-title" ng-click="Ui.turnOff('detailPanel')"
-         keyboard-shortcut="esc" keyboard-title="Close detail panel"
-         ui-turn-off="detailPanel">
+    <div class="panel-heading panel-title" ng-click="Ui.turnOff('detailPanel')">
         Hide details <span class="pull-right fa fa-close"></span>
     </div>
+    <span ui-turn-off="detailPanel"></span>
+
     <div class="panel-body">
         <textarea id="contentID" class="tab-pane form-control" rows="5" ng-model="currentEditor.text"
                   ng-if="editable"></textarea>
@@ -108,36 +108,23 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button class="close" keyboard-shortcut="esc" keyboard-title="Close dialog"
-                            ui-turn-off="iconDialog">&times;</button>
+                    <button class="close" ui-turn-off="iconDialog">&times;</button>
                     <h4 class="modal-title">Add icon</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" ng-controller="viewerIconDialogController">
                     <div id='iconSelectList' class="table">
-                        <div keyboard-selectable="list item"
-                             select-next="right"
-                             select-previous="left"
-                             keyboard-prevent-default>
-                            <div class="iconSelectCell" ng-repeat="item in iconList">
-                                <img class="iconsSelectIcon"
-                                     keyboard-shortcut="space"
-                                     selection-shortcut
-                                     keyboard-title="Add icon"
-                                     ng-src="{{item.link}}" ng-click="addIcon(item.name)" ui-turn-off="iconDialog"/>
-                                <span class="hidden"
-                                      keyboard-shortcut="{{item.shortcut}}"
-                                      shortcutIf="item.shortcut"
-                                      keyboard-action="addIcon(item.name)"
-                                      keyboard-title="{{item.xxxxdescription}}"
-                                      ng-if="item.shortcut"></span>
-                            </div>
+                        <div class="iconSelectCell" ng-repeat="item in iconList"
+                             ng-class="{'selected':$index==selectedIndex}" 
+                             uib-tooltip="{{item.description?item.description:item.name}} {{item.shortcut?'('+item.shortcut+')':''}}">
+                            <img ng-src="{{item.link}}" ng-click="addIcon(item.name)" ui-turn-off="iconDialog"/>
                         </div>
                     </div>
-                </div>
+                    </div>
                 <div class="modal-footer">
-                    <keyboard-help></keyboard-help>
+                    Alt-H for shortcuts
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>

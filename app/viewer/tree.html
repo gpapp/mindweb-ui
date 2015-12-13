@@ -23,7 +23,8 @@
             <div class="item">
                 <markdown ng-model="node.nodeMarkdown" extensions="github, prettify"
                           on-short-press="openDetails(node,'content')"></markdown>
-                <a ng-if="node.$['LINK']" title="{{node.$['LINK']}}" on-short-press="jumptoLink(node.$['LINK'])">
+                <a ng-if="node.$['LINK']" title="{{node.$['LINK']}}"
+                   on-short-press="jumptoLink(node.$['LINK'])">
                     <img ng-src="/images/{{node.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
                 </a>
             </div>
@@ -31,19 +32,21 @@
                 <div class="icon-block">
                     <span name="editorIcons">
                         <i class="fa fa-fw fa-folder-o" tooltip="Add sibling" ng-click="addNode(node.$parent)"></i>
-                        <i class="fa fa-fw fa-plus-circle"  tooltip="Add child" ng-click="addNode(node)"></i>
+                        <i class="fa fa-fw fa-plus-circle" tooltip="Add child" ng-click="addNode(node)"></i>
                         <i class="fa fa-fw fa-trash" tooltip="Delete node" ng-click="deleteNode(node)"></i>
                     </span>
                     <img ng-if="node.attribute" src="/images/AttributesView.png"
                          on-short-press="openDetails(node,'properties')"/>
-                    <img ng-if="node.noteMarkdown" src="/images/knotes.png" ng-click="openDetails(node,'notes')"/>
+                    <img ng-if="node.noteMarkdown" src="/images/knotes.png"
+                         ng-click="openDetails(node,'notes')"/>
                     <i class="fa" ng-class="{'fa-chevron-down': node.open, 'fa-chevron-right': !node.open}"
                        on-short-press="nodeToggleOpen(node)" ng-if="node.node"></i>
                 </div>
             </div>
         </div>
         <div class="list-group-item-text detail" ng-if="node.detailMarkdown">
-            <i class="fa pull-left" ng-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}"
+            <i class="fa pull-left"
+               ng-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}"
                on-short-press="detailToggleOpen(node)"></i>
 
             <div ng-class="{collapsed: !node.detailOpen}">
@@ -65,23 +68,6 @@
          ng-swipe-left='Ui.turnOn("detailPanel")'
          ng-swipe-right='Ui.turnOff("detailPanel")'
          ng-if="!loading">
-        <span keyboard-shortcut="up" keyboard-title="Previous node" keyboard-action="selectNode('prev')"
-              keyboard-prevent-default="true"></span>
-        <span keyboard-shortcut="down" keyboard-title="Next node" keyboard-action="selectNode('next')"
-              keyboard-prevent-default="true"></span>
-        <span keyboard-shortcut="right" keyboard-title="Unfold node" keyboard-action="selectNode('unfold')"
-              keyboard-prevent-default="true"></span>
-        <span keyboard-shortcut="left" keyboard-title="Fold node" keyboard-action="selectNode('fold')"
-              keyboard-prevent-default="true"></span>
-        <span keyboard-shortcut="ins" keyboard-title="Add new subnode" keyboard-action="addNode('current')"
-              keyboard-prevent-default="true"></span>
-        <span keyboard-shortcut="enter" keyboard-title="Add new node" keyboard-action="addNode('parent')"
-              keyboard-prevent-default="true"></span>
-        <span keyboard-shortcut="del" keyboard-title="Delete node" keyboard-action="deleteNode('current')"
-              keyboard-prevent-default="true"></span>
-        <span keyboard-shortcut="f2" keyboard-title="Edit content" keyboard-action="openDetails(currentNode,'content')"
-              keyboard-prevent-default="true"></span>
-
         <div ui-tree="treeOptions" class="list-group">
             <div id="tree-root" ui-tree-nodes="" ng-model="nodes.rootNode">
                 <div ng-repeat="node in nodes"
