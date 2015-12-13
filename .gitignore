@@ -1,3 +1,4 @@
+/release
 logs/*
 !.gitkeep
 node_modules/
