@@ -172,6 +172,7 @@ angular.module('MindWebUi.viewer.detailController', [
                 });
             $scope.selectedIndex = 0;
             hotkeys.purgeHotkeys();
+            document.activeElement.blur();
 
             hotkeys.bindTo($scope)
                 .add({

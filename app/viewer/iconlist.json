@@ -311,7 +311,8 @@
     "name": "licq"
   },
   {
-    "description": "",
+    "shortcut":"p",
+    "description": "List",
     "link": "images/icons/list.png",
     "name": "list"
   },

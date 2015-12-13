@@ -374,7 +374,7 @@ angular.module('MindWebUi.viewer.taskController', [
                 if (!node.project.projects) {
                     return true;
                 }
-                return node.project.projects.indexOf(node) > -1;
+                return node.project.projects.indexOf(node) < 0;
             }
         };
 
@@ -542,24 +542,33 @@ angular.module('MindWebUi.viewer.taskController', [
             $scope.taskList = [];
             $scope.projectList = [];
             NodeService.walknodes($scope.nodes.rootNode, function (node) {
-                if (NodeService.hasConfigIcon(node, "task")) {
-                    var newTask = taskFromNode(node);
-                    $scope.taskList.push(newTask);
-                }
-                if (NodeService.hasConfigIcon(node, "project")) {
-                    var newPrj = findNodeInTasks(node);
-                    if (newPrj) {
-                        $scope.projectList.push(newPrj);
-                    } else {
-                        newPrj = findNodeInProjects(node);
+                    if (NodeService.hasConfigIcon(node, "task")) {
+                        var newTask = taskFromNode(node);
+                        $scope.taskList.push(newTask);
                     }
-                    if (!newPrj) {
-                        newPrj = projectFromNode(node);
-                        $scope.projectList.push(newPrj);
+                    if (NodeService.hasConfigIcon(node, "project")) {
+                        var newPrj = findNodeInTasks(node);
+                        if (newPrj) {
+                            if (newPrj.project) {
+
+                                if (newPrj.project.projects) {
+                                    newPrj.project.projects.push(newPrj);
+                                } else {
+                                    newPrj.project.projects = [newPrj];
+                                }
+                            }
+                            $scope.projectList.push(newPrj);
+                        } else {
+                            newPrj = findNodeInProjects(node);
+                        }
+                        if (!newPrj) {
+                            newPrj = projectFromNode(node);
+                            $scope.projectList.push(newPrj);
+                        }
                     }
+                    return false;
                 }
-                return false;
-            })
+            )
         }
 
         function bindKeys() {
@@ -624,4 +633,5 @@ angular.module('MindWebUi.viewer.taskController', [
 
 
         }
-    });
+    })
+;
