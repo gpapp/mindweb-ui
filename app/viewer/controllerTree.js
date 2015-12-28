@@ -172,6 +172,9 @@ angular.module('MindWebUi.viewer.treeController', [
         };
 
         $scope.treeOptions = {
+            beforeDrag: function(nodeScope) {
+                return $scope.file.editable;
+            },
             dropped: function (event) {
                 var element = event.source.nodeScope.$modelValue;
                 var sourceNode = event.source.nodesScope.$nodeScope.$modelValue;

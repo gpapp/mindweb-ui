@@ -15,6 +15,7 @@ angular.module('MindWebUi.viewer.mainController', [
         function ($scope,
                   $rootScope,
                   $state,
+                  $stateParams,
                   $location,
                   $anchorScroll,
                   $interval,
@@ -170,9 +171,13 @@ angular.module('MindWebUi.viewer.mainController', [
                 }
             };
 
-            PublicService.load($state.params.fileId).then(function (data) {
-                postLoad(data);
-            });
+            if(!$state.current.data.displayOnly){
+                PublicService.load($state.params.fileId).then(function (data) {
+                    postLoad(data);
+                });
+            } else {
+                postLoad($state.params.fileContent);
+            }
 
             function postLoad(data) {
                 $scope.file = data.file;

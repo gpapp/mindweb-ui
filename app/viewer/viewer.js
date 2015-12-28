@@ -10,7 +10,7 @@ angular.module('MindWebUi.viewer', [
         return window.encodeURIComponent;
     })
     .config(['$stateProvider',
-        function ($stateProvider, $rootScope) {
+        function ($stateProvider) {
             $stateProvider
                 .state('viewer', {
                     abstract: true,
@@ -20,6 +20,35 @@ angular.module('MindWebUi.viewer', [
                     controllerAs: 'viewerMainController',
                     data: {
                         requireLogin: false
+                    }
+                })
+                .state('viewer.display', {
+                    url: '/display',
+                    views: {
+                        'tree@viewer': {
+                            templateUrl: 'app/viewer/tree.html',
+                            controller: 'viewerTreeController',
+                            controllerAs: 'viewerTreeController'
+                        },
+                        'task@viewer': {
+                            templateUrl: 'app/viewer/task.html',
+                            controller: 'viewerTaskController',
+                            controllerAs: 'viewerTaskController'
+                        },
+                        'mindmap@viewer': {
+                            templateUrl: 'app/viewer/mindmap.html',
+                            controller: 'viewerMindmapController',
+                            controllerAs: 'viewerMindmapController'
+                        },
+                        'detail@viewer': {
+                            templateUrl: 'app/viewer/detail.html',
+                            controller: 'viewerDetailController',
+                            controllerAs: 'viewerDetailController'
+                        }
+                    },
+                    params: {fileContent: null},
+                    data: {
+                        displayOnly: true
                     }
                 })
                 .state('viewer.file', {
@@ -57,13 +86,13 @@ angular.module('MindWebUi.viewer', [
             // are triggered.
             $timeout(function () {
                 var element = $window.document.getElementById(id);
-                if (element){
+                if (element) {
                     element.focus();
-                    if(selectAll){
+                    if (selectAll) {
                         element.select();
                     }
                 }
-            },500);
+            }, 500);
         };
     })
     .directive('eventFocus', function (focus) {
@@ -106,7 +135,7 @@ angular.module('MindWebUi.viewer', [
                 function skipTouch(evt) {
                     if ($rootScope.$inPress) {
                         $rootScope.$skipShortPress = true;
-                        $rootScope.$inPress=false;
+                        $rootScope.$inPress = false;
                     }
                 }
 
@@ -160,14 +189,14 @@ angular.module('MindWebUi.viewer', [
                 function skipTouch(evt) {
                     if ($rootScope.$inPress) {
                         $rootScope.$skipShortPress = true;
-                        $rootScope.$inPress=false;
+                        $rootScope.$inPress = false;
                     }
                 }
 
                 //$elm.bind('touchstart', startTouch);
                 //$elm.bind('touchend', endTouch);
                 $elm.bind('touchmove', skipTouch);
-                
+
                 $elm.bind('mousedown', startTouch);
                 $elm.bind('mouseup', endTouch);
                 $elm.bind('mousemove', skipTouch);

@@ -31,7 +31,8 @@
                             </div>
                             </span>
 
-                            <div class="btn btn-default" ng-click="clearSelection()">Clear selection</div>
+                            <div class="btn btn-default" ng-click="clearSelection()">Clear
+                            selection</div>
                         </div>
                         <div class="list-group file-list">
                             <div class="list-group-item file-list-item"
@@ -123,3 +124,54 @@
         </div>
     </div>
 </script>
+<script type="text/ng-template" id="freeplane_view_modal.html">
+    <div role="dialog">
+        <div class="modal-header">
+            <h4 class="modal-title">View Freeplane file</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <ngf-drop
+                            ngf-drop=""
+                            ngf-select=""
+                            ng-model="uploadedFiles"
+                            ng-model-rejected="rejFiles"
+                            ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
+                            class="drop-box"
+                            ngf-multiple="false"
+                            ngf-allow-dir="false"
+                            ngf-accept="'.mm'"
+                            ngf-drop-available="dropAvailable">
+                        <span ng-hide="dropAvailable">File Drop not available</span>
+                        <span ng-show="dropAvailable">Drop Files</span>
+                        <div><span class="fa fa-upload">&nbsp;</span>Upload files</div>
+                    </ngf-drop>
+                </div>
+                <div id="uploads" class="col-sm-8">
+                    <div class="file" ng-repeat="upload in uploads">
+                                    <span class="status">
+                                        <uib-progressbar max="upload.max" value="upload.value"
+                                                     type="{{upload.error?'danger':(upload.done?'success':'info')}}">
+                                            <span style="color:black; white-space:nowrap;">{{upload.value}} / {{upload.max}}</span>
+                                        </uib-progressbar>
+                                    </span>
+                        <span class="name">{{upload.name}}</span>
+                                    <span class="error label-danger" ng-bind="upload.errorMsg"
+                                          ng-if="upload.errorMsg"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-danger">
+                <span class="col-xs-12">
+                This function is ONLY for display purposes. The uploaded file will not be stored or used in any way on the Mindweb site!
+                </span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>
+            <div type="button" class="btn" ng-click="cancel()">Cancel</div>
+        </div>
+    </div>
+</script>
+

@@ -6,25 +6,25 @@
   "license": "All rights reserved",
   "private": true,
   "dependencies": {
-    "angular": "~1.4.x",
-    "angular-animate": "~1.4.x",
-    "angular-bootstrap": "~0.14.2",
-    "angular-cookies": "~1.4.x",
-    "angular-loader": "~1.4.x",
-    "angular-mocks": "~1.4.x",
+    "angular": "~1.5.x",
+    "angular-animate": "~1.5.x",
+    "angular-bootstrap": "~x.x.x",
+    "angular-cookies": "~1.5.x",
+    "angular-loader": "~1.5.x",
+    "angular-mocks": "~1.5.x",
     "angular-ui-router": "~0.2.15",
     "mobile-angular-ui": "~1.2.x",
     "html5-boilerplate": "~5.2.0",
     "ng-file-upload": "~9.0.10",
-    "ng-file-upload-shim": "~9.0.10",
     "angular-markdown": "~0.0.1",
-    "angular-ui-tree": "~2.9.0",
     "file-saver-js": "*",
     "ng-tags-input": "~3.0.0",
-    "angular-clipboard": "~1.1.2",
-    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.6.0"
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.6.0",
+    "angular-clipboard": "1.2.0",
+    "ng-file-upload-shim": "11.0.0",
+    "angular-ui-tree": "~2.13.0"
   },
   "resolutions": {
-    "angular": "~1.4.8"
+    "angular": "~1.5.0"
   }
 }

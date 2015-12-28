@@ -101,27 +101,21 @@
                                         ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
                                         class="drop-box"
                                         ngf-multiple="true"
-                                        ngf-allow-dir="true"
+                                        ngf-allow-dir="false"
                                         ngf-accept="'.mm'"
                                         ngf-drop-available="dropAvailable">
-                                    <div ng-hide="dropAvailable">File
-                                    Drop
-                                    not
-                                    available</div>
-                                    <div ng-show="dropAvailable">
-                                        Drop
-                                        Files
-                                    </div>
+                                    <span ng-hide="dropAvailable">File Drop not available</span>
+                                    <span ng-show="dropAvailable">Drop Files</span>
                                     <div><span class="fa fa-upload">&nbsp;</span>Upload files</div>
                                 </ngf-drop>
                             </div>
                             <div id="uploads" class="col-sm-offset-1 col-sm-7">
                                 <div class="file" ng-repeat="upload in uploads">
                                     <span class="status">
-                                        <progressbar max="upload.max" value="upload.value"
+                                        <uib-progressbar max="upload.max" value="upload.value"
                                                      type="{{upload.error?'danger':(upload.done?'success':'info')}}">
                                             <span style="color:black; white-space:nowrap;">{{upload.value}} / {{upload.max}}</span>
-                                        </progressbar>
+                                        </uib-progressbar>
                                     </span>
                                     <span class="name">{{upload.name}}</span>
                                     <span class="error label-danger" ng-bind="upload.errorMsg"
@@ -204,8 +198,7 @@
                     <div class="col-sm-8 ">
                         <input id="newName" type="text" class="form-control" ng-model="target.newName">
                     </div>
-                    <div class="control-label col-sm-1">.
-                    mm</div>
+                    <div class="control-label col-sm-1"><span>.mm</span></div>
                 </div>
 
                 <div class="form-group">
@@ -311,19 +304,10 @@
             </h4>
 
             <div class="text-danger">
-                The
-                file
-                will
-                be
-                unshared
-                and
-                permanently
-                removed
-                from
-                everyone.Proceed
-                with
-                caution
-                !
+                <span>
+                The file will be unshared and permanently removed from everyone.
+                    Proceed with caution !
+                </span>
             </div>
         </div>
         <div class="modal-footer">

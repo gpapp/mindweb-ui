@@ -25,7 +25,7 @@ angular.module('MindWebUi.file', [
                 })
         }
     ])
-    .controller('fileController', function ($rootScope, $scope, $http, $modal, $location, $state, Upload, FileService) {
+    .controller('fileController', function ($rootScope, $scope, $http, $uibModal, $location, $state, Upload, FileService) {
         $scope.loadingFiles = false;
         $scope.loadingSharedFiles = false;
         reloadFiles();
@@ -68,7 +68,7 @@ angular.module('MindWebUi.file', [
         };
 
         $scope.openCreateModal = function () {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: "file_create_modal.html",
                 controller: "fileActionController",
@@ -106,7 +106,7 @@ angular.module('MindWebUi.file', [
         };
 
         $scope.openShareModal = function (target) {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: "file_share_modal.html",
                 controller: "fileActionController",
@@ -133,7 +133,7 @@ angular.module('MindWebUi.file', [
             });
         };
         $scope.openRenameModal = function (target) {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: "file_rename_modal.html",
                 controller: "fileActionController",
@@ -151,7 +151,7 @@ angular.module('MindWebUi.file', [
             });
         };
         $scope.openDeleteModal = function (target) {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: "file_delete_modal.html",
                 controller: "fileActionController",
@@ -229,7 +229,7 @@ angular.module('MindWebUi.file', [
             );
         }
     })
-    .controller('fileActionController', function ($scope, $modalInstance, target) {
+    .controller('fileActionController', function ($scope, $uibModalInstance, target) {
         $scope.target = target;
         $scope.target.newName = $scope.target.name.replace(new RegExp("^(.*)\.mm$"), "$1");
         $scope.target.newIsShareable = $scope.target.isShareable;
@@ -238,10 +238,10 @@ angular.module('MindWebUi.file', [
         $scope.target.newEditors = $scope.target.editors;
 
         $scope.ok = function () {
-            $modalInstance.close($scope.target);
+            $uibModalInstance.close($scope.target);
         };
 
         $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
     });
