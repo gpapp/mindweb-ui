@@ -19,7 +19,7 @@
 
                 <div class="indent" ng-hide="currentUser===undefined || openFiles===undefined"
                      ng-controller="fileController">
-                    <a class="list-group-item" ng-repeat="item in openFiles" ng-click="fileOpen(item)">
+                    <a class="list-group-item" *ngFor="let item of openFiles" onClick="fileOpen(item)">
                     <span>
                         <i class="fa fa-fw fa-2x fa-file"></i>{{item.name}}
                     </span>

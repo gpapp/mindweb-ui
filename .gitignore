@@ -1,4 +1,5 @@
 /release
+/app/**/*.js
 logs/*
 !.gitkeep
 node_modules/

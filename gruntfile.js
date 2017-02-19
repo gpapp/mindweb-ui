@@ -1,9 +1,10 @@
 module.exports = function (grunt) {
-    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-ts');
+    grunt.loadNpmTasks("grunt-package-modules");
+    grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
-    ;
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.initConfig(
         {
@@ -12,20 +13,31 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '.',
                     src: ['release/**']
-                },
+                }
+            },
+            ts: {
+                default: {
+                    tsconfig: true
+                }
             },
             copy: {
                 root: {
                     expand: true,
-                    cwd: '.',
-                    src: ['index.html','images/**'],
+                    cwd: 'src',
+                    src: ['index.html', 'images/**', '**', '!**/*.ts', '!**/*.html', '!css'],
                     dest: "release"
                 },
-                dist: {
+                default: {
                     expand: true,
-                    cwd: 'app',
-                    src: ['**', '!**/*.html', '!**/*.css', '!**.js', "lib/**"],
-                    dest: "release/app"
+                    cwd: 'src',
+                    src: ['**', '!**/*.ts'],
+                    dest: "release"
+                }
+            },
+            packageModules: {
+                default: {
+                    src: 'package.json',
+                    dest: 'release'
                 }
             },
             cssmin: {
@@ -44,14 +56,14 @@ module.exports = function (grunt) {
                     options: {                                 // Target options
                         removeComments: true,
                         collapseWhitespace: true,
-                        processScripts:['text/ng-template'],
+                        processScripts: ['text/ng-template'],
                         minifyCSS: true,
                         minifyJS: true
                     },
                     files: [{
                         expand: true,
                         cwd: '.',
-                        src: ['**/*.html', "!lib/**", "!release/**"],
+                        src: ['**/*.html', "!node_modules/**", "!release/**"],
                         dest: "release"
                     }
                     ]
@@ -68,7 +80,7 @@ module.exports = function (grunt) {
                         {
                             expand: true,
                             cwd: "app",
-                            src: ["**/*.js", "!lib/**"],
+                            src: ["**/*.js", "!node_modules/**"],
                             dest: "release/app",
                             ext: ".js"
                         }
@@ -76,7 +88,7 @@ module.exports = function (grunt) {
                 }
             }
         }
-    )
-    ;
-    grunt.registerTask("default", ["clean", "copy", "htmlmin", "cssmin", "uglify"])
+    );
+    grunt.registerTask("default", ["clean", "ts", "copy", "packageModules"]);
+    grunt.registerTask("release", ["clean", "ts", "copy", "packageModules", "htmlmin", "cssmin", "uglify"]);
 };
