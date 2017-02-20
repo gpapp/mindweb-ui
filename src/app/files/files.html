@@ -35,10 +35,10 @@
                     <div class="panel-heading" ui-set="{'myAccordion': 2}">
                         <h4 class="panel-title">
                             All files
-                            <span ng-show="loadingFiles">
+                            <span (show)="loadingFiles">
                               <i class="fa fa-spinner fa-spin"></i>
                             </span>
-                            <span ng-show="!loadingFiles">
+                            <span (show)="!loadingFiles">
                               ({{files.length}})
                             </span>
                         </h4>
@@ -59,10 +59,10 @@
 
                         <h4 class="panel-title">
                             Shared with me
-                            <span ng-show="loadingSharedFiles">
+                            <span (show)="loadingSharedFiles">
                               <i class="fa fa-spinner fa-spin"></i>
                             </span>
-                            <span ng-show="!loadingSharedFiles">
+                            <span (show)="!loadingSharedFiles">
                               ({{sharedFiles.length}})
                             </span>
 
@@ -88,7 +88,7 @@
                     <div>
                         <div class="panel-body">
                             <div class="col-sm-2">
-                                <div class="btn btn-default" ng-click="openCreateModal()">
+                                <div class="btn btn-default" (click)="openCreateModal()">
                                     <span class="fa fa-file">&nbsp;</span>Create new
                                 </div>
                             </div>
@@ -104,8 +104,8 @@
                                         ngf-allow-dir="false"
                                         ngf-accept="'.mm'"
                                         ngf-drop-available="dropAvailable">
-                                    <span ng-hide="dropAvailable">File Drop not available</span>
-                                    <span ng-show="dropAvailable">Drop Files</span>
+                                    <span (hide)="dropAvailable">File Drop not available</span>
+                                    <span (show)="dropAvailable">Drop Files</span>
                                     <div><span class="fa fa-upload">&nbsp;</span>Upload files</div>
                                 </ngf-drop>
                             </div>
@@ -139,22 +139,22 @@
 <script type="text/ng-template" id="file_item_renderer">
     <div class="file-list-item-content"
          ui-state="hovered"
-         ng-class="{selected : hovered, 'bg-info':item.isPublic, 'bg-success':!item.isPublic}"
-         ng-mouseover="hovered=true"
-         ng-mouseleave="hovered=false">
+         ngClass="{selected : hovered, 'bg-info':item.isPublic, 'bg-success':!item.isPublic}"
+         (mouseover)="hovered=true"
+         (mouseleave)="hovered=false">
         <div class="name" ui-state="infoPopup">
             <i class="fa pull-right "
                clipboard
                text="clipboardLink(item)"
                onSuccess="linkToClipboard()"
-               ng-class="{'fa-share': item.isShareable}"></i>
+               ngClass="{'fa-share': item.isShareable}"></i>
             <i class="fa pull-right"
-               ng-class="{'fa-user': !item.isPublic,'fa-group': !item.isPublic&&(item.viewers||item.editors),'fa-globe': item.isPublic}"></i>
+               ngClass="{'fa-user': !item.isPublic,'fa-group': !item.isPublic&&(item.viewers||item.editors),'fa-globe': item.isPublic}"></i>
             <i class="fa fa-info-circle pull-right"
-               ng-mouseover="infoPopup=true"
-               ng-mouseleave="infoPopup=false"></i>
+               (mouseover)="infoPopup=true"
+               (mouseleave)="infoPopup=false"></i>
 
-            <div class="infoPopup" ng-class="{hidden : !infoPopup}">
+            <div class="infoPopup" ngClass="{hidden : !infoPopup}">
                 <div class="title">{{item.name}}</div>
                 <div class="version">Version: {{ item.versions.length }}</div>
                 <div class="isShareable">Shareable as link: {{item.isShareable}}</div>
@@ -167,7 +167,7 @@
             </div>
             <i class="fa fa-file"></i>
 
-            <div class="fileName" ng-click="fileOpen(item)">{{ item.name }}</div>
+            <div class="fileName" (click)="fileOpen(item)">{{ item.name }}</div>
         </div>
         <div class="tags">
             <tags-input ng-model="item.tags"
@@ -177,10 +177,10 @@
                 <auto-complete source="loadTags(item,$query)"></auto-complete>
             </tags-input>
             <div class="actions">
-                <i class="fa fa-download" title="Download in Freeplane format" ng-click="downloadFreeplane(item)"></i>
-                <i class="fa fa-share" title="Share file" ng-click="openShareModal(item)"></i>
-                <i class="fa fa-edit" title="Rename file" ng-click="openRenameModal(item)"></i>
-                <i class="fa fa-trash" title="Delete file" ng-click="openDeleteModal(item)"></i>
+                <i class="fa fa-download" title="Download in Freeplane format" (click)="downloadFreeplane(item)"></i>
+                <i class="fa fa-share" title="Share file" (click)="openShareModal(item)"></i>
+                <i class="fa fa-edit" title="Rename file" (click)="openRenameModal(item)"></i>
+                <i class="fa fa-trash" title="Delete file" (click)="openDeleteModal(item)"></i>
             </div>
         </div>
     </div>
@@ -216,8 +216,8 @@
             </form>
         </div>
         <div class="modal-footer">
-            <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>
-            <div type="button" class="btn" ng-click="cancel()">Cancel</div>
+            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
+            <div type="button" class="btn" (click)="cancel()">Cancel</div>
         </div>
     </div>
 </script>
@@ -261,8 +261,8 @@
             </form>
         </div>
         <div class="modal-footer">
-            <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>
-            <div type="button" class="btn" ng-click="cancel()">Cancel</div>
+            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
+            <div type="button" class="btn" (click)="cancel()">Cancel</div>
         </div>
     </div>
 </script>
@@ -286,8 +286,8 @@
             </div>
         </div>
         <div class="modal-footer">
-            <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>
-            <div type="button" class="btn" ng-click="cancel()">Cancel</div>
+            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
+            <div type="button" class="btn" (click)="cancel()">Cancel</div>
         </div>
     </div>
 </script>
@@ -311,8 +311,8 @@
             </div>
         </div>
         <div class="modal-footer">
-            <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>
-            <div type="button" class="btn" ng-click="cancel()">Cancel</div>
+            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
+            <div type="button" class="btn" (click)="cancel()">Cancel</div>
         </div>
     </div>
 </script>

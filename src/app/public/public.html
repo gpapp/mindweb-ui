@@ -10,10 +10,10 @@
                     <div class="panel-heading">
                         <div class="panel-title">
                             Maps for tags
-                            <span ng-show="loadingFiles">
+                            <span (show)="loadingFiles">
                               <i class="fa fa-spinner fa-spin"></i>
                             </span>
-                            <span ng-show="!loadingFiles">
+                            <span (show)="!loadingFiles">
                               ({{files.length}})
                             </span>
                         </div>
@@ -25,13 +25,13 @@
                                 <ul class="tag-list">
                                     <li class="tag-item" ng-repeat="tag in selectedTags">
                                         {{tag}}
-                                        <i class="fa fa-trash" ng-click="removeSelected(tag)"></i>
+                                        <i class="fa fa-trash" (click)="removeSelected(tag)"></i>
                                     </li>
                                 </ul>
                             </div>
                             </span>
 
-                            <div class="btn btn-default" ng-click="clearSelection()">Clear
+                            <div class="btn btn-default" (click)="clearSelection()">Clear
                             selection</div>
                         </div>
                         <div class="list-group file-list">
@@ -49,7 +49,7 @@
                                 ng-model-options="{debounce:500}"
                                 ng-change="reloadFiles()"
                         />
-                        <span ng-show="loadingFiles">
+                        <span (show)="loadingFiles">
                           <i class="fa fa-spinner fa-spin"></i>
                         </span>
                     </div>
@@ -58,7 +58,7 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             Tagcloud
-                            <span ng-show="loadingTags">
+                            <span (show)="loadingTags">
                               <i class="fa fa-spinner fa-spin"></i>
                             </span>
                         </h4>
@@ -66,7 +66,7 @@
                     <div class="panel-body">
                         <div class="list-group tagcloud">
                                 <span class="tagcloud-item" ng-repeat="(key,value) in publicTags">
-                                    <span class="tag" ng-click="selectTag(key)">{{key}} ({{value}})</span>
+                                    <span class="tag" (click)="selectTag(key)">{{key}} ({{value}})</span>
                                 </span>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                                 ng-model-options="{debounce:500}"
                                 ng-change="reloadTags()"
                         />
-                        <span ng-show="loadingTags">
+                        <span (show)="loadingTags">
                           <i class="fa fa-spinner fa-spin"></i>
                         </span>
                     </div>
@@ -90,16 +90,16 @@
 <script type="text/ng-template" id="file_item_renderer">
     <div class="file-list-item-content"
          ui-state="hovered"
-         ng-class="{selected : hovered}"
-         ng-mouseover="hovered=true"
-         ng-mouseleave="hovered=false">
-        <div class="name" ng-click="fileOpen(item)" ui-state="infoPopup">
+         ngClass="{selected : hovered}"
+         (mouseover)="hovered=true"
+         (mouseleave)="hovered=false">
+        <div class="name" (click)="fileOpen(item)" ui-state="infoPopup">
             <i class="fa pull-right fa-globe"></i>
             <i class="fa fa-info-circle pull-right"
-               ng-mouseover="infoPopup=true"
-               ng-mouseleave="infoPopup=false"></i>
+               (mouseover)="infoPopup=true"
+               (mouseleave)="infoPopup=false"></i>
 
-            <div class="infoPopup" ng-class="{hidden : !infoPopup}">
+            <div class="infoPopup" ngClass="{hidden : !infoPopup}">
                 <div class="title">{{item.name}}</div>
                 <div class="version">Version: {{ item.versions.length }}</div>
                 <div class="isPublic">Visibility: {{
@@ -119,7 +119,7 @@
                 </ul>
             </div>
             <div class="actions">
-                <i class="fa fa-download" title="Download in Freeplane format" ng-click="downloadFreeplane(item)"></i>
+                <i class="fa fa-download" title="Download in Freeplane format" (click)="downloadFreeplane(item)"></i>
             </div>
         </div>
     </div>
@@ -143,8 +143,8 @@
                             ngf-allow-dir="false"
                             ngf-accept="'.mm'"
                             ngf-drop-available="dropAvailable">
-                        <span ng-hide="dropAvailable">File Drop not available</span>
-                        <span ng-show="dropAvailable">Drop Files</span>
+                        <span (hide)="dropAvailable">File Drop not available</span>
+                        <span (show)="dropAvailable">Drop Files</span>
                         <div><span class="fa fa-upload">&nbsp;</span>Upload files</div>
                     </ngf-drop>
                 </div>
@@ -169,8 +169,8 @@
             </div>
         </div>
         <div class="modal-footer">
-            <div type="button" class="btn btn-primary" ng-click="ok()">Submit</div>
-            <div type="button" class="btn" ng-click="cancel()">Cancel</div>
+            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
+            <div type="button" class="btn" (click)="cancel()">Cancel</div>
         </div>
     </div>
 </script>

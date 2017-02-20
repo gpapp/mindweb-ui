@@ -24,13 +24,7 @@ module.exports = function (grunt) {
                 root: {
                     expand: true,
                     cwd: 'src',
-                    src: ['index.html', 'images/**', '**', '!**/*.ts', '!**/*.html', '!css'],
-                    dest: "release"
-                },
-                default: {
-                    expand: true,
-                    cwd: 'src',
-                    src: ['**', '!**/*.ts'],
+                    src: ['index.html', 'images/**', '**', '!**/*.ts', '!tsconfig.json', '!**/*.html', '!css'],
                     dest: "release"
                 }
             },

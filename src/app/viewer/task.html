@@ -10,20 +10,20 @@
     </div>
     <div class="list-group-item">
         <div class="btn-group-justified">
-            <div class="btn btn-default" ng-class="{'btn-primary': getTaskViewType()==='project'}"
-                 ng-click="setTaskViewType('project')">
+            <div class="btn btn-default" ngClass="{'btn-primary': getTaskViewType()==='project'}"
+                 (click)="setTaskViewType('project')">
                 Project
             </div>
-            <div class="btn btn-default" ng-class="{'btn-primary': getTaskViewType()==='responsible'}"
-                 ng-click="setTaskViewType('responsible')">
+            <div class="btn btn-default" ngClass="{'btn-primary': getTaskViewType()==='responsible'}"
+                 (click)="setTaskViewType('responsible')">
                 Responsible
             </div>
-            <div class="btn btn-default" ng-class="{'btn-primary': getTaskViewType()==='context'}"
-                 ng-click="setTaskViewType('context')">
+            <div class="btn btn-default" ngClass="{'btn-primary': getTaskViewType()==='context'}"
+                 (click)="setTaskViewType('context')">
                 Context
             </div>
-            <div class="btn btn-default" ng-class="{'btn-primary': getTaskViewType()==='timeline'}"
-                 ng-click="setTaskViewType('timeline')">
+            <div class="btn btn-default" ngClass="{'btn-primary': getTaskViewType()==='timeline'}"
+                 (click)="setTaskViewType('timeline')">
                 Timeline
             </div>
         </div>
@@ -31,7 +31,7 @@
 </div>
 
 <script type="text/ng-template" id="task_item_renderer">
-    <div id='{{node.node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node.node}"
+    <div id='{{node.node.$["ID"]}}' class="list-group-item nodeList" ngClass="{active : currentNode===node.node}"
          on-long-press="longPressNode(node)">
         <div class="list-group-item-heading">
             <div ui-tree-handle class="handle" ng-if="node.node.$parent">
@@ -56,25 +56,25 @@
             <div class="chevron">
                 <div class="icon-block">
                     <span name="editorIcons" ng-if="editable">
-                        <i class="fa fa-fw fa-tasks" tooltip="Add subproject" ng-click="addProject(node)"></i>
-                        <i class="fa fa-fw fa-plus-circle" tooltip="Add subtask" ng-click="addTask(node)"></i>
-                        <i class="fa fa-fw fa-trash" tooltip="Delete node" ng-click="deleteNode(node.node)"></i>
+                        <i class="fa fa-fw fa-tasks" tooltip="Add subproject" (click)="addProject(node)"></i>
+                        <i class="fa fa-fw fa-plus-circle" tooltip="Add subtask" (click)="addTask(node)"></i>
+                        <i class="fa fa-fw fa-trash" tooltip="Delete node" (click)="deleteNode(node.node)"></i>
                     </span>
                     <img ng-if="node.node.attribute" src="/images/AttributesView.png"
                          on-short-press="openDetails(node.node,'properties')"/>
                     <img ng-if="node.node.noteMarkdown" src="/images/knotes.png"
-                         ng-click="openDetails(node.node,'notes')"/>
-                    <i class="fa" ng-class="{'fa-chevron-down': node.node.open, 'fa-chevron-right': !node.node.open}"
+                         (click)="openDetails(node.node,'notes')"/>
+                    <i class="fa" ngClass="{'fa-chevron-down': node.node.open, 'fa-chevron-right': !node.node.open}"
                        on-short-press="nodeToggleOpen(node.node)" ng-if="node.node.node"></i>
                 </div>
             </div>
         </div>
         <div class="list-group-item-text detail" ng-if="node.node.detailMarkdown">
             <i class="fa pull-left"
-               ng-class="{'fa-chevron-down':node.node.detailOpen, 'fa-chevron-right':!node.node.detailOpen}"
+               ngClass="{'fa-chevron-down':node.node.detailOpen, 'fa-chevron-right':!node.node.detailOpen}"
                on-short-press="detailToggleOpen(node.node)"></i>
 
-            <div ng-class="{collapsed: !node.node.detailOpen}">
+            <div ngClass="{collapsed: !node.node.detailOpen}">
                 <markdown ng-model="node.node.detailMarkdown" extensions="github, prettify"
                           on-short-press="openDetails(node.node,'details')"></markdown>
             </div>
@@ -110,14 +110,14 @@
                     </div>
                     <div class="chevron">
                         <div class="icon-block">
-                            <i class="fa pull-right" ng-class="{'fa-chevron-down': open, 'fa-chevron-right': !open}"
-                               ng-click="open=!open"></i>
+                            <i class="fa pull-right" ngClass="{'fa-chevron-down': open, 'fa-chevron-right': !open}"
+                               (click)="open=!open"></i>
                         </div>
                     </div>
                 </div>
                 <div class="indent" ng-if="open">
                     <div class="list-group-item nodeList" ng-repeat="node in value"
-                         ng-class="{active : currentNode===node.node}">
+                         ngClass="{active : currentNode===node.node}">
                         <div class="list-group-item-heading">
                             <div class="handle" ng-if="node.node.$parent">
                                 <i class="fa fa-bars"></i>
@@ -141,21 +141,21 @@
                             <div class="chevron">
                                 <div class="icon-block">
                                     <span name="editorIcons" ng-if="editable">
-                                        <i class="fa fa-fw fa-plus-circle" ng-click="addNode(node.node.$parent)"></i>
-                                        <i class="fa fa-fw fa-folder-o" ng-click="addNode(node.node)"></i>
-                                        <i class="fa fa-fw fa-trash" ng-click="deleteNode(node.node)"></i>
+                                        <i class="fa fa-fw fa-plus-circle" (click)="addNode(node.node.$parent)"></i>
+                                        <i class="fa fa-fw fa-folder-o" (click)="addNode(node.node)"></i>
+                                        <i class="fa fa-fw fa-trash" (click)="deleteNode(node.node)"></i>
                                     </span>
                                     <img ng-if="node.node.attribute" src="/images/AttributesView.png"
                                          on-short-press="openDetails(node.node,'properties')"/>
                                     <img ng-if="node.node.noteMarkdown" src="/images/knotes.png"
-                                         ng-click="openDetails(node.node,'notes')"/>
+                                         (click)="openDetails(node.node,'notes')"/>
                                 </div>
                             </div>
                         </div>
                         <div class="list-group-item-text detail" ng-if="node.node.detailMarkdown">
                             <i class="fa pull-left"
-                               ng-class="{'fa-chevron-down':node.node.detailOpen, 'fa-chevron-right':!node.node.detailOpen}"
-                               ng-click="detailToggleOpen(node.node)"></i>
+                               ngClass="{'fa-chevron-down':node.node.detailOpen, 'fa-chevron-right':!node.node.detailOpen}"
+                               (click)="detailToggleOpen(node.node)"></i>
 
                             <div class="rule" ng-if="!node.node.detailOpen"></div>
                             <markdown ng-model="node.node.detailMarkdown" extensions="github, prettify"

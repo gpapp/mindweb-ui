@@ -1,0 +1,33 @@
+<div class="modal" style="display:block">
+    <div class="modal-backdrop">
+
+        <div class="modal-dialog modal-content loginDialog" role="dialog">
+            <div class="modal-header">
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <div class="btn-group btn-group-vertical">
+                    <a href="/auth/google" target="_self" (click)="$event.stopPropagation()"
+                       class="btn list-group-item">
+                        <i class="fa fa-2x fa-stack fa-google-plus"></i>Login with Google account
+                    </a>
+                    <a href="/auth/twitter" target="_self" (click)="$event.stopPropagation()"
+                       class="btn list-group-item">
+                        <i class="fa fa-2x fa-stack fa-twitter"></i>Login with Twitter account
+                    </a>
+                    <a href="/auth/linkedin" target="_self" (click)="$event.stopPropagation()"
+                       class="btn list-group-item">
+                        <i class="fa fa-2x fa-stack fa-linkedin"></i>Login with LinkedIn account
+                    </a>
+                    <a href="/auth/facebook" target="_self" (click)="$event.stopPropagation()"
+                       class="btn list-group-item">
+                        <i class="fa fa-2x fa-stack fa-facebook"></i>Login with Facebook account
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button (click)="parent.loginRequired=false" class="btn btn-default">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

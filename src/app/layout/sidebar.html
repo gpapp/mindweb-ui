@@ -2,60 +2,58 @@
     <h1 class="scrollable-header app-name">MindWeb</h1>
 
     <div class="scrollable-content">
-        <div ui-turn-off='uiSidebarLeft'>
+        <div>
             <div class="list-group">
-                <a class="list-group-item" href="/#!">
+                <a class="list-group-item" routerLink="/">
                     <i class="fa fa-fw fa-2x fa-home"></i>Home
                     <i class="fa fa-chevron-right pull-right"></i>
                 </a>
-                <a class="list-group-item" href="#/public">
+                <a class="list-group-item" routerLink="/public">
                     <i class="fa fa-fw fa-2x fa-globe"></i>Public maps
                     <i class="fa fa-chevron-right pull-right"></i>
                 </a>
-                <a class="list-group-item" href="#/files" ng-hide="currentUser===undefined">
+                <a class="list-group-item" routerLink="/files" *ngIf="parent.currentUser!==undefined">
                     <i class="fa fa-fw fa-2x fa-file"></i>Files
                     <i class="fa fa-chevron-right pull-right"></i>
                 </a>
 
-                <div class="indent" ng-hide="currentUser===undefined || openFiles===undefined"
+                <div class="indent"  *ngIf="(parent.currentUser!==undefined && openFiles!==undefined)"
                      ng-controller="fileController">
                     <a class="list-group-item" *ngFor="let item of openFiles" onClick="fileOpen(item)">
                     <span>
                         <i class="fa fa-fw fa-2x fa-file"></i>{{item.name}}
                     </span>
                     <span class="pull-right">
-                        <i class="fa fa-close " ng-click="fileClose(item)"></i>
+                        <i class="fa fa-close " (click)="fileClose(item)"></i>
                         <i class="fa fa-chevron-right"></i>
                     </span>
                     </a>
                 </div>
-                <a class="list-group-item" href="#/friends" ng-hide="currentUser===undefined">
+                <a class="list-group-item" routerLink="/friends" *ngIf="parent.currentUser!==undefined">
                     <i class="fa fa-fw fa-2x fa-users"></i>Friends
                     <i class="fa fa-chevron-right pull-right"></i>
                 </a>
-                <a class="list-group-item" href="#/user/options" ng-hide="currentUser===undefined">
+                <a class="list-group-item" routerLink="/user/options" *ngIf="parent.currentUser!==undefined">
                     <i class="fa fa-fw fa-2x fa-cog"></i>Options
                     <i class="fa fa-chevron-right pull-right"></i>
                 </a>
-                <a class="list-group-item" href="#/public/display">
+                <a class="list-group-item" routerLink="/public/display">
                     <i class="fa fa-fw fa-2x fa-binoculars"></i>Display Freeplane map
                     <i class="fa fa-chevron-right pull-right"></i>
                 </a>
-                <a class="list-group-item" href="#/about">
+                <a class="list-group-item" routerLink="/about">
                     <i class="fa fa-fw fa-2x fa-info-circle"></i>About
                     <i class="fa fa-chevron-right pull-right"></i>
                 </a>
-                <a class="list-group-item" href="#/user/logout" ng-hide="currentUser===undefined">
+                <a class="list-group-item" (click)="parent.logout()" *ngIf="parent.currentUser!==undefined">
                     <i class="fa fa-fw fa-2x fa-sign-out"></i>Logout
                     <i class="fa fa-chevron-right pull-right"></i>
                 </a>
-
-                <div class="list-group-item" ui-turn-on='loginModal' ng-show="currentUser===undefined">
+                <div class="list-group-item" (click)="parent.loginRequired=true" *ngIf="parent.currentUser===undefined">
                     <i class="fa fa-fw fa-2x fa-sign-in"></i>Login
                     <i class="fa fa-chevron-right pull-right"></i>
                 </div>
             </div>
-            <div ui-yield-to="localMenu"></div>
         </div>
     </div>
 </div>

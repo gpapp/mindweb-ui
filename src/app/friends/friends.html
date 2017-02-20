@@ -11,12 +11,12 @@
 
 <script type="text/ng-template" id="friend_item_renderer">
     <div ui-state="infoPopup">
-        <div ng-click="fileOpen(item)">
+        <div (click)="fileOpen(item)">
             <i class="fa fa-info-circle pull-right"
-               ng-mouseover="friendPopup=true"
-               ng-mouseleave="friendPopup=false"></i>
+               (mouseover)="friendPopup=true"
+               (mouseleave)="friendPopup=false"></i>
 
-            <div class="infoPopup" ng-class="{hidden : !infoPopup}">
+            <div class="infoPopup" ngClass="{hidden : !infoPopup}">
                 <div class="title">{{item.name}}</div>
                 <div class="version">Version: {{ item.versions.length }}</div>
                 <div class="fileDate">Created: {{ item.created | date:'medium'}}</div>
@@ -35,11 +35,11 @@
                 <auto-complete source="loadTags(item,$query)"></auto-complete>
             </tags-input>
         </div>
-        <div class="actions" ng-class="{hidden : !infoPopup}">
-            <i class="fa fa-download" title="Download in Freeplane format" ng-click="downloadFreeplane(item)"></i>
-            <i class="fa fa-share" title="Share file" ng-click="openShareModal(item)"></i>
-            <i class="fa fa-edit" title="Rename file" ng-click="openRenameModal(item)"></i>
-            <i class="fa fa-trash" title="Delete file" ng-click="openDeleteModal(item)"></i>
+        <div class="actions" ngClass="{hidden : !infoPopup}">
+            <i class="fa fa-download" title="Download in Freeplane format" (click)="downloadFreeplane(item)"></i>
+            <i class="fa fa-share" title="Share file" (click)="openShareModal(item)"></i>
+            <i class="fa fa-edit" title="Rename file" (click)="openRenameModal(item)"></i>
+            <i class="fa fa-trash" title="Delete file" (click)="openDeleteModal(item)"></i>
         </div>
     </div>
 </script>

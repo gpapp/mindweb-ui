@@ -6,7 +6,7 @@
 </div>
 
 <script type="text/ng-template" id="tree_item_renderer">
-    <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ng-class="{active : currentNode===node}"
+    <div id='{{node.$["ID"]}}' class="list-group-item nodeList" ngClass="{active : currentNode===node}"
          on-short-press="longPressNode(node)" on-long-press="longPressNode(node)">
         <div class="list-group-item-heading">
             <div ui-tree-handle class="handle" ng-if="node.$parent">
@@ -38,18 +38,18 @@
                     <img ng-if="node.attribute" src="/images/AttributesView.png"
                          on-short-press="openDetails(node,'properties')"/>
                     <img ng-if="node.noteMarkdown" src="/images/knotes.png"
-                         ng-click="openDetails(node,'notes')"/>
-                    <i class="fa" ng-class="{'fa-chevron-down': node.open, 'fa-chevron-right': !node.open}"
+                         (click)="openDetails(node,'notes')"/>
+                    <i class="fa" ngClass="{'fa-chevron-down': node.open, 'fa-chevron-right': !node.open}"
                        on-short-press="nodeToggleOpen(node)" ng-if="node.node"></i>
                 </div>
             </div>
         </div>
         <div class="list-group-item-text detail" ng-if="node.detailMarkdown">
             <i class="fa pull-left"
-               ng-class="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}"
+               ngClass="{'fa-chevron-down':node.detailOpen, 'fa-chevron-right':!node.detailOpen}"
                on-short-press="detailToggleOpen(node)"></i>
 
-            <div ng-class="{collapsed: !node.detailOpen}">
+            <div ngClass="{collapsed: !node.detailOpen}">
                 <markdown ng-model="node.detailMarkdown" extensions="github, prettify"
                           on-short-press="openDetails(node,'details')"></markdown>
             </div>
