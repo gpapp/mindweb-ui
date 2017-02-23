@@ -20,25 +20,11 @@ require("rxjs/add/operator/toPromise");
 var UserService = UserService_1 = (function () {
     function UserService(http) {
         this.http = http;
-        this._authenticationDone = false;
     }
     UserService.prototype.lookup = function () {
-        var _this = this;
-        if (this._authenticationDone) {
-            return new Promise(function (resolve) {
-                resolve(_this._authenticationDone);
-            });
-        }
-        return this.http.get(UserService_1.authURL).map(function (res) {
-            _this._authenticationDone = true;
-            return res.json();
-        }).toPromise().catch(function (error) {
-            _this._authenticationDone = true;
-            return error;
-        });
+        return this.http.get(UserService_1.authURL).map(function (res) { return res.json(); }).toPromise().catch(this.handleError);
     };
     UserService.prototype.logout = function () {
-        this._authenticationDone = true;
         delete this._currentUser;
         return this.http.get(UserService_1.logoutURL).map(function (res) { return res.json(); }).toPromise().catch(this.handleError);
     };

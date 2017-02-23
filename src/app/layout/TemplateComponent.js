@@ -41,10 +41,6 @@ var TemplateComponent = (function () {
     });
     Object.defineProperty(TemplateComponent.prototype, "currentUser", {
         get: function () {
-            var _this = this;
-            if (!this._currentUser) {
-                this.userService.lookup().then(function (user) { return _this._currentUser = user; }, function (error) { return _this._errorMsg = error; });
-            }
             return this._currentUser;
         },
         enumerable: true,
@@ -70,8 +66,13 @@ var TemplateComponent = (function () {
         enumerable: true,
         configurable: true
     });
+    TemplateComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.userService.lookup().then(function (user) { return _this._currentUser = user; }, function (error) { return _this._errorMsg = error; });
+    };
     TemplateComponent.prototype.logout = function () {
-        this.userService.logout();
+        var _this = this;
+        this.userService.logout().then(function (user) { return _this._currentUser = user; }, function (error) { return _this._errorMsg = error; });
     };
     TemplateComponent.prototype.toggleSidebar = function () {
         this._sidebarDisplay = !this._sidebarDisplay;

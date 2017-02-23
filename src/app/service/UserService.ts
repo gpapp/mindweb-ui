@@ -14,29 +14,16 @@ export class UserService {
     static authURL: string = '/auth/authenticated';
     static logoutURL: string = '/auth/logout';
 
-    private _authenticationDone: boolean = false;
     private _currentUser: User;
 
     constructor(private http: Http) {
     }
 
     lookup(): Promise<User> {
-        if (this._authenticationDone) {
-            return new Promise((resolve) => {
-                resolve(this._authenticationDone);
-            });
-        }
-        return this.http.get(UserService.authURL).map(res => {
-            this._authenticationDone = true;
-            return res.json() as User
-        }).toPromise().catch((error) => {
-            this._authenticationDone = true;
-            return error;
-        });
+        return this.http.get(UserService.authURL).map(res => res.json() as User).toPromise().catch(this.handleError);
     }
 
     logout(): Promise<User> {
-        this._authenticationDone = true;
         delete this._currentUser;
         return this.http.get(UserService.logoutURL).map(res => res.json()).toPromise().catch(this.handleError);
     }

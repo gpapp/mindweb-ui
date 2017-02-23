@@ -1,7 +1,7 @@
 /**
  * Created by gpapp on 2017.02.20..
  */
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {UserService} from "../service/UserService";
 import User from "../classes/User";
 @Component({
@@ -9,7 +9,7 @@ import User from "../classes/User";
     selector: "main-app",
     templateUrl: "/app/layout/template.html"
 })
-export class TemplateComponent {
+export class TemplateComponent implements OnInit{
     get infoMsg(): string {
         return this._infoMsg;
     }
@@ -27,12 +27,6 @@ export class TemplateComponent {
     }
 
     get currentUser(): User {
-        if (!this._currentUser) {
-            this.userService.lookup().then(
-                user => this._currentUser = user,
-                error => this._errorMsg = error);
-        }
-
         return this._currentUser;
     }
 
@@ -64,8 +58,17 @@ export class TemplateComponent {
 
     }
 
+    ngOnInit(): void {
+        this.userService.lookup().then(
+            user => this._currentUser = user,
+            error => this._errorMsg = error);
+    }
+
     logout() {
-        this.userService.logout();
+        this.userService.logout().then(
+            user => this._currentUser = user,
+            error => this._errorMsg = error
+        );
     }
 
     toggleSidebar() {
