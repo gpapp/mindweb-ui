@@ -10,14 +10,15 @@ import {PageNotFoundComponent} from "./not-found.component";
 import {HomeComponent} from "./layout/HomeComponent";
 import {TemplateComponent} from "./layout/TemplateComponent";
 import {AboutComponent} from "./layout/AboutComponent";
-
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {MaterialModule} from "@angular/material";
 const appRoutes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'about', component: AboutComponent},
     {path: '**', component: PageNotFoundComponent}
 ];
 @NgModule({
-    imports: [BrowserModule, HttpModule, RouterModule.forRoot(appRoutes), FormsModule],
+    imports: [BrowserModule, HttpModule, RouterModule.forRoot(appRoutes), FormsModule, MaterialModule, NgbModule.forRoot()],
     providers: [UserService],
     declarations: [PageNotFoundComponent, TemplateComponent, SidebarComponent, HomeComponent, AboutComponent, LoginComponent],
     bootstrap: [TemplateComponent]

@@ -1,58 +1,57 @@
-<body>
-<!-- Sidebars -->
-<sidebar class="sidebar sidebar-left" *ngIf="sidebarDisplay"></sidebar>
-<div class="app"
-     ng-swipe-right='uiSidebarLeft=true'
-     ng-swipe-left='Ui.turnOff("uiSidebarLeft")'>
-
-    <!-- Navbars -->
-
-    <div class="navbar navbar-app navbar-absolute-top">
-        <div class="navbar-brand navbar-brand-center">
-            MindWeb
-        </div>
-        <div class="btn-group pull-left">
-            <div (click)="toggleSidebar()" class="btn sidebar-toggle hidden-md hidden-lg" ng-animate="'slide'">
-                <i class="fa fa-bars"></i> Menu
-            </div>
-        </div>
-        <div class="btn-group pull-right">
-            <div class="btn-group hidden-xs" *ngIf="currentUser!==undefined">
-                <a routerLinkActive="options" class="btn btn-navbar">
-                    <img class="img-avatar" src="{{currentUser.avatarUrl}}"/>
-                    <span class="hidden-sm">{{currentUser.name}}</span></a>
-                <div class="btn btn-navbar" (click)="logout()"><i class="fa fa-2x fa-fw fa-sign-out"></i>Logout</div>
-            </div>
-            <div class="btn-group" *ngIf="currentUser===undefined">
-                <div class="btn btn-navbar" (click)="loginRequired=true"><i class="fa fa-2x fa-fw fa-sign-in"></i>Login</div>
-            </div>
+<!-- Navbars -->
+<div class="navbar navbar-app navbar-absolute-top">
+    <div class="navbar-brand navbar-brand-center">
+        MindWeb
+    </div>
+    <div class="btn-group pull-left">
+        <div (click)="toggleSidebar()" class="btn sidebar-toggle hidden-md hidden-lg" ng-animate="'slide'">
+            <i class="fa fa-bars"></i> Menu
         </div>
     </div>
-
-    <!-- App Body -->
-    <div class="app-body" ngClass="{loading: loading, error: error}">
-        <div (show)="loading" class="app-content-loading">
-            <i class="fa fa-spinner fa-spin loading-spinner"></i>
+    <div class="btn-group pull-right">
+        <div class="btn-group hidden-xs" *ngIf="currentUser!==undefined">
+            <a routerLinkActive="options" class="btn btn-navbar">
+                <img class="img-avatar" src="{{currentUser.avatarUrl}}"/>
+                <span class="hidden-sm">{{currentUser.name}}</span></a>
+            <div class="btn btn-navbar" (click)="logout()"><i class="fa fa-2x fa-fw fa-sign-out"></i>Logout
+            </div>
         </div>
-        <div class="app-content">
-            <section>
-                <router-outlet></router-outlet>
-            </section>
-        </div>
-        <div *ngIf="infoMsg" class="alert alert-info app-content-info alert-dismissible">
-            <i class="fa fa-2x fa-info"></i> {{infoMsg}}
-            <button type="button" class="close" (click)="infoMsg=null">
-                <span>&times;</span>
-            </button>
-        </div>
-        <div *ngIf="errorMsg" class="alert alert-danger app-content-error alert-dismissible">
-            <i class="fa fa-2x fa-exclamation"></i> Error in application {{errorMsg}}
-            <button type="button" class="close" (click)="alertMsg=null">
-                <span>&times;</span>
-            </button>
+        <div class="btn-group" *ngIf="currentUser===undefined">
+            <div class="btn btn-navbar" (click)="loginRequired=true"><i class="fa fa-2x fa-fw fa-sign-in"></i>Login
+            </div>
         </div>
     </div>
 </div>
+<md-sidenav-container>
+
+    <!-- Sidebars -->
+    <sidebar></sidebar>
+
+    <div class="main-content">
+        <!-- App Body -->
+        <div class="app-body" ngClass="{loading: loading, error: error}">
+            <div (show)="loading" class="app-content-loading">
+                <i class="fa fa-spinner fa-spin loading-spinner"></i>
+            </div>
+            <div class="app-content">
+                <section>
+                    <router-outlet></router-outlet>
+                </section>
+            </div>
+            <div *ngIf="infoMsg" class="alert alert-info app-content-info alert-dismissible">
+                <i class="fa fa-2x fa-info"></i> {{infoMsg}}
+                <button type="button" class="close" (click)="infoMsg=null">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div *ngIf="errorMsg" class="alert alert-danger app-content-error alert-dismissible">
+                <i class="fa fa-2x fa-exclamation"></i> Error in application {{errorMsg}}
+                <button type="button" class="close" (click)="alertMsg=null">
+                    <span>&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</md-sidenav-container>
 
 <login-form *ngIf="loginRequired"></login-form>
-</body>

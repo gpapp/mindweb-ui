@@ -4,12 +4,13 @@
 import {Component, OnInit} from "@angular/core";
 import {UserService} from "../service/UserService";
 import User from "../classes/User";
+import {MaterialModule} from "@angular/material";
 @Component({
     providers: [UserService],
     selector: "main-app",
     templateUrl: "/app/layout/template.html"
 })
-export class TemplateComponent implements OnInit{
+export class TemplateComponent implements OnInit {
     get infoMsg(): string {
         return this._infoMsg;
     }

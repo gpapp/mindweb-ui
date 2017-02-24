@@ -1,0 +1,19 @@
+md-sidenav-container {
+    margin: 0;
+    min-width: 200px;
+    height: 100%;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.pull-left {
+    float: left !important;
+}
+
+.pull-right {
+    float: right !important;;
+}
