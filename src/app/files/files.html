@@ -1,16 +1,15 @@
-<div ui-content-for="title">
-    <span>MindWeb - Files</span>
-</div>
-
 <div class="scrollable" ui-state="searchBar">
     <div class="scrollable-content">
         <div class="section">
             <input
-                    ng-if="Ui.active('searchBar')"
                     type="search"
                     class="form-control scrollable-header"
                     placeholder="Search.."/>
+            <ngb-accordion closeOthers="true">
+                <ngb-panel>
 
+                </ngb-panel>
+            </ngb-accordion>
             <div class="panel-group"
                  ui-state='myAccordion'
                  ui-default='1'>
@@ -20,12 +19,12 @@
                             Recent files
                         </h4>
                     </div>
-                    <div ui-if="myAccordion == 1">
+                    <div *ngIf="myAccordion == 1">
                         <div class="panel-body">
                             <div class="list-group file-list">
                                 <div class="list-group-item file-list-item"
-                                     ng-repeat="item in files | orderBy:'-modifieddate' | limitTo:10"
-                                     ng-include="'file_item_renderer'">
+                                     *ngFor="let item of files">
+                                    <file-item></file-item>
                                 </div>
                             </div>
                         </div>
@@ -35,10 +34,10 @@
                     <div class="panel-heading" ui-set="{'myAccordion': 2}">
                         <h4 class="panel-title">
                             All files
-                            <span (show)="loadingFiles">
+                            <span *ngIf="loadingFiles">
                               <i class="fa fa-spinner fa-spin"></i>
                             </span>
-                            <span (show)="!loadingFiles">
+                            <span *ngIf="!loadingFiles">
                               ({{files.length}})
                             </span>
                         </h4>
@@ -47,8 +46,8 @@
                         <div class="panel-body">
                             <div class="list-group file-list">
                                 <div class="list-group-item file-list-item"
-                                     ng-repeat="item in files | orderBy:'name'"
-                                     ng-include="'file_item_renderer'">
+                                     *ngFor="let item of files">
+                                    <file-item></file-item>
                                 </div>
                             </div>
                         </div>
@@ -59,10 +58,10 @@
 
                         <h4 class="panel-title">
                             Shared with me
-                            <span (show)="loadingSharedFiles">
+                            <span *ngIf="loadingSharedFiles">
                               <i class="fa fa-spinner fa-spin"></i>
                             </span>
-                            <span (show)="!loadingSharedFiles">
+                            <span *ngIf="!loadingSharedFiles">
                               ({{sharedFiles.length}})
                             </span>
 
@@ -72,8 +71,8 @@
                         <div class="panel-body">
                             <div class="list-group file-list">
                                 <div class="list-group-item file-list-item"
-                                     ng-repeat="item in sharedFiles | orderBy:'name'"
-                                     ng-include="'file_item_renderer'">
+                                     *ngFor="let item of sharedFiles">
+                                    <file-item></file-item>
                                 </div>
                             </div>
                         </div>
@@ -93,29 +92,13 @@
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <ngf-drop
-                                        ngf-drop=""
-                                        ngf-select=""
-                                        ng-model="uploadedFiles"
-                                        ng-model-rejected="rejFiles"
-                                        ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
-                                        class="drop-box"
-                                        ngf-multiple="true"
-                                        ngf-allow-dir="false"
-                                        ngf-accept="'.mm'"
-                                        ngf-drop-available="dropAvailable">
-                                    <span (hide)="dropAvailable">File Drop not available</span>
-                                    <span (show)="dropAvailable">Drop Files</span>
-                                    <div><span class="fa fa-upload">&nbsp;</span>Upload files</div>
-                                </ngf-drop>
+
                             </div>
                             <div id="uploads" class="col-sm-offset-1 col-sm-7">
-                                <div class="file" ng-repeat="upload in uploads">
+                                <div class="file" *ngFor="let upload of uploads">
                                     <span class="status">
-                                        <uib-progressbar max="upload.max" value="upload.value"
-                                                     type="{{upload.error?'danger':(upload.done?'success':'info')}}">
-                                            <span style="color:black; white-space:nowrap;">{{upload.value}} / {{upload.max}}</span>
-                                        </uib-progressbar>
+
+
                                     </span>
                                     <span class="name">{{upload.name}}</span>
                                     <span class="error label-danger" ng-bind="upload.errorMsg"
@@ -136,184 +119,122 @@
     </a>
 </div>
 
-<script type="text/ng-template" id="file_item_renderer">
-    <div class="file-list-item-content"
-         ui-state="hovered"
-         ngClass="{selected : hovered, 'bg-info':item.isPublic, 'bg-success':!item.isPublic}"
-         (mouseover)="hovered=true"
-         (mouseleave)="hovered=false">
-        <div class="name" ui-state="infoPopup">
-            <i class="fa pull-right "
-               clipboard
-               text="clipboardLink(item)"
-               onSuccess="linkToClipboard()"
-               ngClass="{'fa-share': item.isShareable}"></i>
-            <i class="fa pull-right"
-               ngClass="{'fa-user': !item.isPublic,'fa-group': !item.isPublic&&(item.viewers||item.editors),'fa-globe': item.isPublic}"></i>
-            <i class="fa fa-info-circle pull-right"
-               (mouseover)="infoPopup=true"
-               (mouseleave)="infoPopup=false"></i>
-
-            <div class="infoPopup" ngClass="{hidden : !infoPopup}">
-                <div class="title">{{item.name}}</div>
-                <div class="version">Version: {{ item.versions.length }}</div>
-                <div class="isShareable">Shareable as link: {{item.isShareable}}</div>
-                <div class="isPublic">Visibility: {{
-                    item.isPublic?'Public':(item.viewers||item.editors)?'Shared':'Private'}}
+<template #createFileDialog role="dialog" let-c='close()' let-d='dismiss()'>
+    <div class="modal-header">
+        <h4 class="modal-title">Create file</h4>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="newName" class="control-label col-sm-3">New file name</label>
+                <div class="col-sm-8 ">
+                    <input id="newName" type="text" class="form-control" ng-model="target.newName">
                 </div>
-                <div class="fileDate">Created: {{ item.created}}</div>
-                <div class="fileDate">Last modification:{{ item.modified}}
+                <div class="control-label col-sm-1"><span>.mm</span></div>
+            </div>
+            <div class="form-group">
+                <label for="createIsShareable" class="col-sm-3">Shareable as link</label>
+                <div class="col-sm-9">
+                    <input id="createIsShareable" type="checkbox" ng-model="target.newIsShareable"/>
                 </div>
             </div>
-            <i class="fa fa-file"></i>
+            <div class="form-group">
+                <label for="createIsPublic" class="col-sm-3">Public</label>
+                <div class="col-sm-9">
+                    <input id="createIsPublic" type="checkbox" ng-model="target.newIsPublic"/>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
+        <div type="button" class="btn" (click)="cancel()">Cancel</div>
+    </div>
+</template>
 
-            <div class="fileName" (click)="fileOpen(item)">{{ item.name }}</div>
-        </div>
-        <div class="tags">
-            <tags-input ng-model="item.tags"
-                        replace-spaces-with-dashes="false"
-                        on-tag-added="tag(item,$tag)"
-                        on-tag-removed="untag(item,$tag)">
-                <auto-complete source="loadTags(item,$query)"></auto-complete>
-            </tags-input>
-            <div class="actions">
-                <i class="fa fa-download" title="Download in Freeplane format" (click)="downloadFreeplane(item)"></i>
-                <i class="fa fa-share" title="Share file" (click)="openShareModal(item)"></i>
-                <i class="fa fa-edit" title="Rename file" (click)="openRenameModal(item)"></i>
-                <i class="fa fa-trash" title="Delete file" (click)="openDeleteModal(item)"></i>
+<template #shareFileDialog role="dialog">
+    <div class="modal-header">
+        <h4 class="modal-title">share file</h4>
+        <h5 class="modal-title">{{target.name}}</h5>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="shareIsShareable" class="col-sm-3">Shareable as link</label>
+                <div class="col-sm-9">
+                    <input id="shareIsShareable" type="checkbox" ng-model="target.newIsShareable"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="shareIsPublic" class="col-sm-3">Public</label>
+                <div class="col-sm-9">
+                    <input id="shareIsPublic" type="checkbox" ng-model="target.newIsPublic"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="viewers" class="col-sm-3">Viewers</label>
+                <div class="col-sm-4">{{target.viewers?target.viewers:"Not shared"}}</div>
+                <div class="col-sm-5">
+                    <textarea id="viewers" class="" ng-model="target.newViewers"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="editors" class="col-sm-3">Editors</label>
+                <div class="col-sm-4">{{target.editors?target.editors:"Not shared"}}</div>
+                <div class="col-sm-5">
+                    <textarea id="editors" class="" ng-model="target.newEditors"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
+        <div type="button" class="btn" (click)="cancel()">Cancel</div>
+    </div>
+</template>
+
+
+<template #renameFileDialog role="dialog">
+    <div class="modal-header">
+        <h4 class="modal-title">Rename file</h4>
+        <h5 class="modal-title">{{target.name}}</h5>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="newName" class="control-label col-sm-3">New file name</label>
+                <div class="control-label col-sm-8 ">
+                    <input class="form-control disabled" ng-model="target.newName">
+                </div>
+                <div class="control-label col-sm-1">.
+                mm</div>
             </div>
         </div>
     </div>
-</script>
-
-<script type="text/ng-template" id="file_create_modal.html">
-    <div role="dialog">
-        <div class="modal-header">
-            <h4 class="modal-title">Create file</h4>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label for="newName" class="control-label col-sm-3">New file name</label>
-                    <div class="col-sm-8 ">
-                        <input id="newName" type="text" class="form-control" ng-model="target.newName">
-                    </div>
-                    <div class="control-label col-sm-1"><span>.mm</span></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="createIsShareable" class="col-sm-3">Shareable as link</label>
-                    <div class="col-sm-9">
-                        <input id="createIsShareable" type="checkbox" ng-model="target.newIsShareable"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="createIsPublic" class="col-sm-3">Public</label>
-                    <div class="col-sm-9">
-                        <input id="createIsPublic" type="checkbox" ng-model="target.newIsPublic"/>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
-            <div type="button" class="btn" (click)="cancel()">Cancel</div>
-        </div>
+    <div class="modal-footer">
+        <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
+        <div type="button" class="btn" (click)="cancel()">Cancel</div>
     </div>
-</script>
+</template>
 
-<script type="text/ng-template" id="file_share_modal.html">
-    <div role="dialog">
-        <div class="modal-header">
-            <h4 class="modal-title">share file</h4>
-            <h5 class="modal-title">{{target.name}}</h5>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label for="shareIsShareable" class="col-sm-3">Shareable as link</label>
-                    <div class="col-sm-9">
-                        <input id="shareIsShareable" type="checkbox" ng-model="target.newIsShareable"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="shareIsPublic" class="col-sm-3">Public</label>
-                    <div class="col-sm-9">
-                        <input id="shareIsPublic" type="checkbox" ng-model="target.newIsPublic"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="viewers" class="col-sm-3">Viewers</label>
-                    <div class="col-sm-4">{{target.viewers?target.viewers:"Not shared"}}</div>
-                    <div class="col-sm-5">
-                        <textarea id="viewers" class="" ng-model="target.newViewers"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="editors" class="col-sm-3">Editors</label>
-                    <div class="col-sm-4">{{target.editors?target.editors:"Not shared"}}</div>
-                    <div class="col-sm-5">
-                        <textarea id="editors" class="" ng-model="target.newEditors"></textarea>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
-            <div type="button" class="btn" (click)="cancel()">Cancel</div>
-        </div>
+<template #deleteFileDialog role="dialog">
+    <div class="modal-header">
+        <h4 class="modal-title">Delete file</h4>
+        <h5 class="modal-title">{{target.name}}</h5>
     </div>
-</script>
-
-<script type="text/ng-template" id="file_rename_modal.html">
-    <div role="dialog">
-        <div class="modal-header">
-            <h4 class="modal-title">Rename file</h4>
-            <h5 class="modal-title">{{target.name}}</h5>
-        </div>
-        <div class="modal-body">
-            <div class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label for="newName" class="control-label col-sm-3">New file name</label>
-                    <div class="control-label col-sm-8 ">
-                        <input class="form-control disabled" ng-model="target.newName">
-                    </div>
-                    <div class="control-label col-sm-1">.
-                    mm</div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
-            <div type="button" class="btn" (click)="cancel()">Cancel</div>
-        </div>
-    </div>
-</script>
-
-<script type="text/ng-template" id="file_delete_modal.html">
-    <div role="dialog">
-        <div class="modal-header">
-            <h4 class="modal-title">Delete file</h4>
-            <h5 class="modal-title">{{target.name}}</h5>
-        </div>
-        <div class="modal-body">
-            <h4 class="text-danger">
-                <i class="fa fa-2x fa-exclamation-circle"></i> Are you sure you want to permanently remove this file?
-            </h4>
-
-            <div class="text-danger">
+    <div class="modal-body">
+        <h4 class="text-danger">
+            <i class="fa fa-2x fa-exclamation-circle"></i> Are you sure you want to permanently remove this file?
+        </h4>
+        <div class="text-danger">
                 <span>
                 The file will be unshared and permanently removed from everyone.
                     Proceed with caution !
                 </span>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
-            <div type="button" class="btn" (click)="cancel()">Cancel</div>
         </div>
     </div>
-</script>
-
+    <div class="modal-footer">
+        <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
+        <div type="button" class="btn" (click)="cancel()">Cancel</div>
+    </div>
+</template>

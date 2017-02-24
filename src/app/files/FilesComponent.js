@@ -1,4 +1,85 @@
-
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = require("@angular/core");
+var viewer_1 = require("../viewer/viewer");
+var UserService_1 = require("../service/UserService");
+var FileService_1 = require("../service/FileService");
+var TemplateComponent_1 = require("../layout/TemplateComponent");
+var appRoutes = [
+    { path: 'file', component: viewer_1.default },
+];
+var FilesComponent = (function () {
+    function FilesComponent(userService, fileService, parent) {
+        this.userService = userService;
+        this.fileService = fileService;
+        this.parent = parent;
+        this._files = [];
+        this._loadingFiles = true;
+        this._sharedFiles = [];
+        this._loadingSharedFiles = true;
+    }
+    Object.defineProperty(FilesComponent.prototype, "loadingFiles", {
+        get: function () {
+            return this._loadingFiles;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FilesComponent.prototype, "files", {
+        get: function () {
+            return this._files;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FilesComponent.prototype, "loadingSharedFiles", {
+        get: function () {
+            return this._loadingSharedFiles;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FilesComponent.prototype, "sharedFiles", {
+        get: function () {
+            return this._sharedFiles;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    FilesComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.fileService.list().then(function (files) {
+            _this._loadingFiles = false;
+            return _this._files = files;
+        }, function (error) { return _this.parent.errorMsg = error; });
+        this.fileService.listShared().then(function (files) {
+            _this._loadingSharedFiles = false;
+            return _this._files = files;
+        }, function (error) { return _this.parent.errorMsg = error; });
+    };
+    return FilesComponent;
+}());
+FilesComponent = __decorate([
+    core_1.Component({
+        providers: [UserService_1.UserService, FileService_1.FileService],
+        templateUrl: "/app/files/files.html"
+    }),
+    __param(2, core_1.Host()),
+    __metadata("design:paramtypes", [UserService_1.UserService, FileService_1.FileService, TemplateComponent_1.TemplateComponent])
+], FilesComponent);
+exports.FilesComponent = FilesComponent;
 /**
  .config(['$stateProvider',
  function ($stateProvider) {
@@ -233,4 +314,5 @@
             $uibModalInstance.dismiss('cancel');
         };
     });
- */
+ */ 
+//# sourceMappingURL=FilesComponent.js.map

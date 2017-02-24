@@ -25,17 +25,17 @@ export class MWUUser{
                     url: '/options',
                     templateUrl: 'app/user/options.html'
                 })
-                .state('user.logout',
+                .state('user.logoutPromise',
                 {
-                    url: '/logout',
+                    url: '/logoutPromise',
                     template: '<section ui-view></section>',
                     controller: 'logoutController'
                 });
         }
     ])
     .controller('logoutController', function ($state, $rootScope, UsersApi) {
-        delete $rootScope.lookup;
-        UsersApi.logout();
+        delete $rootScope.lookupPromise;
+        UsersApi.logoutPromise();
         $state.go('home');
     })
 ;*/

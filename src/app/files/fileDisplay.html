@@ -1,0 +1,40 @@
+<div class="file-list-item-content"
+     ui-state="hovered"
+     ng-class="{selected : hovered, 'bg-info':item.isPublic, 'bg-success':!item.isPublic}"
+     ng-mouseover="hovered=true"
+     ng-mouseleave="hovered=false">
+    <div class="name" ui-state="infoPopup">
+        <i class="fa pull-right "
+           clipboard
+           text="clipboardLink(item)"
+           onSuccess="linkToClipboard()"
+           ng-class="{'fa-share': item.isShareable}"></i>
+        <i class="fa pull-right"
+           ng-class="{'fa-user': !item.isPublic,'fa-group': !item.isPublic&&(item.viewers||item.editors),'fa-globe': item.isPublic}"></i>
+        <i class="fa fa-info-circle pull-right"
+           (mouseover)="infoPopup=true"
+           (mouseleave)="infoPopup=false"></i>
+        <div class="infoPopup" ng-class="{hidden : !infoPopup}">
+            <div class="title">{{item.name}}</div>
+            <div class="version">Version: {{ item.versions.length }}</div>
+            <div class="isShareable">Shareable as link: {{item.isShareable}}</div>
+            <div class="isPublic">Visibility: {{
+                item.isPublic?'Public':(item.viewers||item.editors)?'Shared':'Private'}}
+            </div>
+            <div class="fileDate">Created: {{ item.created}}</div>
+            <div class="fileDate">Last modification:{{ item.modified}}
+            </div>
+        </div>
+        <i class="fa fa-file"></i>
+        <div class="fileName" (click)="fileOpen(item)">{{ item.name }}</div>
+    </div>
+    <div class="tags">
+
+        <div class="actions">
+            <i class="fa fa-download" title="Download in Freeplane format" (click)="downloadFreeplane(item)"></i>
+            <i class="fa fa-share" title="Share file" (click)="openShareModal(item)"></i>
+            <i class="fa fa-edit" title="Rename file" (click)="openRenameModal(item)"></i>
+            <i class="fa fa-trash" title="Delete file" (click)="openDeleteModal(item)"></i>
+        </div>
+    </div>
+</div>

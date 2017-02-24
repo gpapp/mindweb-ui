@@ -8,9 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var http_1 = require("@angular/http");
 var UserService_1 = require("./UserService");
 var core_1 = require("@angular/core");
+require("rxjs/add/operator/map");
+require("rxjs/add/operator/toPromise");
 /**
  * Created by gpapp on 2015.05.15..
  */
@@ -18,8 +21,6 @@ var FileService = (function () {
     function FileService(http, userService) {
         this.http = http;
         this.userService = userService;
-        this.files = [];
-        this.sharedFiles = [];
         this._openFiles = new Map();
     }
     Object.defineProperty(FileService.prototype, "openFiles", {
@@ -31,22 +32,28 @@ var FileService = (function () {
     });
     FileService.prototype.list = function () {
         var _this = this;
-        this.userService.lookup().then(function () {
-            _this.http.get("/file/files").subscribe(function (data) { return _this.files = data.json(); }, function (err) { return console.error(err); });
+        return new Promise(function (resolve, reject) {
+            _this.userService.lookupPromise().then(function () {
+                _this.http.get("/file/files").map(function (data) { return data.json(); }).toPromise().then(function (files) {
+                    resolve(files);
+                });
+            });
         });
-        return this.files;
     };
     FileService.prototype.listShared = function () {
         var _this = this;
-        this.userService.lookup().then(function () {
-            _this.http.get("/file/sharedFiles").subscribe(function (data) { return _this.sharedFiles = data.json(); }, function (err) { return console.error(err); });
+        return new Promise(function (resolve, reject) {
+            _this.userService.lookupPromise().then(function () {
+                _this.http.get("/file/sharedFiles").map(function (data) { return data.json(); }).toPromise().then(function (files) {
+                    resolve(files);
+                });
+            });
         });
-        return this.sharedFiles;
     };
     FileService.prototype.create = function (name, isShareable, isPublic, viewers, editors) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.userService.lookup().then(function () {
+            _this.userService.lookupPromise().then(function () {
                 var headers = new http_1.Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 var body = JSON.stringify({
@@ -66,7 +73,7 @@ var FileService = (function () {
     FileService.prototype.share = function (fileId, isShareable, isPublic, viewers, editors) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.userService.lookup().then(function () {
+            _this.userService.lookupPromise().then(function () {
                 var headers = new http_1.Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 var body = JSON.stringify({
@@ -86,7 +93,7 @@ var FileService = (function () {
     FileService.prototype.rename = function (id, newName) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.userService.lookup().then(function () {
+            _this.userService.lookupPromise().then(function () {
                 var headers = new http_1.Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 var body = JSON.stringify({ newName: newName });
@@ -100,7 +107,7 @@ var FileService = (function () {
     FileService.prototype.delete = function (fileId) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.userService.lookup().then(function () {
+            _this.userService.lookupPromise().then(function () {
                 _this.http.delete("/file/file/" + fileId).subscribe(function (data) {
                     _this.unRegisterFile(fileId);
                     resolve(data.json());
@@ -114,7 +121,7 @@ var FileService = (function () {
     FileService.prototype.tagQuery = function (id, query) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.userService.lookup().then(function () {
+            _this.userService.lookupPromise().then(function () {
                 var headers = new http_1.Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 var body = JSON.stringify({ id: id, query: query });
@@ -128,7 +135,7 @@ var FileService = (function () {
     FileService.prototype.tag = function (id, tag) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.userService.lookup().then(function () {
+            _this.userService.lookupPromise().then(function () {
                 var headers = new http_1.Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 var body = JSON.stringify({ id: id, tag: tag });
@@ -142,7 +149,7 @@ var FileService = (function () {
     FileService.prototype.exportFreeplane = function (id) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.userService.lookup().then(function () {
+            _this.userService.lookupPromise().then(function () {
                 _this.http.get('/file/convert/freeplane/' + id).subscribe(function (data) { return resolve(data); }, function (err) {
                     console.error(err);
                     reject();

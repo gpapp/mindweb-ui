@@ -4,13 +4,17 @@
 import {Component, OnInit} from "@angular/core";
 import {UserService} from "../service/UserService";
 import User from "../classes/User";
-import {MaterialModule} from "@angular/material";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 @Component({
     providers: [UserService],
     selector: "main-app",
     templateUrl: "/app/layout/template.html"
 })
 export class TemplateComponent implements OnInit {
+    get loading(): boolean {
+        return this._loading;
+    }
+
     get infoMsg(): string {
         return this._infoMsg;
     }
@@ -31,48 +35,44 @@ export class TemplateComponent implements OnInit {
         return this._currentUser;
     }
 
-    get sidebarDisplay(): boolean {
-        return this._sidebarDisplay;
-    }
-
-    set sidebarDisplay(value: boolean) {
-        this._sidebarDisplay = value;
-    }
-
-    get loginRequired(): boolean {
-        return this._loginRequired;
-    }
-
-    set loginRequired(value: boolean) {
-        this._loginRequired = value;
-    }
-
-
     private _infoMsg: string;
     private _errorMsg: string;
-
+    private _loading: boolean = true;
     private _currentUser: User;
-    private _sidebarDisplay: boolean = true;
-    private _loginRequired: boolean = false;
 
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService, private modalService: NgbModal) {
 
     }
 
     ngOnInit(): void {
-        this.userService.lookup().then(
-            user => this._currentUser = user,
-            error => this._errorMsg = error);
+        this.userService.lookupPromise().then(
+            user => {
+                this._loading = false;
+                return this._currentUser = user
+            },
+            error => {
+                this._loading = false;
+                this._errorMsg = error;
+            });
+    }
+
+    open(content) {
+        this.modalService.open(content).result.then((result) => {
+        }, (reason) => {
+        });
     }
 
     logout() {
-        this.userService.logout().then(
-            user => this._currentUser = user,
-            error => this._errorMsg = error
-        );
+        this._loading = true;
+        this.userService.logoutPromise().then(
+            user => {
+                this._loading = false;
+                delete  this._currentUser;
+            },
+            error => {
+                this._loading = false;
+                this._errorMsg = error;
+            });
     }
 
-    toggleSidebar() {
-        this._sidebarDisplay = !this._sidebarDisplay;
-    }
 }

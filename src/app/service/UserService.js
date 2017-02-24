@@ -8,9 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var http_1 = require("@angular/http");
 var core_1 = require("@angular/core");
-var Observable_1 = require("rxjs/Observable");
 require("rxjs/add/operator/catch");
 require("rxjs/add/operator/map");
 require("rxjs/add/operator/toPromise");
@@ -21,24 +21,12 @@ var UserService = UserService_1 = (function () {
     function UserService(http) {
         this.http = http;
     }
-    UserService.prototype.lookup = function () {
-        return this.http.get(UserService_1.authURL).map(function (res) { return res.json(); }).toPromise().catch(this.handleError);
+    UserService.prototype.lookupPromise = function () {
+        return this.http.get(UserService_1.authURL).map(function (res) { return res.json(); }).toPromise();
     };
-    UserService.prototype.logout = function () {
+    UserService.prototype.logoutPromise = function () {
         delete this._currentUser;
-        return this.http.get(UserService_1.logoutURL).map(function (res) { return res.json(); }).toPromise().catch(this.handleError);
-    };
-    UserService.prototype.handleError = function (error) {
-        // In a real world app, we might use a remote logging infrastructure
-        var errMsg;
-        if (error instanceof http_1.Response) {
-            errMsg = error.status + " - " + (error.statusText || '') + " " + error.text();
-        }
-        else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        console.error(errMsg);
-        return Observable_1.Observable.throw(errMsg);
+        return this.http.get(UserService_1.logoutURL).toPromise();
     };
     return UserService;
 }());

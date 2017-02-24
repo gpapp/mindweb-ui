@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var File = (function () {
     function File() {
     }
@@ -24,6 +25,5 @@ var File = (function () {
     });
     return File;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = File;
 //# sourceMappingURL=File.js.map

@@ -8,17 +8,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Created by gpapp on 2017.02.20..
  */
 var core_1 = require("@angular/core");
 var UserService_1 = require("../service/UserService");
+var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
 var TemplateComponent = (function () {
-    function TemplateComponent(userService) {
+    function TemplateComponent(userService, modalService) {
         this.userService = userService;
-        this._sidebarDisplay = true;
-        this._loginRequired = false;
+        this.modalService = modalService;
+        this._loading = true;
     }
+    Object.defineProperty(TemplateComponent.prototype, "loading", {
+        get: function () {
+            return this._loading;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(TemplateComponent.prototype, "infoMsg", {
         get: function () {
             return this._infoMsg;
@@ -46,36 +55,31 @@ var TemplateComponent = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(TemplateComponent.prototype, "sidebarDisplay", {
-        get: function () {
-            return this._sidebarDisplay;
-        },
-        set: function (value) {
-            this._sidebarDisplay = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TemplateComponent.prototype, "loginRequired", {
-        get: function () {
-            return this._loginRequired;
-        },
-        set: function (value) {
-            this._loginRequired = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
     TemplateComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.userService.lookup().then(function (user) { return _this._currentUser = user; }, function (error) { return _this._errorMsg = error; });
+        this.userService.lookupPromise().then(function (user) {
+            _this._loading = false;
+            return _this._currentUser = user;
+        }, function (error) {
+            _this._loading = false;
+            _this._errorMsg = error;
+        });
+    };
+    TemplateComponent.prototype.open = function (content) {
+        this.modalService.open(content).result.then(function (result) {
+        }, function (reason) {
+        });
     };
     TemplateComponent.prototype.logout = function () {
         var _this = this;
-        this.userService.logout().then(function (user) { return _this._currentUser = user; }, function (error) { return _this._errorMsg = error; });
-    };
-    TemplateComponent.prototype.toggleSidebar = function () {
-        this._sidebarDisplay = !this._sidebarDisplay;
+        this._loading = true;
+        this.userService.logoutPromise().then(function (user) {
+            _this._loading = false;
+            delete _this._currentUser;
+        }, function (error) {
+            _this._loading = false;
+            _this._errorMsg = error;
+        });
     };
     return TemplateComponent;
 }());
@@ -85,7 +89,7 @@ TemplateComponent = __decorate([
         selector: "main-app",
         templateUrl: "/app/layout/template.html"
     }),
-    __metadata("design:paramtypes", [UserService_1.UserService])
+    __metadata("design:paramtypes", [UserService_1.UserService, ng_bootstrap_1.NgbModal])
 ], TemplateComponent);
 exports.TemplateComponent = TemplateComponent;
 //# sourceMappingURL=TemplateComponent.js.map

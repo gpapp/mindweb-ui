@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var http_1 = require("@angular/http");
 var UserService_1 = require("./UserService");
 var core_1 = require("@angular/core");
@@ -22,7 +23,7 @@ var FriendService = (function () {
     }
     FriendService.prototype.list = function () {
         var _this = this;
-        this.userService.lookup().then(function () {
+        this.userService.lookupPromise().then(function () {
             _this.http.get("/friend/list").subscribe(function (data) { return _this.friends = data.json(); }, function (err) { return console.error(err); });
         });
         return this.friends;
@@ -30,7 +31,7 @@ var FriendService = (function () {
     FriendService.prototype.load = function (id, newName) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.userService.lookup().then(function () {
+            _this.userService.lookupPromise().then(function () {
                 _this.http.get("/friend/get/" + id).subscribe(function (data) {
                     //todo: Close files in rootscope
                     resolve(data.json());
@@ -44,7 +45,7 @@ var FriendService = (function () {
     FriendService.prototype.create = function (alias, linkedUserId) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.userService.lookup().then(function () {
+            _this.userService.lookupPromise().then(function () {
                 var headers = new http_1.Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 var body = JSON.stringify({ alias: alias, linkedUserId: linkedUserId });

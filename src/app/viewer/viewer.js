@@ -5,33 +5,40 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var UserService_1 = require("../service/UserService");
-var MWUViewer = (function () {
-    function MWUViewer() {
+var FileService_1 = require("../service/FileService");
+var ViewComponent = (function () {
+    function ViewComponent() {
     }
-    return MWUViewer;
+    ViewComponent.prototype.ngOnInit = function () {
+    };
+    ViewComponent.prototype.ngOnDestroy = function () {
+    };
+    return ViewComponent;
 }());
-MWUViewer = __decorate([
-    core_1.NgModule({
-        imports: [UserService_1.UserService]
+ViewComponent = __decorate([
+    core_1.Component({
+        providers: [UserService_1.UserService, FileService_1.FileService],
+        templateUrl: "/app/files/files.html"
     })
-], MWUViewer);
-exports.MWUViewer = MWUViewer;
+], ViewComponent);
+exports.default = ViewComponent;
 /**
-angular.module('MindWebUi.viewer', [
-        'ui.router',
-        'MindWebUi.viewer.mainController',
-        'MindWebUi.viewer.treeController',
-        'MindWebUi.viewer.taskController',
-        'MindWebUi.viewer.mindmapController',
-        'MindWebUi.viewer.detailController'
-    ])
-    .filter('escape', function () {
+ angular.module('MindWebUi.viewer', [
+ 'ui.router',
+ 'MindWebUi.viewer.mainController',
+ 'MindWebUi.viewer.treeController',
+ 'MindWebUi.viewer.taskController',
+ 'MindWebUi.viewer.mindmapController',
+ 'MindWebUi.viewer.detailController'
+ ])
+ .filter('escape', function () {
         return window.encodeURIComponent;
     })
-    .config(['$stateProvider',
-        function ($stateProvider) {
+ .config(['$stateProvider',
+ function ($stateProvider) {
             $stateProvider
                 .state('viewer', {
                     abstract: true,
@@ -98,8 +105,8 @@ angular.module('MindWebUi.viewer', [
                     }
                 });
         }
-    ])
-    .factory('focusElement', function ($timeout, $window) {
+ ])
+ .factory('focusElement', function ($timeout, $window) {
         return function (id, selectAll) {
             // timeout makes sure that it is invoked after any other event has been triggered.
             // e.g. click events that need to run before the focus or
@@ -116,7 +123,7 @@ angular.module('MindWebUi.viewer', [
             }, 500);
         };
     })
-    .directive('eventFocus', function (focus) {
+ .directive('eventFocus', function (focus) {
         return function (scope, elem, attr) {
             elem.on(attr.eventFocus, function () {
                 focus(attr.eventFocusId);
@@ -129,7 +136,7 @@ angular.module('MindWebUi.viewer', [
             });
         };
     })
-    .directive('onShortPress', function ($timeout, $rootScope) {
+ .directive('onShortPress', function ($timeout, $rootScope) {
         return {
             restrict: 'A',
             link: function ($scope, $elm, $attrs) {
@@ -170,7 +177,7 @@ angular.module('MindWebUi.viewer', [
             }
         };
     })
-    .directive('onLongPress', function ($timeout, $rootScope) {
+ .directive('onLongPress', function ($timeout, $rootScope) {
         return {
             restrict: 'A',
             link: function ($scope, $elm, $attrs) {
@@ -224,6 +231,6 @@ angular.module('MindWebUi.viewer', [
             }
         };
     })
-;
-*/ 
+ ;
+ */ 
 //# sourceMappingURL=viewer.js.map

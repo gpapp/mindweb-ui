@@ -1,6 +1,6 @@
 var proxy = require('http-proxy-middleware');
 
-var apiProxy = proxy('/auth', {
+var apiProxy = proxy(['/auth', '/file', '/public', '/task', '/session'], {
     target: 'http://localhost:8081',
     changeOrigin: true   // for vhosted sites
 });

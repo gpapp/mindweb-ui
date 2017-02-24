@@ -3,13 +3,13 @@ import Friend from "../classes/Friend";
 import {Http, Headers, Response} from "@angular/http";
 import {UserService} from "./UserService";
 import {Injectable} from "@angular/core";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/toPromise";
 /**
  * Created by gpapp on 2015.05.15..
  */
 @Injectable()
 export class FileService {
-    private files: File[] = [];
-    private sharedFiles: File[] = [];
     private _openFiles: Map<string,File> = new Map();
 
     constructor(private http: Http, private userService: UserService) {
@@ -19,29 +19,30 @@ export class FileService {
         return this._openFiles;
     }
 
-    list(): File[] {
-        this.userService.lookup().then(() => {
-            this.http.get("/file/files").subscribe(
-                data => this.files = data.json(),
-                err => console.error(err)
-            )
+    list(): Promise<File[]> {
+        return new Promise((resolve, reject) => {
+            this.userService.lookupPromise().then(() => {
+                this.http.get("/file/files").map(data => data.json()).toPromise().then((files) => {
+                    resolve(files);
+                });
+            });
+
         });
-        return this.files;
     }
 
-    listShared() {
-        this.userService.lookup().then(() => {
-            this.http.get("/file/sharedFiles").subscribe(
-                data => this.sharedFiles = data.json(),
-                err => console.error(err)
-            )
+    listShared(): Promise<File[]> {
+        return new Promise((resolve, reject) => {
+            this.userService.lookupPromise().then(() => {
+                this.http.get("/file/sharedFiles").map(data => data.json()).toPromise().then((files) => {
+                    resolve(files);
+                });
+            });
         });
-        return this.sharedFiles;
     }
 
     create(name: string, isShareable: boolean, isPublic: boolean, viewers: Friend[], editors: Friend[]): Promise<File> {
         return new Promise((resolve, reject) => {
-            this.userService.lookup().then(() => {
+            this.userService.lookupPromise().then(() => {
                 const headers = new Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 const body = JSON.stringify({
@@ -64,7 +65,7 @@ export class FileService {
 
     share(fileId: string, isShareable: boolean, isPublic: boolean, viewers: Friend[], editors: Friend[]): Promise<File> {
         return new Promise((resolve, reject) => {
-            this.userService.lookup().then(() => {
+            this.userService.lookupPromise().then(() => {
                 const headers = new Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 const body = JSON.stringify({
@@ -87,7 +88,7 @@ export class FileService {
 
     rename(id: string, newName: string): Promise<File> {
         return new Promise((resolve, reject) => {
-            this.userService.lookup().then(() => {
+            this.userService.lookupPromise().then(() => {
                 const headers = new Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 const body = JSON.stringify({newName: newName});
@@ -104,7 +105,7 @@ export class FileService {
 
     delete(fileId: string): Promise<File> {
         return new Promise((resolve, reject) => {
-                this.userService.lookup().then(() => {
+                this.userService.lookupPromise().then(() => {
                     this.http.delete("/file/file/" + fileId).subscribe(
                         data => {
                             this.unRegisterFile(fileId);
@@ -123,7 +124,7 @@ export class FileService {
 
     tagQuery(id: string, query: string): Promise < File > {
         return new Promise((resolve, reject) => {
-            this.userService.lookup().then(() => {
+            this.userService.lookupPromise().then(() => {
                 const headers = new Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 const body = JSON.stringify({id: id, query: query});
@@ -140,7 +141,7 @@ export class FileService {
 
     tag(id: string, tag: string): Promise < File > {
         return new Promise((resolve, reject) => {
-            this.userService.lookup().then(() => {
+            this.userService.lookupPromise().then(() => {
                 const headers = new Headers();
                 headers.append('Content-Type', 'application/x-www-form-urlencoded');
                 const body = JSON.stringify({id: id, tag: tag});
@@ -157,7 +158,7 @@ export class FileService {
 
     exportFreeplane(id: string): Promise < Response > {
         return new Promise((resolve, reject) => {
-            this.userService.lookup().then(() => {
+            this.userService.lookupPromise().then(() => {
                 this.http.get('/file/convert/freeplane/' + id).subscribe(
                     data => resolve(data),
                     err => {

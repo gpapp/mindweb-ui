@@ -1,24 +1,32 @@
-import {NgModule} from "@angular/core";
+import {Component, OnInit, OnDestroy} from "@angular/core";
 import {UserService} from "../service/UserService";
-@NgModule({
-    imports: [UserService]
+import {FileService} from "../service/FileService";
+
+@Component({
+    providers: [UserService, FileService],
+    templateUrl: "/app/files/files.html"
 })
-export class MWUViewer{
+export default class ViewComponent implements OnDestroy,OnInit {
+    ngOnInit(): void {
+    }
+
+    ngOnDestroy(): void {
+    }
 }
 /**
-angular.module('MindWebUi.viewer', [
-        'ui.router',
-        'MindWebUi.viewer.mainController',
-        'MindWebUi.viewer.treeController',
-        'MindWebUi.viewer.taskController',
-        'MindWebUi.viewer.mindmapController',
-        'MindWebUi.viewer.detailController'
-    ])
-    .filter('escape', function () {
+ angular.module('MindWebUi.viewer', [
+ 'ui.router',
+ 'MindWebUi.viewer.mainController',
+ 'MindWebUi.viewer.treeController',
+ 'MindWebUi.viewer.taskController',
+ 'MindWebUi.viewer.mindmapController',
+ 'MindWebUi.viewer.detailController'
+ ])
+ .filter('escape', function () {
         return window.encodeURIComponent;
     })
-    .config(['$stateProvider',
-        function ($stateProvider) {
+ .config(['$stateProvider',
+ function ($stateProvider) {
             $stateProvider
                 .state('viewer', {
                     abstract: true,
@@ -85,8 +93,8 @@ angular.module('MindWebUi.viewer', [
                     }
                 });
         }
-    ])
-    .factory('focusElement', function ($timeout, $window) {
+ ])
+ .factory('focusElement', function ($timeout, $window) {
         return function (id, selectAll) {
             // timeout makes sure that it is invoked after any other event has been triggered.
             // e.g. click events that need to run before the focus or
@@ -103,7 +111,7 @@ angular.module('MindWebUi.viewer', [
             }, 500);
         };
     })
-    .directive('eventFocus', function (focus) {
+ .directive('eventFocus', function (focus) {
         return function (scope, elem, attr) {
             elem.on(attr.eventFocus, function () {
                 focus(attr.eventFocusId);
@@ -116,7 +124,7 @@ angular.module('MindWebUi.viewer', [
             });
         };
     })
-    .directive('onShortPress', function ($timeout, $rootScope) {
+ .directive('onShortPress', function ($timeout, $rootScope) {
         return {
             restrict: 'A',
             link: function ($scope, $elm, $attrs) {
@@ -157,7 +165,7 @@ angular.module('MindWebUi.viewer', [
             }
         };
     })
-    .directive('onLongPress', function ($timeout, $rootScope) {
+ .directive('onLongPress', function ($timeout, $rootScope) {
         return {
             restrict: 'A',
             link: function ($scope, $elm, $attrs) {
@@ -211,5 +219,5 @@ angular.module('MindWebUi.viewer', [
             }
         };
     })
-;
-*/
+ ;
+ */

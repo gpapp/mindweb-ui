@@ -10,10 +10,16 @@ md-sidenav-container {
     height: 100%;
 }
 
-.pull-left {
-    float: left !important;
+.navbar {
+    position: inherit;
+    flex-direction: column;
 }
 
-.pull-right {
-    float: right !important;;
+.navbar .pull-left {
+    flex-grow: 0;
+}
+
+.navbar .pull-right {
+    flex-grow: 1;
+    flex-direction: row-reverse;
 }

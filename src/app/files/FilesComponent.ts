@@ -1,50 +1,59 @@
-"use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@angular/core");
-var viewer_1 = require("../viewer/viewer");
-var UserService_1 = require("../service/UserService");
-var FileService_1 = require("../service/FileService");
-var appRoutes = [
-    { path: 'file', component: viewer_1.default },
+import {Component, OnInit, Host} from "@angular/core";
+import {Routes} from "@angular/router";
+import ViewComponent from "../viewer/viewer";
+import {UserService} from "../service/UserService";
+import {FileService} from "../service/FileService";
+import File from "../classes/File";
+import {TemplateComponent} from "../layout/TemplateComponent";
+
+const appRoutes: Routes = [
+    {path: 'file', component: ViewComponent},
 ];
-var FilesComponent = (function () {
-    function FilesComponent(userService, fileService) {
-        this.userService = userService;
-        this.fileService = fileService;
-        this._files = [];
+@Component({
+    providers: [UserService, FileService],
+    templateUrl: "/app/files/files.html"
+})
+export class FilesComponent implements OnInit {
+    get loadingFiles(): boolean {
+        return this._loadingFiles;
     }
-    Object.defineProperty(FilesComponent.prototype, "files", {
-        get: function () {
-            return this._files;
-        },
-        set: function (value) {
-            this._files = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    FilesComponent.prototype.ngOnInit = function () {
-        this._files = this.fileService.list();
-    };
-    return FilesComponent;
-}());
-FilesComponent = __decorate([
-    core_1.Component({
-        providers: [UserService_1.UserService, FileService_1.FileService],
-        templateUrl: "/app/files/files.html"
-    }),
-    __metadata("design:paramtypes", [UserService_1.UserService, FileService_1.FileService])
-], FilesComponent);
-exports.FilesComponent = FilesComponent;
+
+    get files(): File[] {
+        return this._files;
+    }
+
+    get loadingSharedFiles(): boolean {
+        return this._loadingSharedFiles;
+    }
+
+    get sharedFiles(): File[] {
+        return this._sharedFiles;
+    }
+
+    private _files: File[] = [];
+    private _loadingFiles: boolean = true;
+    private _sharedFiles: File[] = [];
+    private _loadingSharedFiles: boolean = true;
+
+    constructor(private userService: UserService, private fileService: FileService, @Host() private parent: TemplateComponent) {
+
+    }
+
+    ngOnInit(): void {
+        this.fileService.list().then(
+            files => {
+                this._loadingFiles = false;
+                return this._files = files
+            },
+            error => this.parent.errorMsg = error);
+        this.fileService.listShared().then(
+            files => {
+                this._loadingSharedFiles = false;
+                return this._files = files
+            },
+            error => this.parent.errorMsg = error);
+    }
+}
 /**
  .config(['$stateProvider',
  function ($stateProvider) {
@@ -279,5 +288,4 @@ exports.FilesComponent = FilesComponent;
             $uibModalInstance.dismiss('cancel');
         };
     });
- */ 
-//# sourceMappingURL=files.js.map
+ */

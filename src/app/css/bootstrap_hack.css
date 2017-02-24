@@ -1,8 +1,14 @@
 /* override clashes from bootstrap and mobile-angular-ui */
 .navbar {
-    position: absolute;
+    /* position: absolute; */
 }
-
+.pull-left, .fa-pull-left {
+    flex-grow: 4;
+}
+.pull-right, .fa-pull-right{
+    flex-grow: 4;
+    text-align: right;
+}
 .modal {
     display: block;
 }

@@ -13,7 +13,7 @@ export class FriendService {
     }
 
     list(): Friend[] {
-        this.userService.lookup().then(() => {
+        this.userService.lookupPromise().then(() => {
             this.http.get("/friend/list").subscribe(
                 data => this.friends = data.json(),
                 err => console.error(err)
@@ -24,7 +24,7 @@ export class FriendService {
 
     load(id: string, newName: string): Promise<Friend> {
         return new Promise((resolve, reject) => {
-                this.userService.lookup().then(() => {
+                this.userService.lookupPromise().then(() => {
                     this.http.get("/friend/get/" + id).subscribe(
                         data => {
                             //todo: Close files in rootscope
@@ -43,7 +43,7 @@ export class FriendService {
 
     create(alias: string, linkedUserId: string): Promise<Friend> {
         return new Promise((resolve, reject) => {
-                this.userService.lookup().then(() => {
+                this.userService.lookupPromise().then(() => {
                     const headers = new Headers();
                     headers.append('Content-Type', 'application/x-www-form-urlencoded');
                     const body = JSON.stringify({alias: alias, linkedUserId: linkedUserId});
