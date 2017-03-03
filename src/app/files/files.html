@@ -5,77 +5,93 @@
                     type="search"
                     class="form-control scrollable-header"
                     placeholder="Search.."/>
-            <ngb-accordion closeOthers="true">
-                <ngb-panel>
 
-                </ngb-panel>
-            </ngb-accordion>
-            <div class="panel-group"
-                 ui-state='myAccordion'
-                 ui-default='1'>
-                <div class="panel panel-default">
-                    <div class="panel-heading" ui-set="{'myAccordion': 1}">
-                        <h4 class="panel-title">
-                            Recent files
-                        </h4>
-                    </div>
-                    <div *ngIf="myAccordion == 1">
-                        <div class="panel-body">
-                            <div class="list-group file-list">
-                                <div class="list-group-item file-list-item"
-                                     *ngFor="let item of files">
-                                    <file-item></file-item>
+            <div class="panel-group">
+                <ngb-accordion [closeOthers]="true" activeIds="1">
+                    <ngb-panel id="1">
+                        <template ngbPanelTitle>
+                            <h4 class="panel-title">
+                                Recent files
+                            </h4>
+                        </template>
+                        <template ngbPanelContent>
+                            <div class="panel-body">
+                                <div class="list-group file-list">
+                                    <div class="list-group-item file-list-item"
+                                         *ngFor="let item of files">
+                                        <file-item [item]="item"
+                                                   [deleteFileDialog]="deleteFileDialog"
+                                                   [renameFileDialog]="renameFileDialog"
+                                                   [shareFileDialog]="shareFileDialog"></file-item>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" ui-set="{'myAccordion': 2}">
-                        <h4 class="panel-title">
-                            All files
-                            <span *ngIf="loadingFiles">
+                        </template>
+                    </ngb-panel>
+                    <ngb-panel id="2">
+                        <template ngbPanelTitle>
+                            <h4 class="panel-title">
+                                All files
+                                <span *ngIf="loadingFiles">
                               <i class="fa fa-spinner fa-spin"></i>
                             </span>
-                            <span *ngIf="!loadingFiles">
+                                <span *ngIf="!loadingFiles">
                               ({{files.length}})
                             </span>
-                        </h4>
-                    </div>
-                    <div ui-if="myAccordion == 2">
-                        <div class="panel-body">
-                            <div class="list-group file-list">
-                                <div class="list-group-item file-list-item"
-                                     *ngFor="let item of files">
-                                    <file-item></file-item>
+                            </h4>
+                        </template>
+                        <template ngbPanelContent>
+                            <div class="panel-body">
+                                <div class="list-group file-list">
+                                    <div class="list-group-item file-list-item"
+                                         *ngFor="let item of files">
+                                        <file-item [item]="item"
+                                                   [deleteFileDialog]="deleteFileDialog"
+                                                   [renameFileDialog]="renameFileDialog"
+                                                   [shareFileDialog]="shareFileDialog"></file-item>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" ui-set="{'myAccordion': 3}">
+                        </template>
+                    </ngb-panel>
 
-                        <h4 class="panel-title">
-                            Shared with me
-                            <span *ngIf="loadingSharedFiles">
+                    <ngb-panel id="3">
+                        <template ngbPanelTitle>
+                            <h4 class="panel-title">
+                                Shared with me
+                                <span *ngIf="loadingSharedFiles">
                               <i class="fa fa-spinner fa-spin"></i>
                             </span>
-                            <span *ngIf="!loadingSharedFiles">
+                                <span *ngIf="!loadingSharedFiles">
                               ({{sharedFiles.length}})
                             </span>
 
-                        </h4>
-                    </div>
-                    <div ui-if="myAccordion == 3">
-                        <div class="panel-body">
-                            <div class="list-group file-list">
-                                <div class="list-group-item file-list-item"
-                                     *ngFor="let item of sharedFiles">
-                                    <file-item></file-item>
+                            </h4>
+                        </template>
+                        <template ngbPanelContent>
+                            <div class="panel-body">
+                                <div class="list-group file-list">
+                                    <div class="list-group-item file-list-item"
+                                         *ngFor="let item of sharedFiles">
+                                        <file-item [item]="item"
+                                                   [deleteFileDialog]="deleteFileDialog"
+                                                   [renameFileDialog]="renameFileDialog"
+                                                   [shareFileDialog]="shareFileDialog"></file-item>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </template>
+                    </ngb-panel>
+
+                </ngb-accordion>
+                <div class="panel panel-default">
+                    <div class="panel-heading panel-primary">
+                        <h4 class="panel-title">
+                            Upload
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <file-upload></file-upload>
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -87,7 +103,7 @@
                     <div>
                         <div class="panel-body">
                             <div class="col-sm-2">
-                                <div class="btn btn-default" (click)="openCreateModal()">
+                                <div class="btn btn-default" (click)="open(createFileDialog)">
                                     <span class="fa fa-file">&nbsp;</span>Create new
                                 </div>
                             </div>
@@ -111,120 +127,135 @@
             </div>
         </div>
     </div>
-    <a class="btn btn-block btn-lg btn-primary scrollable-footer" ui-toggle='searchBar'>
+    <a class="btn btn-block btn-lg btn-primary scrollable-footer" (toggle)='searchBar'>
         <i class="fa fa-search"></i>
-        <span ui-hide="searchBar">Show</span>
-        <span ui-show="searchBar">Hide</span>
+        <span *ngIf="!searchBar">Show</span>
+        <span *ngIf="searchBar">Hide</span>
         Search Bar
     </a>
 </div>
 
-<template #createFileDialog role="dialog" let-c='close()' let-d='dismiss()'>
+<template #createFileDialog class="modal" role="dialog" let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Create file</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <div class="modal-body">
-        <form class="form-horizontal" role="form">
-            <div class="form-group">
-                <label for="newName" class="control-label col-sm-3">New file name</label>
+        <form role="form">
+            <div class="form-group row">
+                <label for="createNewName" class="control-label col-sm-3">New file name</label>
                 <div class="col-sm-8 ">
-                    <input id="newName" type="text" class="form-control" ng-model="target.newName">
+                    <input id="createNewName" type="text" class="form-control" [(ngModel)]="target.newName">
                 </div>
                 <div class="control-label col-sm-1"><span>.mm</span></div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="createIsShareable" class="col-sm-3">Shareable as link</label>
                 <div class="col-sm-9">
-                    <input id="createIsShareable" type="checkbox" ng-model="target.newIsShareable"/>
+                    <input class="form-control" id="createIsShareable" type="checkbox"
+                           [(ngModel)]='target.newIsShareable'/>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="createIsPublic" class="col-sm-3">Public</label>
                 <div class="col-sm-9">
-                    <input id="createIsPublic" type="checkbox" ng-model="target.newIsPublic"/>
+                    <input class="form-control" id="createIsPublic" type="checkbox" [(ngModel)]='target.newIsPublic'/>
                 </div>
             </div>
         </form>
     </div>
     <div class="modal-footer">
-        <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
-        <div type="button" class="btn" (click)="cancel()">Cancel</div>
+        <div type="button" class="btn btn-primary" (click)="c(target)">Submit</div>
+        <div type="button" class="btn" (click)="d()">Cancel</div>
     </div>
 </template>
 
-<template #shareFileDialog role="dialog">
+<template #shareFileDialog class="modal" role="dialog" let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">share file</h4>
         <h5 class="modal-title">{{target.name}}</h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <div class="modal-body">
-        <form class="form-horizontal">
-            <div class="form-group">
+        <div class="form-horizontal">
+            <div class="form-group row">
                 <label for="shareIsShareable" class="col-sm-3">Shareable as link</label>
                 <div class="col-sm-9">
-                    <input id="shareIsShareable" type="checkbox" ng-model="target.newIsShareable"/>
+                    <input class="form-control" id="shareIsShareable" type="checkbox"
+                           [(ngModel)]='target.newIsShareable'/>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="shareIsPublic" class="col-sm-3">Public</label>
                 <div class="col-sm-9">
-                    <input id="shareIsPublic" type="checkbox" ng-model="target.newIsPublic"/>
+                    <input class="form-control" id="shareIsPublic" type="checkbox" [(ngModel)]='target.newIsPublic'/>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="viewers" class="col-sm-3">Viewers</label>
-                <div class="col-sm-4">{{target.viewers?target.viewers:"Not shared"}}</div>
-                <div class="col-sm-5">
-                    <textarea id="viewers" class="" ng-model="target.newViewers"></textarea>
+                <div class="col-sm-4">
+                    <span class="form-control-static">{{target.viewers?target.viewers:"Not shared"}}</span>
                 </div>
+                <textarea class="form-control" id="viewers" class="col-sm-5"
+                          [(ngModel)]='target.newViewers'></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="editors" class="col-sm-3">Editors</label>
-                <div class="col-sm-4">{{target.editors?target.editors:"Not shared"}}</div>
-                <div class="col-sm-5">
-                    <textarea id="editors" class="" ng-model="target.newEditors"></textarea>
+                <div class="col-sm-4">
+                    <span class="form-control-static">{{target.editors?target.editors:"Not shared"}}</span>
                 </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
-        <div type="button" class="btn" (click)="cancel()">Cancel</div>
-    </div>
-</template>
-
-
-<template #renameFileDialog role="dialog">
-    <div class="modal-header">
-        <h4 class="modal-title">Rename file</h4>
-        <h5 class="modal-title">{{target.name}}</h5>
-    </div>
-    <div class="modal-body">
-        <div class="form-horizontal" role="form">
-            <div class="form-group">
-                <label for="newName" class="control-label col-sm-3">New file name</label>
-                <div class="control-label col-sm-8 ">
-                    <input class="form-control disabled" ng-model="target.newName">
-                </div>
-                <div class="control-label col-sm-1">.
-                mm</div>
+                <textarea class="form-control" id="editors" class="col-sm-5"
+                          [(ngModel)]='target.newEditors'></textarea>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
-        <div type="button" class="btn" (click)="cancel()">Cancel</div>
+        <div type="button" class="btn btn-primary" (click)="c(target)">Submit</div>
+        <div type="button" class="btn" (click)="d()">Cancel</div>
     </div>
 </template>
 
-<template #deleteFileDialog role="dialog">
+<template #renameFileDialog class="modal modal-lg" role="dialog" let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Rename file</h4>
+        <h5 class="modal-title">{{target.name}}</h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal" role="form">
+            <div class="form-group row">
+                <label for="newName" class="control-label col-sm-3">New file name</label>
+                <span class="control-label col-sm-8 ">
+                    <input id='newName' class="form-control" [(ngModel)]="target.newName">
+                </span>
+                <span class="control-label col-sm-1">.mm</span>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div type="button" class="btn btn-primary" (click)="c(target)">Submit</div>
+        <div type="button" class="btn" (click)="d()">Cancel</div>
+    </div>
+</template>
+
+<template #deleteFileDialog let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Delete file</h4>
         <h5 class="modal-title">{{target.name}}</h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     <div class="modal-body">
         <h4 class="text-danger">
-            <i class="fa fa-2x fa-exclamation-circle"></i> Are you sure you want to permanently remove this file?
+            <i class="fa fa-2x fa-exclamation-circle"></i> Are you sure you want to permanently remove this
+            file?
         </h4>
         <div class="text-danger">
                 <span>
@@ -234,7 +265,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
-        <div type="button" class="btn" (click)="cancel()">Cancel</div>
+        <div type="button" class="btn btn-primary" (click)="c(target)">Submit</div>
+        <div type="button" class="btn" (click)="d()">Cancel</div>
     </div>
 </template>

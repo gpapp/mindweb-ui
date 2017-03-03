@@ -1,10 +1,12 @@
-import {Component, OnInit, Host} from "@angular/core";
+import {Component, OnInit, Host, TemplateRef} from "@angular/core";
 import {Routes} from "@angular/router";
 import ViewComponent from "../viewer/viewer";
 import {UserService} from "../service/UserService";
 import {FileService} from "../service/FileService";
-import File from "../classes/File";
+import MyFile from "mindweb-request-classes/dist/classes/File";
 import {TemplateComponent} from "../layout/TemplateComponent";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {FileDisplayComponent} from "./FileDisplayComponent";
 
 const appRoutes: Routes = [
     {path: 'file', component: ViewComponent},
@@ -14,11 +16,12 @@ const appRoutes: Routes = [
     templateUrl: "/app/files/files.html"
 })
 export class FilesComponent implements OnInit {
+
     get loadingFiles(): boolean {
         return this._loadingFiles;
     }
 
-    get files(): File[] {
+    get files(): MyFile[] {
         return this._files;
     }
 
@@ -26,20 +29,45 @@ export class FilesComponent implements OnInit {
         return this._loadingSharedFiles;
     }
 
-    get sharedFiles(): File[] {
+    get sharedFiles(): MyFile[] {
         return this._sharedFiles;
     }
 
-    private _files: File[] = [];
+    get target(): MyFile {
+        return this._target;
+    }
+
+    set target(value: MyFile) {
+        this._target = value;
+        this._target['newName'] = value.name.replace(/.mm$/, '');
+        this._target['newEditors'] = value.editors;
+        this._target['newViewers'] = value.viewers;
+        this._target['newIsPublic'] = value.isPublic;
+        this._target['newIsShareable'] = value.isShareable;
+    }
+
+    private _files: MyFile[] = [];
     private _loadingFiles: boolean = true;
-    private _sharedFiles: File[] = [];
+    private _sharedFiles: MyFile[] = [];
     private _loadingSharedFiles: boolean = true;
+    private _target: MyFile;
 
-    constructor(private userService: UserService, private fileService: FileService, @Host() private parent: TemplateComponent) {
+    constructor(private modalService: NgbModal, private userService: UserService, private fileService: FileService, @Host() private parent: TemplateComponent) {
+    }
 
+
+    open(dialog: TemplateRef<any>) {
+        this.target = new MyFile(null, 'New file.mm', null, [], [], true, true, [], []);
+        this.modalService.open(dialog, {size: 'lg'}).result.then((result) => {
+        }, (reason) => {
+        });
     }
 
     ngOnInit(): void {
+        this.refreshFiles();
+    }
+
+    refreshFiles() {
         this.fileService.list().then(
             files => {
                 this._loadingFiles = false;
@@ -49,10 +77,11 @@ export class FilesComponent implements OnInit {
         this.fileService.listShared().then(
             files => {
                 this._loadingSharedFiles = false;
-                return this._files = files
+                return this._sharedFiles = files
             },
             error => this.parent.errorMsg = error);
     }
+
 }
 /**
  .config(['$stateProvider',

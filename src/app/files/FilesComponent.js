@@ -16,12 +16,15 @@ var core_1 = require("@angular/core");
 var viewer_1 = require("../viewer/viewer");
 var UserService_1 = require("../service/UserService");
 var FileService_1 = require("../service/FileService");
+var File_1 = require("mindweb-request-classes/dist/classes/File");
 var TemplateComponent_1 = require("../layout/TemplateComponent");
+var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
 var appRoutes = [
     { path: 'file', component: viewer_1.default },
 ];
 var FilesComponent = (function () {
-    function FilesComponent(userService, fileService, parent) {
+    function FilesComponent(modalService, userService, fileService, parent) {
+        this.modalService = modalService;
         this.userService = userService;
         this.fileService = fileService;
         this.parent = parent;
@@ -58,7 +61,31 @@ var FilesComponent = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(FilesComponent.prototype, "target", {
+        get: function () {
+            return this._target;
+        },
+        set: function (value) {
+            this._target = value;
+            this._target['newName'] = value.name.replace(/.mm$/, '');
+            this._target['newEditors'] = value.editors;
+            this._target['newViewers'] = value.viewers;
+            this._target['newIsPublic'] = value.isPublic;
+            this._target['newIsShareable'] = value.isShareable;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    FilesComponent.prototype.open = function (dialog) {
+        this.target = new File_1.default(null, 'New file.mm', null, [], [], true, true, [], []);
+        this.modalService.open(dialog, { size: 'lg' }).result.then(function (result) {
+        }, function (reason) {
+        });
+    };
     FilesComponent.prototype.ngOnInit = function () {
+        this.refreshFiles();
+    };
+    FilesComponent.prototype.refreshFiles = function () {
         var _this = this;
         this.fileService.list().then(function (files) {
             _this._loadingFiles = false;
@@ -66,7 +93,7 @@ var FilesComponent = (function () {
         }, function (error) { return _this.parent.errorMsg = error; });
         this.fileService.listShared().then(function (files) {
             _this._loadingSharedFiles = false;
-            return _this._files = files;
+            return _this._sharedFiles = files;
         }, function (error) { return _this.parent.errorMsg = error; });
     };
     return FilesComponent;
@@ -76,8 +103,8 @@ FilesComponent = __decorate([
         providers: [UserService_1.UserService, FileService_1.FileService],
         templateUrl: "/app/files/files.html"
     }),
-    __param(2, core_1.Host()),
-    __metadata("design:paramtypes", [UserService_1.UserService, FileService_1.FileService, TemplateComponent_1.TemplateComponent])
+    __param(3, core_1.Host()),
+    __metadata("design:paramtypes", [ng_bootstrap_1.NgbModal, UserService_1.UserService, FileService_1.FileService, TemplateComponent_1.TemplateComponent])
 ], FilesComponent);
 exports.FilesComponent = FilesComponent;
 /**

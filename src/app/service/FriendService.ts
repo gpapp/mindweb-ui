@@ -1,4 +1,4 @@
-import Friend from "../classes/Friend";
+import Friend from "mindweb-request-classes/dist/classes/Friend";
 import {Http, Headers} from "@angular/http";
 import {UserService} from "./UserService";
 import {Injectable} from "@angular/core";

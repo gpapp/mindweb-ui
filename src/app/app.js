@@ -24,9 +24,11 @@ var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
 var material_1 = require("@angular/material");
 var angular2_fontawesome_1 = require("angular2-fontawesome/angular2-fontawesome");
 var FileDisplayComponent_1 = require("./files/FileDisplayComponent");
+var AuthGuard_1 = require("./layout/AuthGuard");
+var UploadComponent_1 = require("./files/UploadComponent");
 var appRoutes = [
     { path: '', component: HomeComponent_1.HomeComponent },
-    { path: 'files', component: FilesComponent_1.FilesComponent },
+    { path: 'files', component: FilesComponent_1.FilesComponent, canActivate: [AuthGuard_1.AuthGuard] },
     { path: 'about', component: AboutComponent_1.AboutComponent },
     { path: '**', component: not_found_component_1.PageNotFoundComponent }
 ];
@@ -49,13 +51,14 @@ AppModule = __decorate([
             ng_bootstrap_1.NgbModule.forRoot(),
             angular2_fontawesome_1.Angular2FontawesomeModule
         ],
-        providers: [UserService_1.UserService],
+        providers: [UserService_1.UserService, AuthGuard_1.AuthGuard],
         declarations: [not_found_component_1.PageNotFoundComponent,
             TemplateComponent_1.TemplateComponent,
             FilesComponent_1.FilesComponent,
             FileDisplayComponent_1.FileDisplayComponent,
             HomeComponent_1.HomeComponent,
-            AboutComponent_1.AboutComponent],
+            AboutComponent_1.AboutComponent,
+            UploadComponent_1.UploadComponent],
         bootstrap: [TemplateComponent_1.TemplateComponent]
     }),
     __metadata("design:paramtypes", [UserService_1.UserService])

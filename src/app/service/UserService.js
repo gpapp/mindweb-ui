@@ -21,17 +21,38 @@ var UserService = UserService_1 = (function () {
     function UserService(http) {
         this.http = http;
     }
+    Object.defineProperty(UserService.prototype, "currentUser", {
+        get: function () {
+            return this._currentUser;
+        },
+        enumerable: true,
+        configurable: true
+    });
     UserService.prototype.lookupPromise = function () {
-        return this.http.get(UserService_1.authURL).map(function (res) { return res.json(); }).toPromise();
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.get(UserService_1.authURL).map(function (res) { return res.json(); }).toPromise().then(function (data) {
+                _this._currentUser = data;
+                resolve(data);
+            }, function (error) { return reject(error); });
+        });
     };
     UserService.prototype.logoutPromise = function () {
-        delete this._currentUser;
-        return this.http.get(UserService_1.logoutURL).toPromise();
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.get(UserService_1.logoutURL).toPromise().then(function (data) {
+                delete _this._currentUser;
+                resolve();
+            }, function (error) {
+                delete _this._currentUser;
+                resolve(error);
+            });
+        });
     };
     return UserService;
 }());
 UserService.authURL = '/auth/authenticated';
-UserService.logoutURL = '/auth/logout';
+UserService.logoutURL = "/auth/logout";
 UserService = UserService_1 = __decorate([
     core_1.Injectable(),
     __metadata("design:paramtypes", [http_1.Http])

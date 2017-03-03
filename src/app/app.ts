@@ -13,10 +13,12 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {MaterialModule} from "@angular/material";
 import {Angular2FontawesomeModule} from "angular2-fontawesome/angular2-fontawesome";
 import {FileDisplayComponent} from "./files/FileDisplayComponent";
+import {AuthGuard} from "./layout/AuthGuard";
+import {UploadComponent} from "./files/UploadComponent";
 
 const appRoutes: Routes = [
     {path: '', component: HomeComponent},
-    {path: 'files', component: FilesComponent},
+    {path: 'files', component: FilesComponent, canActivate: [AuthGuard]},
     {path: 'about', component: AboutComponent},
     {path: '**', component: PageNotFoundComponent}
 ];
@@ -29,13 +31,15 @@ const appRoutes: Routes = [
         MaterialModule,
         NgbModule.forRoot(),
         Angular2FontawesomeModule],
-    providers: [UserService],
+    providers: [UserService, AuthGuard],
     declarations: [PageNotFoundComponent,
         TemplateComponent,
         FilesComponent,
         FileDisplayComponent,
         HomeComponent,
-        AboutComponent],
+        AboutComponent,
+        UploadComponent],
+
     bootstrap: [TemplateComponent]
 })
 export class AppModule implements OnInit {

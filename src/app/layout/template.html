@@ -26,8 +26,6 @@
 <md-sidenav-container>
     <md-sidenav #sidenav mode="side" opened="sidebarDisplay">
         <div class="scrollable">
-            <h1 class="scrollable-header app-name">MindWeb</h1>
-
             <div class="scrollable-content">
                 <div>
                     <div class="list-group">
@@ -124,39 +122,34 @@
 </md-sidenav-container>
 <template ngbModalContainer></template>
 
-<template #loginDialog class="modal" let-c="close" let-d="dismiss">
-    <div class="modal-backdrop">
-
-        <div class="modal-dialog modal-content" role="dialog">
-            <div class="modal-header">
-                <h4 class="modal-title">Login</h4>
-                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="btn-group btn-group-vertical">
-                    <a href="/auth/google" target="_self" (click)="$event.stopPropagation()"
-                       class="btn list-group-item">
-                        <i class="fa fa-2x fa-stack fa-google-plus"></i>Login with Google account
-                    </a>
-                    <a href="/auth/twitter" target="_self" (click)="$event.stopPropagation()"
-                       class="btn list-group-item">
-                        <i class="fa fa-2x fa-stack fa-twitter"></i>Login with Twitter account
-                    </a>
-                    <a href="/auth/linkedin" target="_self" (click)="$event.stopPropagation()"
-                       class="btn list-group-item">
-                        <i class="fa fa-2x fa-stack fa-linkedin"></i>Login with LinkedIn account
-                    </a>
-                    <a href="/auth/facebook" target="_self" (click)="$event.stopPropagation()"
-                       class="btn list-group-item">
-                        <i class="fa fa-2x fa-stack fa-facebook"></i>Login with Facebook account
-                    </a>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button (click)="c()" class="btn btn-default">Close</button>
-            </div>
+<template #loginDialog class="modal fade" let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Login</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="btn-group btn-group-vertical">
+            <a href="/auth/google" target="_self" (click)="$event.stopPropagation()"
+               class="btn list-group-item">
+                <i class="fa fa-2x fa-stack fa-google-plus"></i>Login with Google account
+            </a>
+            <a href="/auth/twitter" target="_self" (click)="$event.stopPropagation()"
+               class="btn list-group-item">
+                <i class="fa fa-2x fa-stack fa-twitter"></i>Login with Twitter account
+            </a>
+            <a href="/auth/linkedin" target="_self" (click)="$event.stopPropagation()"
+               class="btn list-group-item">
+                <i class="fa fa-2x fa-stack fa-linkedin"></i>Login with LinkedIn account
+            </a>
+            <a href="/auth/facebook" target="_self" (click)="$event.stopPropagation()"
+               class="btn list-group-item">
+                <i class="fa fa-2x fa-stack fa-facebook"></i>Login with Facebook account
+            </a>
         </div>
+    </div>
+    <div class="modal-footer">
+        <button (click)="d()" class="btn btn-default">Close</button>
     </div>
 </template>

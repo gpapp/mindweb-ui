@@ -54,8 +54,12 @@ var FileService = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.userService.lookupPromise().then(function () {
-                var headers = new http_1.Headers();
-                headers.append('Content-Type', 'application/x-www-form-urlencoded');
+                var options = new http_1.RequestOptions({
+                    headers: new http_1.Headers({
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json; charset=utf-8'
+                    })
+                });
                 var body = JSON.stringify({
                     name: name,
                     isShareable: isShareable,
@@ -63,9 +67,9 @@ var FileService = (function () {
                     viewers: viewers,
                     editors: editors
                 });
-                _this.http.post("/file/create", body, headers).subscribe(function (data) { return resolve(data.json()); }, function (err) {
+                _this.http.post("/file/create", body, options).subscribe(function (data) { return resolve(data.json()); }, function (err) {
                     console.error(err);
-                    reject();
+                    reject(err);
                 });
             });
         });
@@ -74,18 +78,22 @@ var FileService = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.userService.lookupPromise().then(function () {
-                var headers = new http_1.Headers();
-                headers.append('Content-Type', 'application/x-www-form-urlencoded');
+                var options = new http_1.RequestOptions({
+                    headers: new http_1.Headers({
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json; charset=utf-8'
+                    })
+                });
                 var body = JSON.stringify({
-                    name: name,
+                    fileId: fileId,
                     isShareable: isShareable,
                     isPublic: isPublic,
                     viewers: viewers,
                     editors: editors
                 });
-                _this.http.post("/file/share", body, headers).subscribe(function (data) { return resolve(data.json()); }, function (err) {
+                _this.http.post("/file/share", body, options).subscribe(function (data) { return resolve(data.json()); }, function (err) {
                     console.error(err);
-                    reject();
+                    reject(err);
                 });
             });
         });
@@ -94,17 +102,21 @@ var FileService = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.userService.lookupPromise().then(function () {
-                var headers = new http_1.Headers();
-                headers.append('Content-Type', 'application/x-www-form-urlencoded');
+                var options = new http_1.RequestOptions({
+                    headers: new http_1.Headers({
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json; charset=utf-8'
+                    })
+                });
                 var body = JSON.stringify({ newName: newName });
-                _this.http.post("/file/rename/" + id, body, headers).subscribe(function (data) { return resolve(data.json()); }, function (err) {
+                _this.http.post("/file/rename/" + id, body, options).subscribe(function (data) { return resolve(data.json()); }, function (err) {
                     console.error(err);
-                    reject();
+                    reject(err);
                 });
             });
         });
     };
-    FileService.prototype.delete = function (fileId) {
+    FileService.prototype.deleteFile = function (fileId) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.userService.lookupPromise().then(function () {
@@ -113,7 +125,7 @@ var FileService = (function () {
                     resolve(data.json());
                 }, function (err) {
                     console.error(err);
-                    reject();
+                    reject(err);
                 });
             });
         });
@@ -122,12 +134,16 @@ var FileService = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.userService.lookupPromise().then(function () {
-                var headers = new http_1.Headers();
-                headers.append('Content-Type', 'application/x-www-form-urlencoded');
+                var options = new http_1.RequestOptions({
+                    headers: new http_1.Headers({
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json; charset=utf-8'
+                    })
+                });
                 var body = JSON.stringify({ id: id, query: query });
-                _this.http.post("/file/tagQuery", body, headers).subscribe(function (data) { return resolve(data.json()); }, function (err) {
+                _this.http.post("/file/tagQuery", body, options).subscribe(function (data) { return resolve(data.json()); }, function (err) {
                     console.error(err);
-                    reject();
+                    reject(err);
                 });
             });
         });
@@ -136,12 +152,16 @@ var FileService = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.userService.lookupPromise().then(function () {
-                var headers = new http_1.Headers();
-                headers.append('Content-Type', 'application/x-www-form-urlencoded');
+                var options = new http_1.RequestOptions({
+                    headers: new http_1.Headers({
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json; charset=utf-8'
+                    })
+                });
                 var body = JSON.stringify({ id: id, tag: tag });
-                _this.http.post("/file/tag", body, headers).subscribe(function (data) { return resolve(data.json()); }, function (err) {
+                _this.http.post("/file/tag", body, options).subscribe(function (data) { return resolve(data.json()); }, function (err) {
                     console.error(err);
-                    reject();
+                    reject(err);
                 });
             });
         });
@@ -150,15 +170,15 @@ var FileService = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.userService.lookupPromise().then(function () {
-                _this.http.get('/file/convert/freeplane/' + id).subscribe(function (data) { return resolve(data); }, function (err) {
+                _this.http.get('/public/convert/freeplane/' + id).subscribe(function (data) { return resolve(data); }, function (err) {
                     console.error(err);
-                    reject();
+                    reject(err);
                 });
             });
         });
     };
     FileService.prototype.registerFile = function (file) {
-        this._openFiles.set(file.id, file);
+        this._openFiles.set(file.id.toString(), file);
     };
     FileService.prototype.unRegisterFile = function (fileId) {
         this._openFiles.delete(fileId);
@@ -185,7 +205,7 @@ exports.FileService = FileService;
  });
  },
  function () {
- deferred.reject();
+ deferred.reject(err);
  });
  return deferred.promise;
  }

@@ -1,12 +1,13 @@
 /**
  * Created by gpapp on 2017.02.20..
  */
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, TemplateRef} from "@angular/core";
 import {UserService} from "../service/UserService";
-import User from "../classes/User";
+import User from "mindweb-request-classes/dist/classes/User";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {Router} from "@angular/router";
+import {Location} from "@angular/common";
 @Component({
-    providers: [UserService],
     selector: "main-app",
     templateUrl: "/app/layout/template.html"
 })
@@ -32,15 +33,14 @@ export class TemplateComponent implements OnInit {
     }
 
     get currentUser(): User {
-        return this._currentUser;
+        return this.userService.currentUser;
     }
 
     private _infoMsg: string;
     private _errorMsg: string;
     private _loading: boolean = true;
-    private _currentUser: User;
 
-    constructor(private userService: UserService, private modalService: NgbModal) {
+    constructor(private userService: UserService, private modalService: NgbModal, private router: Router, private location: Location) {
 
     }
 
@@ -48,7 +48,6 @@ export class TemplateComponent implements OnInit {
         this.userService.lookupPromise().then(
             user => {
                 this._loading = false;
-                return this._currentUser = user
             },
             error => {
                 this._loading = false;
@@ -56,8 +55,8 @@ export class TemplateComponent implements OnInit {
             });
     }
 
-    open(content) {
-        this.modalService.open(content).result.then((result) => {
+    open(dialog: TemplateRef<any>) {
+        this.modalService.open(dialog).result.then((result) => {
         }, (reason) => {
         });
     }
@@ -67,7 +66,8 @@ export class TemplateComponent implements OnInit {
         this.userService.logoutPromise().then(
             user => {
                 this._loading = false;
-                delete  this._currentUser;
+                this.location.replaceState("/");
+                this.router.navigate(['']);
             },
             error => {
                 this._loading = false;

@@ -27,6 +27,7 @@
             '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
             // other libraries
             'rxjs': 'npm:rxjs',
+            'mindweb-request-classes': 'npm:mindweb-request-classes',
             '@ng-bootstrap/ng-bootstrap': 'node_modules/@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
             '@angular/material': 'npm:@angular/material/bundles/material.umd.js',
             'angular2-fontawesome': 'node_modules/angular2-fontawesome',
@@ -38,6 +39,9 @@
                 defaultExtension: 'js'
             },
             rxjs: {
+                defaultExtension: 'js'
+            },
+            'mindweb-request-classes': {
                 defaultExtension: 'js'
             },
             'angular2-fontawesome': {defaultExtension: 'js'}

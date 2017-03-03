@@ -15,10 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var UserService_1 = require("../service/UserService");
 var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
+var router_1 = require("@angular/router");
+var common_1 = require("@angular/common");
 var TemplateComponent = (function () {
-    function TemplateComponent(userService, modalService) {
+    function TemplateComponent(userService, modalService, router, location) {
         this.userService = userService;
         this.modalService = modalService;
+        this.router = router;
+        this.location = location;
         this._loading = true;
     }
     Object.defineProperty(TemplateComponent.prototype, "loading", {
@@ -50,7 +54,7 @@ var TemplateComponent = (function () {
     });
     Object.defineProperty(TemplateComponent.prototype, "currentUser", {
         get: function () {
-            return this._currentUser;
+            return this.userService.currentUser;
         },
         enumerable: true,
         configurable: true
@@ -59,14 +63,13 @@ var TemplateComponent = (function () {
         var _this = this;
         this.userService.lookupPromise().then(function (user) {
             _this._loading = false;
-            return _this._currentUser = user;
         }, function (error) {
             _this._loading = false;
             _this._errorMsg = error;
         });
     };
-    TemplateComponent.prototype.open = function (content) {
-        this.modalService.open(content).result.then(function (result) {
+    TemplateComponent.prototype.open = function (dialog) {
+        this.modalService.open(dialog).result.then(function (result) {
         }, function (reason) {
         });
     };
@@ -75,7 +78,8 @@ var TemplateComponent = (function () {
         this._loading = true;
         this.userService.logoutPromise().then(function (user) {
             _this._loading = false;
-            delete _this._currentUser;
+            _this.location.replaceState("/");
+            _this.router.navigate(['']);
         }, function (error) {
             _this._loading = false;
             _this._errorMsg = error;
@@ -85,11 +89,10 @@ var TemplateComponent = (function () {
 }());
 TemplateComponent = __decorate([
     core_1.Component({
-        providers: [UserService_1.UserService],
         selector: "main-app",
         templateUrl: "/app/layout/template.html"
     }),
-    __metadata("design:paramtypes", [UserService_1.UserService, ng_bootstrap_1.NgbModal])
+    __metadata("design:paramtypes", [UserService_1.UserService, ng_bootstrap_1.NgbModal, router_1.Router, common_1.Location])
 ], TemplateComponent);
 exports.TemplateComponent = TemplateComponent;
 //# sourceMappingURL=TemplateComponent.js.map
