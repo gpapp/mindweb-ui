@@ -21,10 +21,16 @@ module.exports = function (grunt) {
                 }
             },
             copy: {
-                root: {
+                default: {
                     expand: true,
                     cwd: 'src',
                     src: ['index.html', 'images/**', '**', '!**/*.ts', '!tsconfig.json', '!**/*.html', '!css'],
+                    dest: "release"
+                },
+                release: {
+                    expand: true,
+                    cwd: 'src',
+                    src: ['index.html', 'images/**', '**', '!**/*.js.map', '!**/*.ts', '!tsconfig.json', '!**/*.html', '!*.css'],
                     dest: "release"
                 }
             },
@@ -41,7 +47,7 @@ module.exports = function (grunt) {
                         collapseWhitespace: true
                     },
                     files: {
-                        "release/app/app.css": "app/app.css"
+                        "release/app/app.css": "src/app/app.css"
                     }
                 }
             },
@@ -56,7 +62,7 @@ module.exports = function (grunt) {
                     },
                     files: [{
                         expand: true,
-                        cwd: '.',
+                        cwd: 'src',
                         src: ['**/*.html', "!node_modules/**", "!release/**"],
                         dest: "release"
                     }
@@ -73,9 +79,9 @@ module.exports = function (grunt) {
                     files: [
                         {
                             expand: true,
-                            cwd: "app",
-                            src: ["**/*.js", "!node_modules/**"],
-                            dest: "release/app",
+                            cwd: "src",
+                            src: ["app/app.js"],
+                            dest: "release",
                             ext: ".js"
                         }
                     ]
@@ -84,5 +90,5 @@ module.exports = function (grunt) {
         }
     );
     grunt.registerTask("default", ["clean", "ts", "copy", "packageModules"]);
-    grunt.registerTask("release", ["clean", "ts", "copy", "packageModules", "htmlmin", "cssmin", "uglify"]);
+    grunt.registerTask("release", ["clean", "ts", "copy:release", "packageModules", "htmlmin", "cssmin"]);
 };
