@@ -1,5 +1,5 @@
-import File from "mindweb-request-classes/dist/classes/File";
-import Friend from "mindweb-request-classes/dist/classes/Friend";
+import MapContainer from "mindweb-request-classes/classes/MapContainer";
+import {Friend} from "mindweb-request-classes";
 import {Http, Headers, Response, RequestOptions} from "@angular/http";
 import {UserService} from "./UserService";
 import {Injectable} from "@angular/core";
@@ -9,20 +9,20 @@ import "rxjs/add/operator/toPromise";
  * Created by gpapp on 2015.05.15..
  */
 @Injectable()
-export class FileService {
-    private _openFiles: Map<string,File> = new Map();
+export class MapService {
+    private _openMaps: Map<string,MapContainer> = new Map();
 
     constructor(private http: Http, private userService: UserService) {
     }
 
-    get openFiles(): Map<string, File> {
-        return this._openFiles;
+    get openMaps(): Map<string, MapContainer> {
+        return this._openMaps;
     }
 
-    list(): Promise<File[]> {
+    list(): Promise<MapContainer[]> {
         return new Promise((resolve, reject) => {
             this.userService.lookupPromise().then(() => {
-                this.http.get("/file/files").map(data => data.json()).toPromise().then((files) => {
+                this.http.get("/map/maps").map(data => data.json()).toPromise().then((files) => {
                     resolve(files);
                 });
             });
@@ -30,17 +30,17 @@ export class FileService {
         });
     }
 
-    listShared(): Promise<File[]> {
+    listShared(): Promise<MapContainer[]> {
         return new Promise((resolve, reject) => {
             this.userService.lookupPromise().then(() => {
-                this.http.get("/file/sharedFiles").map(data => data.json()).toPromise().then((files) => {
+                this.http.get("/map/sharedMaps").map(data => data.json()).toPromise().then((files) => {
                     resolve(files);
                 });
             });
         });
     }
 
-    create(name: string, isShareable: boolean, isPublic: boolean, viewers: Friend[], editors: Friend[]): Promise<File> {
+    create(name: string, isShareable: boolean, isPublic: boolean, viewers: Friend[], editors: Friend[]): Promise<MapContainer> {
         return new Promise((resolve, reject) => {
             this.userService.lookupPromise().then(() => {
                 const options = new RequestOptions({
@@ -56,7 +56,7 @@ export class FileService {
                     viewers: viewers,
                     editors: editors
                 });
-                this.http.post("/file/create", body, options).subscribe(
+                this.http.post("/map/create", body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);
@@ -67,7 +67,7 @@ export class FileService {
         });
     }
 
-    share(fileId: string, isShareable: boolean, isPublic: boolean, viewers: Friend[], editors: Friend[]): Promise<File> {
+    share(fileId: string, isShareable: boolean, isPublic: boolean, viewers: Friend[], editors: Friend[]): Promise<MapContainer> {
         return new Promise((resolve, reject) => {
             this.userService.lookupPromise().then(() => {
                 const options = new RequestOptions({
@@ -83,7 +83,7 @@ export class FileService {
                     viewers: viewers,
                     editors: editors
                 });
-                this.http.post("/file/share", body, options).subscribe(
+                this.http.post("/map/share", body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);
@@ -94,7 +94,7 @@ export class FileService {
         });
     }
 
-    rename(id: string, newName: string): Promise<File> {
+    rename(id: string, newName: string): Promise<MapContainer> {
         return new Promise((resolve, reject) => {
             this.userService.lookupPromise().then(() => {
                 const options = new RequestOptions({
@@ -104,7 +104,7 @@ export class FileService {
                     })
                 });
                 const body = JSON.stringify({newName: newName});
-                this.http.post("/file/rename/" + id, body, options).subscribe(
+                this.http.post("/map/rename/" + id, body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);
@@ -115,12 +115,12 @@ export class FileService {
         });
     }
 
-    deleteFile(fileId: string): Promise<File> {
+    deleteFile(fileId: string): Promise<MapContainer> {
         return new Promise((resolve, reject) => {
                 this.userService.lookupPromise().then(() => {
-                    this.http.delete("/file/file/" + fileId).subscribe(
+                    this.http.delete("/map/map/" + fileId).subscribe(
                         data => {
-                            this.unRegisterFile(fileId);
+                            this.unRegisterMap(fileId);
                             resolve(data.json())
                         }
                         ,
@@ -134,7 +134,7 @@ export class FileService {
         );
     }
 
-    tagQuery(id: string, query: string): Promise < File > {
+    tagQuery(id: string, query: string): Promise < MapContainer > {
         return new Promise((resolve, reject) => {
             this.userService.lookupPromise().then(() => {
                 const options = new RequestOptions({
@@ -144,7 +144,7 @@ export class FileService {
                     })
                 });
                 const body = JSON.stringify({id: id, query: query});
-                this.http.post("/file/tagQuery", body, options).subscribe(
+                this.http.post("/map/tagQuery", body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);
@@ -155,7 +155,7 @@ export class FileService {
         });
     }
 
-    tag(id: string, tag: string): Promise < File > {
+    tag(id: string, tag: string): Promise < MapContainer > {
         return new Promise((resolve, reject) => {
             this.userService.lookupPromise().then(() => {
                 const options = new RequestOptions({
@@ -165,7 +165,7 @@ export class FileService {
                     })
                 });
                 const body = JSON.stringify({id: id, tag: tag});
-                this.http.post("/file/tag", body, options).subscribe(
+                this.http.post("/map/tag", body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);
@@ -190,12 +190,12 @@ export class FileService {
         });
     }
 
-    registerFile(file: File) {
-        this._openFiles.set(file.id.toString(), file);
+    registerMap(file: MapContainer) {
+        this._openMaps.set(file.id, file);
     }
 
-    unRegisterFile(fileId: string) {
-        this._openFiles.delete(fileId);
+    unRegisterMap(fileId: string) {
+        this._openMaps.delete(fileId);
     }
 
 }
@@ -205,7 +205,7 @@ export class FileService {
  var deferred = $q.defer();
  $rootScope.getCurrentUser().then(
  function () {
- $http.put('/file/change/' + id, {actions: changes}).
+ $http.put('/map/change/' + id, {actions: changes}).
  success(function (response) {
  deferred.resolve({body: response.data, length: changes.length});
  }).

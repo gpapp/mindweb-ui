@@ -18,6 +18,8 @@ h1 {
     width: 90%;
     min-height: 5%;
     position: absolute;
+    transition: opacity 0.3s 5;
+    opacity: 1;
 }
 
 .app-content-info {

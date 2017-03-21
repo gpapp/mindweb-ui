@@ -1,4 +1,4 @@
-import User from "mindweb-request-classes/dist/classes/User";
+import {User} from "mindweb-request-classes";
 import {Http} from "@angular/http";
 import {Injectable, resolveForwardRef} from "@angular/core";
 import "rxjs/add/operator/catch";

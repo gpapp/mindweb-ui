@@ -1,10 +1,10 @@
 import {Component, OnInit, OnDestroy} from "@angular/core";
 import {UserService} from "../service/UserService";
-import {FileService} from "../service/FileService";
+import {MapService} from "../service/MapService";
 
 @Component({
-    providers: [UserService, FileService],
-    templateUrl: "/app/files/files.html"
+    providers: [UserService, MapService],
+    templateUrl: "/app/maps/MapListTemplate.html"
 })
 export default class ViewComponent implements OnDestroy,OnInit {
     ngOnInit(): void {

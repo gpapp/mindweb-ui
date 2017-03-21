@@ -3,7 +3,7 @@
  */
 import {Component, OnInit, TemplateRef} from "@angular/core";
 import {UserService} from "../service/UserService";
-import User from "mindweb-request-classes/dist/classes/User";
+import {User} from "mindweb-request-classes";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {Location} from "@angular/common";
@@ -40,7 +40,10 @@ export class TemplateComponent implements OnInit {
     private _errorMsg: string;
     private _loading: boolean = true;
 
-    constructor(private userService: UserService, private modalService: NgbModal, private router: Router, private location: Location) {
+    constructor(private userService: UserService,
+                private modalService: NgbModal,
+                private router: Router,
+                private location: Location) {
 
     }
 

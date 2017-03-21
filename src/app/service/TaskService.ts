@@ -1,4 +1,4 @@
-import {FileService} from "./FileService";
+import {MapService} from "./MapService";
 import {Http} from "@angular/http";
 import {Injectable} from "@angular/core";
 
@@ -8,7 +8,7 @@ import {Injectable} from "@angular/core";
 @Injectable()
 export class TaskService {
 
-    constructor(private http: Http, private fileService: FileService) {
+    constructor(private http: Http, private fileService: MapService) {
 
     }
 

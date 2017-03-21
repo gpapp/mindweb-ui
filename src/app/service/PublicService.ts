@@ -1,5 +1,5 @@
 import {Http, Headers} from "@angular/http";
-import {FileService} from "./FileService";
+import {MapService} from "./MapService";
 import {Injectable} from "@angular/core";
 /**
  * Created by gpapp on 2015.05.15..
@@ -7,7 +7,7 @@ import {Injectable} from "@angular/core";
 @Injectable()
 export class PublicService {
 
-    constructor(private http: Http, fileService:FileService) {
+    constructor(private http: Http, fileService:MapService) {
 
     }
 

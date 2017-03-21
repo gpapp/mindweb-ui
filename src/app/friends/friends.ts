@@ -39,7 +39,7 @@ angular.module('MindWebUi.friends', [
         function reloadFriends() {
             $rootScope.$emit('$routeChangeStart');
             FriendService.list().then(function (data) {
-                    $scope.files = data;
+                    $scope.maps = data;
                     $rootScope.$emit('$routeChangeSuccess');
                 },
                 function () {

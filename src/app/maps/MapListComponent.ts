@@ -1,132 +1,143 @@
-"use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@angular/core");
-var viewer_1 = require("../viewer/viewer");
-var UserService_1 = require("../service/UserService");
-var FileService_1 = require("../service/FileService");
-var File_1 = require("mindweb-request-classes/dist/classes/File");
-var TemplateComponent_1 = require("../layout/TemplateComponent");
-var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
-var appRoutes = [
-    { path: 'file', component: viewer_1.default },
+import {Component, OnInit, TemplateRef} from "@angular/core";
+import {Routes} from "@angular/router";
+import ViewComponent from "../viewer/viewer";
+import {UserService} from "../service/UserService";
+import {MapService} from "../service/MapService";
+import MapContainer from "mindweb-request-classes/classes/MapContainer";
+import {TemplateComponent} from "../layout/TemplateComponent";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import OpenFileModule from "../service/OpenMapService";
+
+const appRoutes: Routes = [
+    {path: 'file', component: ViewComponent},
 ];
-var FilesComponent = (function () {
-    function FilesComponent(modalService, userService, fileService, parent) {
-        this.modalService = modalService;
-        this.userService = userService;
-        this.fileService = fileService;
-        this.parent = parent;
-        this._files = [];
-        this._loadingFiles = true;
-        this._sharedFiles = [];
-        this._loadingSharedFiles = true;
+@Component({
+    providers: [UserService, MapService],
+    templateUrl: "/app/maps/MapListTemplate.html"
+})
+export class MapListComponent implements OnInit {
+
+    get loadingFiles(): boolean {
+        return this._loadingFiles;
     }
-    Object.defineProperty(FilesComponent.prototype, "loadingFiles", {
-        get: function () {
-            return this._loadingFiles;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(FilesComponent.prototype, "files", {
-        get: function () {
-            return this._files;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(FilesComponent.prototype, "loadingSharedFiles", {
-        get: function () {
-            return this._loadingSharedFiles;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(FilesComponent.prototype, "sharedFiles", {
-        get: function () {
-            return this._sharedFiles;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(FilesComponent.prototype, "target", {
-        get: function () {
-            return this._target;
-        },
-        set: function (value) {
-            this._target = value;
-            this._target['newName'] = value.name.replace(/.mm$/, '');
-            this._target['newEditors'] = value.editors;
-            this._target['newViewers'] = value.viewers;
-            this._target['newIsPublic'] = value.isPublic;
-            this._target['newIsShareable'] = value.isShareable;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    FilesComponent.prototype.open = function (dialog) {
-        this.target = new File_1.default(null, 'New file.mm', null, [], [], true, true, [], []);
-        this.modalService.open(dialog, { size: 'lg' }).result.then(function (result) {
-        }, function (reason) {
+
+    get files(): MapContainer[] {
+        return this._files;
+    }
+
+    get loadingSharedFiles(): boolean {
+        return this._loadingSharedFiles;
+    }
+
+    get sharedFiles(): MapContainer[] {
+        return this._sharedFiles;
+    }
+
+    get target(): MapContainer {
+        return this._target;
+    }
+
+    set target(value: MapContainer) {
+        this._target = value;
+        this._target['newName'] = value.name.replace(/.mm$/, '');
+        this._target['newEditors'] = value.editors;
+        this._target['newViewers'] = value.viewers;
+        this._target['newIsPublic'] = value.isPublic;
+        this._target['newIsShareable'] = value.isShareable;
+    }
+
+    private _files: MapContainer[] = [];
+    private _loadingFiles: boolean = true;
+    private _sharedFiles: MapContainer[] = [];
+    private _loadingSharedFiles: boolean = true;
+    private _target: MapContainer;
+
+    constructor(private modalService: NgbModal,
+                private fileService: MapService,
+                private openfileModule: OpenFileModule,
+                private root: TemplateComponent) {
+    }
+
+    open(dialog: TemplateRef<any>) {
+        let newFileName: string = 'New file.mm';
+        let counter: number = 0;
+        if (this._files) {
+            let done: boolean = false;
+            do {
+                done = true;
+                for (let i in this._files) {
+                    if (this._files[i].name === newFileName) {
+                        done = false;
+                        counter++;
+                        newFileName = 'New file (' + counter + ').mm';
+                        break;
+                    }
+                }
+            } while (!done);
+        }
+        this.target = new MapContainer(null, newFileName, null, [], [], true, true, [], []);
+        this.modalService.open(dialog, {size: 'lg'}).result.then((result: File) => {
+            for (let i in this._files) {
+                if (this._files[i].name === result['newName'] + '.mm') {
+                    this.root.errorMsg = "File name '" + newFileName + "' already exists";
+                    return;
+                }
+            }
+            this.fileService.create(result['newName'],
+                result['newIsShareable'],
+                result['newIsPublic'],
+                null, null).then(() => {
+                this.refreshFiles();
+            }).catch((error) => {
+                this.root.errorMsg = error;
+            });
+        }, (reason) => {
         });
-    };
-    FilesComponent.prototype.ngOnInit = function () {
+    }
+
+    ngOnInit(): void {
         this.refreshFiles();
-    };
-    FilesComponent.prototype.refreshFiles = function () {
-        var _this = this;
-        this.fileService.list().then(function (files) {
-            _this._loadingFiles = false;
-            return _this._files = files;
-        }, function (error) { return _this.parent.errorMsg = error; });
-        this.fileService.listShared().then(function (files) {
-            _this._loadingSharedFiles = false;
-            return _this._sharedFiles = files;
-        }, function (error) { return _this.parent.errorMsg = error; });
-    };
-    return FilesComponent;
-}());
-FilesComponent = __decorate([
-    core_1.Component({
-        providers: [UserService_1.UserService, FileService_1.FileService],
-        templateUrl: "/app/files/files.html"
-    }),
-    __param(3, core_1.Host()),
-    __metadata("design:paramtypes", [ng_bootstrap_1.NgbModal, UserService_1.UserService, FileService_1.FileService, TemplateComponent_1.TemplateComponent])
-], FilesComponent);
-exports.FilesComponent = FilesComponent;
+    }
+
+    refreshFiles() {
+        this.fileService.list().then(
+            files => {
+                this._loadingFiles = false;
+                return this._files = files
+            },
+            error => this.root.errorMsg = error);
+        this.fileService.listShared().then(
+            files => {
+                this._loadingSharedFiles = false;
+                return this._sharedFiles = files
+            },
+            error => this.root.errorMsg = error);
+    }
+
+    openMap(map: MapContainer) {
+        this.openfileModule.openFile(map.id);
+    }
+}
 /**
  .config(['$stateProvider',
  function ($stateProvider) {
             $stateProvider
-                .state('files', {
+                .state('maps', {
                     abstract: true,
-                    url: '/files',
+                    url: '/maps',
                     template: '<section ui-view></section>',
                     data: {
                         requireLogin: true // this property will apply to all children of 'app'
                     }
                 })
-                .state('files.list', {
+                .state('maps.list', {
                     url: '',
-                    templateUrl: 'app/files/files.html',
+                    templateUrl: 'app/maps/MapListTemplate.html',
                     controller: 'fileController'
                 })
         }
  ])
- .controller('fileController', function ($rootScope, $scope, $http, $uibModal, $location, $state, Upload, FileService) {
+ .controller('fileController', function ($rootScope, $scope, $http, $uibModal, $location, $state, Upload, MapService) {
         $scope.loadingFiles = false;
         $scope.loadingSharedFiles = false;
         reloadFiles();
@@ -188,14 +199,14 @@ exports.FilesComponent = FilesComponent;
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileService.create(selectedItem.newName, selectedItem.newIsPublic).then(function (data) {
-                    $scope.files.push(data);
+                MapService.create(selectedItem.newName, selectedItem.newIsPublic).then(function (data) {
+                    $scope.maps.push(data);
                 });
             });
         };
 
         $scope.downloadFreeplane = function (target) {
-            FileService.exportFreeplane(target.id).then(
+            MapService.exportFreeplane(target.id).then(
                 function (data) {
                     var blob = new Blob([data], {type: 'application/x-freemind'});
                     saveAs(blob, target.name);
@@ -219,15 +230,15 @@ exports.FilesComponent = FilesComponent;
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileService.share(
+                MapService.share(
                     selectedItem.id,
                     selectedItem.newIsShareable,
                     selectedItem.newIsPublic,
                     selectedItem.newViewers,
                     selectedItem.newEditors).then(function (data) {
-                    for (var i = 0; i < $scope.files.length; i++) {
-                        if (data.id === $scope.files[i].id) {
-                            $scope.files[i] = data;
+                    for (var i = 0; i < $scope.maps.length; i++) {
+                        if (data.id === $scope.maps[i].id) {
+                            $scope.maps[i] = data;
                         }
                     }
                 });
@@ -246,7 +257,7 @@ exports.FilesComponent = FilesComponent;
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileService.rename(selectedItem.id, selectedItem.newName).then(function (data) {
+                MapService.rename(selectedItem.id, selectedItem.newName).then(function (data) {
                     target.name = data.name;
                 });
             });
@@ -264,18 +275,18 @@ exports.FilesComponent = FilesComponent;
             });
 
             modalInstance.result.then(function (selectedItem) {
-                FileService.remove(selectedItem.id).then(function () {
-                    $scope.files.splice($scope.files.indexOf(target), 1);
+                MapService.remove(selectedItem.id).then(function () {
+                    $scope.maps.splice($scope.maps.indexOf(target), 1);
                 });
             });
         };
 
         $scope.loadTags = function (file, query) {
-            return FileService.tagQuery(file.id, query);
+            return MapService.tagQuery(file.id, query);
         };
 
         $scope.tag = function (file, mytag) {
-            FileService.tag(file.id, mytag.text).then(function (data) {
+            MapService.tag(file.id, mytag.text).then(function (data) {
                 file = data;
             });
         };
@@ -287,7 +298,7 @@ exports.FilesComponent = FilesComponent;
         };
 
         $scope.untag = function (file, mytag) {
-            FileService.untag(file.id, mytag.text).then(function (data) {
+            MapService.untag(file.id, mytag.text).then(function (data) {
                 file = data;
             });
         };
@@ -306,15 +317,15 @@ exports.FilesComponent = FilesComponent;
                 function (data) {
                     if (!data) return;
                     $scope.loadingFiles = true;
-                    FileService.list().then(function (data) {
-                            $scope.files = data;
+                    MapService.list().then(function (data) {
+                            $scope.maps = data;
                             $scope.loadingFiles = false;
                         },
                         function (data) {
                             $rootScope.$emit("$applicationError", "Cannot load file list");
                         });
                     $scope.loadingSharedFiles = true;
-                    FileService.listShared().then(function (data) {
+                    MapService.listShared().then(function (data) {
                             $scope.sharedFiles = data;
                             $scope.loadingSharedFiles = false;
                         },
@@ -341,5 +352,4 @@ exports.FilesComponent = FilesComponent;
             $uibModalInstance.dismiss('cancel');
         };
     });
- */ 
-//# sourceMappingURL=FilesComponent.js.map
+ */

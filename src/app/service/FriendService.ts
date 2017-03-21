@@ -1,4 +1,4 @@
-import Friend from "mindweb-request-classes/dist/classes/Friend";
+import {Friend} from "mindweb-request-classes";
 import {Http, Headers} from "@angular/http";
 import {UserService} from "./UserService";
 import {Injectable} from "@angular/core";
@@ -27,7 +27,7 @@ export class FriendService {
                 this.userService.lookupPromise().then(() => {
                     this.http.get("/friend/get/" + id).subscribe(
                         data => {
-                            //todo: Close files in rootscope
+                            //todo: Close maps in rootscope
                             resolve(data.json())
                         }
                         ,
@@ -49,7 +49,7 @@ export class FriendService {
                     const body = JSON.stringify({alias: alias, linkedUserId: linkedUserId});
                     this.http.post("/friend/create", body, headers).subscribe(
                         data => {
-                            //todo: Close files in rootscope
+                            //todo: Close maps in rootscope
                             resolve(data.json())
                         }
                         ,

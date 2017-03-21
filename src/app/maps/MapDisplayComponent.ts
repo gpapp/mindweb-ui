@@ -1,35 +1,35 @@
 import {Component, Input, TemplateRef, ElementRef} from "@angular/core";
-import File from "mindweb-request-classes/dist/classes/File";
-import {FilesComponent} from "./FilesComponent";
+import MapContainer from "mindweb-request-classes/classes/MapContainer";
+import {MapListComponent} from "./MapListComponent";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {FileService} from "../service/FileService";
+import {MapService} from "../service/MapService";
 import {TemplateComponent} from "../layout/TemplateComponent";
 @Component({
     selector: 'file-item',
-    templateUrl: "/app/files/fileDisplay.html"
+    templateUrl: "/app/maps/MapDisplayTemplate.html"
 })
-export class FileDisplayComponent {
+export class MapDisplayComponent {
     infoPopup: boolean = false;
     hovered: boolean = false;
 
-    @Input() item: File;
+    @Input() item: MapContainer;
     @Input() deleteFileDialog: TemplateRef<ElementRef>;
     @Input() renameFileDialog: TemplateRef<ElementRef>;
     @Input() shareFileDialog: TemplateRef<ElementRef>;
 
-    constructor(private fileService: FileService,
+    constructor(private fileService: MapService,
                 private modalService: NgbModal,
                 private root: TemplateComponent,
-                private parent: FilesComponent) {
+                private parent: MapListComponent) {
     }
 
     exportFreeplane() {
         const name = this.item.name;
         this.fileService.exportFreeplane(this.item.id.toString()).then(
             function (data) {
-                var blob = new Blob([data.text()], {type: 'application/x-freemind'});
-                var url = window.URL.createObjectURL(blob, {oneTimeOnly: true});
-                var tempLink = document.createElement('a');
+                const blob = new Blob([data.text()], {type: 'application/x-freemind'});
+                const url = window.URL.createObjectURL(blob, {oneTimeOnly: true});
+                const tempLink = document.createElement('a');
                 document.body.appendChild(tempLink);
                 tempLink.href = url;
                 tempLink.setAttribute('download', name);
@@ -45,7 +45,7 @@ export class FileDisplayComponent {
     open(command: string, dialog: TemplateRef<any>) {
         this.parent.target = this.item;
         this.modalService.open(dialog, {size: 'lg'}).result.then((result) => {
-            let promise: Promise<File>;
+            let promise: Promise<MapContainer>;
             switch (command) {
                 case 'share':
                     promise = this.fileService.share(result.id,

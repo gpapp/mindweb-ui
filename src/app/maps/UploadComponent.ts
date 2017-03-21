@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {UploadService} from "../service/UploadService";
-import {FilesComponent} from "./FilesComponent";
+import {MapListComponent} from "./MapListComponent";
 
 @Component({
     selector: 'file-upload',
@@ -12,7 +12,7 @@ import {FilesComponent} from "./FilesComponent";
     providers: [UploadService]
 })
 export class UploadComponent {
-    constructor(private service: UploadService, private parent: FilesComponent) {
+    constructor(private service: UploadService, private parent: MapListComponent) {
         this.service.progress.subscribe(
             data => {
                 console.log('progress = ' + data);
@@ -23,7 +23,7 @@ export class UploadComponent {
         console.log('onChange');
         const files: FileList = (event.srcElement as HTMLInputElement).files;
         console.log(files);
-        this.service.makeFileRequest("/file/upload", files).subscribe(() => {
+        this.service.makeFileRequest("/map/upload", files).subscribe(() => {
             console.log('sent');
             this.parent.refreshFiles();
         });

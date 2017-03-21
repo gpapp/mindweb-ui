@@ -19,7 +19,7 @@
             <span class="fileDate">Last modification:{{ item.modified}}</span>
         </div>
         <i class="fa fa-file"></i>
-        <span class="fileName" (click)="fileOpen(item)">{{item.name}}</span>
+        <span class="fileName" (click)="parent.openMap(item)">{{item.name}}</span>
     </div>
     <div class="tags">
 

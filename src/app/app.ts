@@ -6,19 +6,23 @@ import {FormsModule} from "@angular/forms";
 import {UserService} from "./service/UserService";
 import {PageNotFoundComponent} from "./not-found.component";
 import {HomeComponent} from "./layout/HomeComponent";
-import {FilesComponent} from "./files/FilesComponent";
+import {MapListComponent} from "./maps/MapListComponent";
 import {TemplateComponent} from "./layout/TemplateComponent";
 import {AboutComponent} from "./layout/AboutComponent";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {MaterialModule} from "@angular/material";
 import {Angular2FontawesomeModule} from "angular2-fontawesome/angular2-fontawesome";
-import {FileDisplayComponent} from "./files/FileDisplayComponent";
+import {MapDisplayComponent} from "./maps/MapDisplayComponent";
 import {AuthGuard} from "./layout/AuthGuard";
-import {UploadComponent} from "./files/UploadComponent";
+import {UploadComponent} from "./maps/UploadComponent";
+import OpenMapsComponent from "./maps/OpenMapsComponent";
+import OpenMapModule from "./service/OpenMapService";
+import WebsocketService from "./service/WebsocketService";
+import OpenMapService from "./service/OpenMapService";
 
 const appRoutes: Routes = [
     {path: '', component: HomeComponent},
-    {path: 'files', component: FilesComponent, canActivate: [AuthGuard]},
+    {path: 'maps', component: MapListComponent, canActivate: [AuthGuard]},
     {path: 'about', component: AboutComponent},
     {path: '**', component: PageNotFoundComponent}
 ];
@@ -31,11 +35,12 @@ const appRoutes: Routes = [
         MaterialModule,
         NgbModule.forRoot(),
         Angular2FontawesomeModule],
-    providers: [UserService, AuthGuard],
+    providers: [UserService, WebsocketService, OpenMapService, AuthGuard],
     declarations: [PageNotFoundComponent,
         TemplateComponent,
-        FilesComponent,
-        FileDisplayComponent,
+        MapListComponent,
+        OpenMapsComponent,
+        MapDisplayComponent,
         HomeComponent,
         AboutComponent,
         UploadComponent],

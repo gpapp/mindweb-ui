@@ -99,7 +99,7 @@
         function reloadFiles() {
             $scope.loadingFiles = true;
             PublicService.listPublicFilesForTags($scope.filesearch, $scope.selectedTags).then(function (data) {
-                    $scope.files = data;
+                    $scope.maps = data;
                     $scope.loadingFiles = false;
                 },
                 function (data) {

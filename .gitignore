@@ -1,8 +1,11 @@
 /release
-/app/**/*.js
+src/app/**/*.js
+src/app/**/*.js.map
 logs/*
 !.gitkeep
 node_modules/
 tmp
 .DS_Store
 .idea
+.tscache/
+
