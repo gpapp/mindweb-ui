@@ -6,6 +6,7 @@ export default class UnsubscribeRequestImpl extends UnsubscribeRequest {
 
     constructor(fileId: string) {
         super(fileId);
+        this['name']=super.constructor.name;
     }
 
     internalExecute(userId: string, websocketService: WebsocketService, next: (response: AbstractResponse) => void) {

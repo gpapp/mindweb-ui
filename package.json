@@ -41,8 +41,7 @@
     "tslint": "4.5.1",
     "http-proxy-middleware": "^0.17.4",
     "lite-server": "^2.3.0",
-    "typescript": "^2.2.1",
-    "@types/node": "^7.0.8"
+    "typescript": "^2.2.1"
   },
   "scripts": {
     "build": "tsc -p src/",

@@ -5,37 +5,40 @@ import SubscribeRequestImpl from "../../requestImpl/SubscribeRequestImpl";
 import UnsubscribeRequestImpl from "../../requestImpl/UnsubscribeRequestImpl";
 import SubscribeResponse from "mindweb-request-classes/response/SubscribeResponse";
 import UnsubscribeResponse from "mindweb-request-classes/response/UnsubscribeResponse";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {Observable} from "rxjs";
 /**
  * Created by gpapp on 2017.03.15..
  */
 @Injectable()
 export default class OpenMapService {
-
-    private _openMaps: Map<string,MapContainer> = new Map();
+    private _openMapStore: Map<string, MapContainer> = new Map();
+    private _openMaps: BehaviorSubject<MapContainer[]> = new BehaviorSubject([]);
 
     constructor(private websocketService: WebsocketService) {
     }
 
-    get openMaps(): Map<string, MapContainer> {
-        return this._openMaps;
+    get openMaps(): Observable<MapContainer[]> {
+        return this._openMaps.asObservable();
     }
 
-    openFile(fileId: string) {
-        if (this._openMaps.has(fileId))
+    openMap(fileId: string) {
+        if (this._openMapStore.has(fileId))
             return;
         this.websocketService.sendMessage(new SubscribeRequestImpl(fileId), (response: AbstractResponse) => {
             const s: SubscribeResponse = response as SubscribeResponse;
-            this._openMaps.set(s.mapContainer.id, s.mapContainer);
+            this._openMapStore.set(s.mapContainer.id, s.mapContainer);
+            this._openMaps.next(Array.from(this._openMapStore.values()));
         });
     }
 
-    closeFile(fileId: string) {
-        if (!this._openMaps.has(fileId))
+    closeMap(fileId: string) {
+        if (!this._openMapStore.has(fileId))
             return;
-        const curFile: MapContainer = this._openMaps.get(fileId);
         this.websocketService.sendMessage(new UnsubscribeRequestImpl(fileId), (response: AbstractResponse) => {
             const s: UnsubscribeResponse = response as UnsubscribeResponse;
-            this._openMaps.delete(s.mapContainer.id);
+            this._openMapStore.delete(s.mapContainer.id);
+            this._openMaps.next(Array.from(this._openMapStore.values()));
         });
 
     }

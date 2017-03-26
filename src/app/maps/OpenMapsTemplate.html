@@ -1,11 +1,9 @@
 <div class="indent">
-{{openMaps}}
-    <nav *ngFor="let item of openMaps.entries()" onClick="fileOpen(item)">
-    {{item}}
-        <span><fa name="file" size="2" fw="true"></fa>{{item.name}}</span>
+    <div *ngFor="let item of openMapService.openMaps | async">
+        <span onClick="mapOpen(item.id)"><fa name="file" size="2" fw="true"></fa>{{item.name}}</span>
         <span class="pull-right">
-                        <i class="fa fa-close " (click)="fileClose(item)"></i>
+                        <i class="fa fa-close " (click)="mapClose(item.id)"></i>
                         <i class="fa fa-chevron-right"></i>
                     </span>
-    </nav>
+    </div>
 </div>

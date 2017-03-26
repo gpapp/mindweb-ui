@@ -115,7 +115,7 @@ export class MapListComponent implements OnInit {
     }
 
     openMap(map: MapContainer) {
-        this.openfileModule.openFile(map.id);
+        this.openfileModule.openMap(map.id);
     }
 }
 /**

@@ -26,7 +26,7 @@
             '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
             '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
             // other libraries
-            'rxjs': 'npm:rxjs',
+            "rxjs":"npm:rxjs",
             '@ng-bootstrap/ng-bootstrap': 'npm:@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
             '@angular/material': 'npm:@angular/material/bundles/material.umd.js',
             'angular2-uuid': 'npm:angular2-uuid/index.js',

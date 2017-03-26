@@ -1,18 +1,25 @@
 /**
  * Created by gpapp on 2017.03.15..
  */
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
+import {MapContainer} from "mindweb-request-classes";
 import OpenMapService from "../service/OpenMapService";
 @Component({
     selector: 'open-files',
     templateUrl: '/app/maps/OpenMapsTemplate.html'
 })
 export default class OpenMapsComponent {
+
     constructor(private openMapService: OpenMapService) {
 
     }
 
-    get openMaps() {
-        return this.openMapService.openMaps;
+    mapOpen(mapId: string) {
+
     }
+
+    mapClose(mapId: string) {
+        this.openMapService.closeMap(mapId);
+    }
+
 }

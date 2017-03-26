@@ -1,13 +1,14 @@
 import {Injectable} from "@angular/core";
 import {UUID} from "angular2-uuid";
 import {MindwebService} from "mindweb-request-classes/service/MindwebService";
-import {Subject} from "rxjs/Subject";
-import {Observable} from "rxjs/Observable";
-import {Observer} from "rxjs/Observer";
 import ResponseFactory from "mindweb-request-classes/service/ResponseFactory";
 import {AbstractRequest} from "mindweb-request-classes/request/AbstractRequest";
 import {AbstractResponse} from "mindweb-request-classes/response/AbstractResponse";
 import {AbstractMessage} from "mindweb-request-classes/classes/AbstractMessage";
+import {Subject} from "rxjs/Subject";
+import {Observable} from "rxjs/Observable";
+import {Observer} from "rxjs/Observer";
+import {timeout} from "rxjs/operator/timeout";
 /**
  * Created by gpapp on 2017.03.15..
  */
@@ -37,13 +38,14 @@ export default class WebsocketService implements MindwebService {
 
                 return ws.close.bind(ws);
             });
-
-        let observer = {
+        // Send message
+        let observer: Observer<TwoWayMessage> = {
             next: (message: TwoWayMessage) => {
 
                 switch (ws.readyState) {
                     case WebSocket.CONNECTING:
-                    break;
+                        setTimeout(observer.next, 500, message);
+                        break;
                     case WebSocket.OPEN:
                         const correlationId = UUID.UUID();
                         message.data.correlationId = correlationId;
@@ -59,11 +61,12 @@ export default class WebsocketService implements MindwebService {
             complete: () => {
                 delete this.handler;
             },
-            error: () => {
+            error: (error) => {
+                console.error(error);
                 delete this.handler;
             }
         };
-
+        //Receive response
         observable.map((msg: MessageEvent) => {
             return ResponseFactory.create(msg.data)
         }).subscribe({
@@ -72,15 +75,19 @@ export default class WebsocketService implements MindwebService {
                     const response: AbstractResponse = msg as AbstractResponse;
                     if (this.registeredCallbacks.has(response.correlationId)) {
                         const fn: (response: AbstractResponse) => void = this.registeredCallbacks.get(response.correlationId);
+                        this.registeredCallbacks.delete(response.correlationId);
                         return fn(response);
                     }
                 }
             },
-            error: () => {
-
+            error: (error: any) => {
+                console.error(error);
+                ws.close();
+                delete this.handler;
             },
             complete: () => {
-
+                ws.close();
+                delete this.handler;
             }
         });
         return Subject.create(observer, observable);
