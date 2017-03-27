@@ -12,4 +12,4 @@ test_async:
   script:
    - npm install --quiet
    - npm install --quiet grunt -g
-   - npm release
+   - npm run release
