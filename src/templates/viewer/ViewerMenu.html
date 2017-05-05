@@ -1,0 +1,80 @@
+<nav>Test item</nav>
+<div class="list-group">
+    <div class="list-group-item">
+        <i class="fa fa-list"></i> Local menu
+    </div>
+    <div class="appear-down" ngClass='{"roll-down":!loading}'>
+        <div class="list-group-item">
+            <div class="">
+                <i class="fa fa-binoculars"></i> View type
+            </div>
+        </div>
+        <div class="list-group-item">
+            <div class="btn-group-justified">
+                <div class="btn btn-default" ngClass="{'btn-primary': viewType==='tree'}"
+                     (click)="setViewType('tree')">
+                    Tree
+                </div>
+                <div class="btn btn-default" ngClass="{'btn-primary': viewType==='task'}"
+                     (click)="setViewType('task')">
+                    Task
+                </div>
+                <div class="btn btn-default" ngClass="{'btn-primary': viewType==='mindmap'}"
+                     (click)="setViewType('mindmap')">
+                    Mindmap
+                </div>
+            </div>
+        </div>
+        <div ui-yield-to="viewSubmenu"></div>
+        <div class="list-group-item">
+            <button class="btn btn-default" (click)="downloadFreeplane()">
+                <i class="fa fa-fw fa-download"></i>Download
+            </button>
+        </div>
+        <div class="list-group-item" *ngIf="editable">
+            <button class="btn btn-default" (click)="parseTasks()">
+                <i class="fa fa-fw fa-tasks"></i>Parse tasks
+            </button>
+            <button class="btn btn-default" (click)="markProject(currentNode)" (hide)="isProject(currentNode)">
+                <i class="fa fa-fw fa-list" *ngIf="currentNode"></i>Mark as project
+            </button>
+            <button class="btn btn-default" (click)="markTask(currentNode)" (hide)="isTask(currentNode)">
+                <i class="fa fa-fw fa-thumb-tack" *ngIf="currentNode"></i>Mark as task
+            </button>
+            <button class="btn btn-default" (click)="markDone(currentNode,true)"
+                    (hide)="!isTask(currentNode)||isDone(currentNode)">
+                <i class="fa fa-fw fa-check" *ngIf="currentNode"></i>Mark as done
+            </button>
+            <button class="btn btn-default" (click)="markDone(currentNode,false)"
+                    (hide)="!isTask(currentNode)||!isDone(currentNode)">
+                <i class="fa fa-fw fa-check" *ngIf="currentNode"></i>Unmark as done
+            </button>
+        </div>
+    </div>
+
+    <div class="list-group-item">
+        <div class="">
+            <i class="fa fa-sort"></i>Group by
+        </div>
+    </div>
+    <div class="list-group-item">
+        <div class="btn-group-justified">
+            <div class="btn btn-default" ngClass="{'btn-primary': getTaskViewType()==='project'}"
+                 (click)="setTaskViewType('project')">
+                Project
+            </div>
+            <div class="btn btn-default" ngClass="{'btn-primary': getTaskViewType()==='responsible'}"
+                 (click)="setTaskViewType('responsible')">
+                Responsible
+            </div>
+            <div class="btn btn-default" ngClass="{'btn-primary': getTaskViewType()==='context'}"
+                 (click)="setTaskViewType('context')">
+                Context
+            </div>
+            <div class="btn btn-default" ngClass="{'btn-primary': getTaskViewType()==='timeline'}"
+                 (click)="setTaskViewType('timeline')">
+                Timeline
+            </div>
+        </div>
+    </div>
+</div>

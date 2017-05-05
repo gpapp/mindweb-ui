@@ -1,0 +1,10 @@
+<div id="viewerTable">
+    <div id="nodePane" ngClass="{'detailOpen': showDetail}">
+        <viewer-tree *ngIf="viewerService.viewType=='tree'"></viewer-tree>
+        <viewer-task *ngIf="viewerService.viewType=='task'"></viewer-task>
+        <viewer-mindmap *ngIf="viewerService.viewType=='mindmap'"></viewer-mindmap>
+    </div>
+    <div id="detailPane">
+        <viewer-detail></viewer-detail>
+    </div>
+</div>

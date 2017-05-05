@@ -1,0 +1,99 @@
+<div class="panel panel-primary">
+    <div class="panel-heading panel-title" (click)="parent.showDetail=false">
+        Hide details <span class="pull-right fa fa-close"></span>
+    </div>
+
+    <div class="panel-body" *ngIf="parent.currentNode">
+       <textarea id="contentID" class="tab-pane form-control" rows="5" [(ngModel)]="parent.currentNode.nodeMarkdown"
+                 *ngIf="editable"></textarea>
+        <markdown class="tab-pane tab-content" [data]="parent.currentNode.$nodeMarkdown" *ngIf="!editable"></markdown>
+
+        <md-tab-group>
+            <md-tab active="selectedTab=='details'" *ngIf="editable||parent.currentNode.detailMarkdown">
+                <template md-tab-label>
+                    <i class='fa fa-fw fa-info'></i>Details
+                </template>
+                <md-tab-body>
+                    <textarea id="detailsID" class="tab-pane form-control" rows="5"
+                              *ngIf="editable"
+                              [(ngModel)]="parent.currentNode.detailMarkdown"></textarea>
+                    <markdown class="tab-pane tab-content" [data]="parent.currentNode.detailMarkdown"
+                              *ngIf="!editable"></markdown>
+                </md-tab-body>
+            </md-tab>
+            <md-tab active="selectedTab=='notes'" *ngIf="editable||parent.currentNode.noteMarkdown">
+                <template md-tab-label>
+                    Notes
+                </template>
+                <md-tab-body>
+                    <textarea id="notesID" class="tab-pane form-control" rows="5"
+                              *ngIf="editable"
+                              [(ngModel)]="parent.currentNode.noteMarkdown"></textarea>
+                    <markdown class="tab-pane tab-content" [data]="parent.currentNode.noteMarkdown"
+                              *ngIf="!editable"></markdown>
+                </md-tab-body>
+            </md-tab>
+            <md-tab active="selectedTab=='icons'" *ngIf="editable||currentNode.icon">
+                <template md-tab-label>
+                    <i class='fa fa-stack fa-picture-o'></i>Icons
+                </template>
+                <md-tab-body>
+                    <div class="panel">
+                        <div id='detail-icon' class="panel-body ">
+                            <div class="icon"
+                                 *ngFor="let attr of parent.currentNode.icon; let index = index; let first=first;let last=last"
+                                 (mouseover)="iconEditor=true"
+                                 (mouseleave)="iconEditor=false">
+                                <div ui-state="iconEditor">
+                                    <img class=" mw-detail-icon" src="/images/icons/{{attr.$['BUILTIN']}}.png"/>
+                                    <span *ngIf="editable">
+                                <i class="fa fa-trash" ngClass="{hidden: !iconEditor}"
+                                   (click)="deleteIcon(index)"></i>
+                                <i class="fa fa-arrow-left" ngClass="{hidden: !iconEditor||first}"
+                                   (click)="moveIcon(index,'left')"></i>
+                                <i class="fa fa-arrow-right" ngClass="{hidden: !iconEditor||last}"
+                                   (click)="moveIcon(index,'right')"></i>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer" *ngIf="editable">
+                            <i class="fa fa-2x fa-plus-circle pull-right" ui-turn-on="iconDialog"></i>
+                        </div>
+                    </div>
+                </md-tab-body>
+            </md-tab>
+            <md-tab active="selectedTab=='properties'" *ngIf="editable||parent.currentNode.attribute">
+                <template md-tab-label>
+                    <i class='fa fa-fw fa-table'></i>Properties
+                </template>
+                <md-tab-body>
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let attr of parent.currentNode.attribute">
+                            <td><input [(ngModel)]="attr.$['NAME']"></td>
+                            <td><input [(ngModel)]="attr.$['VALUE']"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-tab-body>
+            </md-tab>
+        </md-tab-group>
+        <div class="debug">
+            <div class="list-item" *ngFor="let msg of msgStac">
+                <pre>{{msg.event}} {{msg.parent}} {{msg.payload}}</pre>
+            </div>
+            <div class="btn" (click)="performSave()">Save</div>
+        </div>
+    </div>
+    <div *ngIf="!parent.currentNode">
+        <i class="fa fa-spin fa-spinner"></i>Loading
+    </div>
+</div>

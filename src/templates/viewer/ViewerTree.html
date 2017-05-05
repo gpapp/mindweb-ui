@@ -1,0 +1,48 @@
+<div class="panel">
+    <div class="panel-body">
+        <div class="list-group">
+            <tree-root [nodes]="treeModel|async">
+                <template #treeNodeTemplate let-curnode="node.data.data" let-index="index">
+                    <div class="list-group-item nodeList" ng-class="{active : currentNode===node}">
+                        <div class="list-group-item-heading">
+                            <div class="handle">
+                                <i class="fa fa-bars"></i>
+                            </div>
+                            <div class="icons">
+                                <div class="icon-block">
+                                <span *ngFor="let attr of curnode.icon">
+                                    <img class="icon-block" src="/images/icons/{{attr.$['BUILTIN']}}.png"/>
+                                </span>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <markdown (click)="selectNode(curnode)"
+                                          [data]="curnode.nodeMarkdown||''"></markdown>
+                                <a *ngIf="curnode.$['LINK']" title="{{curnode.$['LINK']}}"
+                                   (click)="jumptoLink(curnode.$['LINK'])">
+                                    <img src="/images/{{curnode.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
+                                </a>
+
+                            </div>
+                        </div>
+                        <div class="list-group-item-text detail" *ngIf="curnode.detailMarkdown">
+                            <i class="fa pull-left"
+                               (class)="{'fa-chevron-down':curnode.detailOpen, 'fa-chevron-right':!curnode.detailOpen}"
+                               (click)="detailToggleOpen(curnode)"></i>
+                            <div ngClass="{collapsed: !curnode.detailOpen}">
+                                <markdown (click)="selectNode(curnode)"
+                                          [data]="curnode.detailMarkdown"></markdown>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </tree-root>
+        </div>
+    </div>
+    <div class="panel-body"
+         ng-swipe-left='Ui.turnOn("detailPanel")'
+         ng-swipe-right='Ui.turnOff("detailPanel")'
+         *ngIf="!viewerService.currentMapVersion|async">
+        <i class="fa fa-2x fa-spinner fa-spin"></i> Loading file
+    </div>
+</div>
