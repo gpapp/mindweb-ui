@@ -3,7 +3,8 @@
 */
 @media (max-width: 767px) {
     #viewerTable {
-        display: block;
+        display: flex;
+        flex-direction: column;
         width: 100%;
         height: 100%;
         overflow: auto;
@@ -13,26 +14,46 @@
     #viewerTable #nodePane, #viewerTable #detailPane {
         width: 100%;
         display: block;
+        overflow: auto;
+        flex-grow: 1;
+    }
+
+    #viewerTable #detailPane {
+        max-height: 50%;
+        flex-shrink: 0;
     }
 
     #viewerTable #nodePane.detailOpen {
         display: none;
     }
+
+    #viewerTable #detailFab {
+        position: absolute;
+        bottom: 60px;
+        right: 0;
+    }
 }
 
 @media (min-width: 768px) {
     #viewerTable {
-        display: table;
+        display: flex;
+        flex-direction: row;
         width: 100%;
-        min-height: 100%;
+        height: 100%;
+        overflow: auto;
+        position: absolute;
     }
 
     #viewerTable #nodePane, #viewerTable #detailPane {
-        display: table-cell;
-        vertical-align: top;
-        width: 50%;
-        min-height: 100%;
-        position: relative;
+        height: 100%;
+        display: block;
+        overflow: auto;
+        flex-grow: 1;
+    }
+
+    #viewerTable #detailPane {
+        max-width: 50%;
+        flex-shrink: 0;
     }
 
     #viewerTable #nodePane.panel, #viewerTable #detailPane.panel {
@@ -43,25 +64,10 @@
         min-width: 100%;
     }
 
-    #viewerTable #nodePane {
+    #viewerTable #detailFab {
         position: absolute;
-        top: 0;
-        left: 0;
-        overflow: auto;
-        height: 100%;
-        width: 100%;
-    }
-
-    #viewerTable #nodePane.detailOpen {
-        width: 50%;
-    }
-
-    #viewerTable #detailPane {
-        position: absolute;
-        top: 0;
+        top: 0px;
         right: 0;
-        overflow: auto;
-        height: 100%;
     }
 }
 
@@ -73,7 +79,7 @@
 }
 
 markdown {
-    display: inline-block;
+    /* display: inline-block; */
 }
 
 markdown.tab-content {
@@ -82,6 +88,10 @@ markdown.tab-content {
     max-height: 50vh;
     overflow: auto;
     display: block;
+}
+
+.node-content-wrapper {
+    width: 100%;
 }
 
 .nodeList {
@@ -94,6 +104,10 @@ markdown.tab-content {
     width: 100%;
     overflow: auto;
     flex-wrap: nowrap;
+}
+
+.list-group-item-text.detail {
+    width: 100%;
 }
 
 .nodeList .item {
@@ -109,7 +123,7 @@ markdown.tab-content {
 }
 
 .nodeList .handle {
-    padding-right:5px;
+    padding-right: 5px;
 }
 
 .nodeList .chevron {
@@ -122,6 +136,7 @@ markdown.tab-content {
 .nodeList .chevron .icon-block {
     display: flex;
 }
+
 .nodeList .chevron .icon-block {
     position: initial;
     bottom: 20px;
@@ -131,37 +146,37 @@ markdown.tab-content {
 .nodeList .chevron span[name='editorIcons'] {
     display: flex;
     position: absolute;
-    border-radius:5px;
-    color:black;
-    padding:2px;
+    border-radius: 5px;
+    color: black;
+    padding: 2px;
     right: 40px;
     z-index: 20;
     opacity: 0;
-    font-size:100%;
+    font-size: 100%;
     transform: translateY(15px) translateX(32px);
     transition: opacity 1s 0s, transform .5s 0s, font-size .5s 0s;
 }
 
 .nodeList:hover .chevron span[name='editorIcons'] {
     opacity: 1.0;
-    font-size:150%;
+    font-size: 150%;
     transition: opacity 1s 0s, transform .5s 0s;
     transform: translateY(0px) translateX(0px);
 }
 
 .nodeList.active:hover .chevron span[name='editorIcons'] {
     opacity: 1;
-    font-size:150%;
+    font-size: 150%;
     transform: translateY(0px) translateX(0px);
     transition: opacity 1s 0s, transform .5s 0s, font-size .5s 0s;
 }
 
 .nodeList.active .chevron span[name='editorIcons'] {
-    color:white;
-    background-color: rgba(255,255,255,.1);
+    color: white;
+    background-color: rgba(255, 255, 255, .1);
     transition: background-color 1s 2s, font-size 1s 2s, transform 1s 2s, opacity 1s 2s;
     opacity: .5;
-    font-size:100%;
+    font-size: 100%;
     transform: translateY(15px) translateX(32px);
 }
 
@@ -172,12 +187,11 @@ markdown.tab-content {
     padding: 2px;
 }
 
-
 .nodeList .detail markdown {
     display: block;
     transition: max-height 1s 0s, font-size 1s 0s, opacity 1s 0s;
-    max-height:300px;
-    overflow:auto;
+    max-height: 300px;
+    overflow: auto;
     background-color: ghostwhite;
     color: black;
     border: 1px solid black;
@@ -185,20 +199,28 @@ markdown.tab-content {
 }
 
 .nodeList .detail .collapsed markdown {
-    transition: max-height 1s 0s,font-size 1s 0s, opacity 1s 0s;
-    font-size:50%;
-    overflow:hidden;
-    max-height:0;
+    transition: max-height 1s 0s, font-size 1s 0s, opacity 1s 0s;
+    font-size: 50%;
+    overflow: hidden;
+    max-height: 0;
     opacity: .2;
 }
 
-
 /* Detail styles */
-#detail-icon .icon {
+#detailPaneContent .mat-list-item-content {
+    height: inherit;
+}
+
+#detail-icon .icon-block {
     display: inline-flex;
+    flex-direction: column;
     padding-left: 20px;
-    width: 70px;
-    height: 60px;
+
+}
+
+#detail-icon .icon {
+    display: flex;
+    flex-direction: column;
 }
 
 .mw-detail-icon {
@@ -217,7 +239,7 @@ markdown.tab-content {
 }
 
 #iconSelectList .iconSelectCell.selected {
-    border:1px solid black;
+    border: 1px solid black;
     padding: 9px;
 }
 

@@ -6,7 +6,7 @@ import {MapService} from "../service/MapService";
 import {TemplateComponent} from "../layout/TemplateComponent";
 @Component({
     selector: 'file-item',
-    templateUrl: "/app/maps/MapDisplayTemplate.html"
+    templateUrl: "../../templates/maps/MapDisplay.html"
 })
 export class MapDisplayComponent {
     infoPopup: boolean = false;

@@ -10,12 +10,12 @@
             <div class="panel-group">
                 <ngb-accordion [closeOthers]="true" activeIds="1">
                     <ngb-panel id="1">
-                        <template ngbPanelTitle>
+                        <ng-template ngbPanelTitle>
                             <h4 class="panel-title">
                                 Recent files
                             </h4>
-                        </template>
-                        <template ngbPanelContent>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
                             <div class="panel-body">
                                 <div class="list-group file-list">
                                     <div class="list-group-item file-list-item"
@@ -27,10 +27,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </template>
+                        </ng-template>
                     </ngb-panel>
                     <ngb-panel id="2">
-                        <template ngbPanelTitle>
+                        <ng-template ngbPanelTitle>
                             <h4 class="panel-title">
                                 All files
                                 <span *ngIf="loadingFiles">
@@ -40,8 +40,8 @@
                               ({{files.length}})
                             </span>
                             </h4>
-                        </template>
-                        <template ngbPanelContent>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
                             <div class="panel-body">
                                 <div class="list-group file-list">
                                     <div class="list-group-item file-list-item"
@@ -53,11 +53,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </template>
+                        </ng-template>
                     </ngb-panel>
 
                     <ngb-panel id="3">
-                        <template ngbPanelTitle>
+                        <ng-template ngbPanelTitle>
                             <h4 class="panel-title">
                                 Shared with me
                                 <span *ngIf="loadingSharedFiles">
@@ -68,8 +68,8 @@
                             </span>
 
                             </h4>
-                        </template>
-                        <template ngbPanelContent>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
                             <div class="panel-body">
                                 <div class="list-group file-list">
                                     <div class="list-group-item file-list-item"
@@ -81,7 +81,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </template>
+                        </ng-template>
                     </ngb-panel>
 
                 </ngb-accordion>

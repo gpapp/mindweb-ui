@@ -3,44 +3,31 @@
 <head>
     <meta charset="utf-8"/>
     <title>MindWeb</title>
-    <base href="/#/">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="google-site-verification" content="Q1dwM27Je8Ba4rLMgwH-YRTg-OmyD7iqg7XYFeJxAPE"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="yes"/>
-    <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon"/>
-
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="node_modules/@angular/material/core/theming/prebuilt/indigo-pink.css">
+    <% if (webpackConfig.htmlElements.headTags) { %>
+    <!-- Configured Head Tags  -->
+    <%= webpackConfig.htmlElements.headTags %>
+    <% } %>
+    <link rel="shortcut icon" href="/assets/images/favicon.png" type="image/x-icon"/>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="app/app.css">
-    <!-- 1. Load libraries -->
-    <!-- IE required polyfill -->
-    <script src="node_modules/core-js/client/shim.min.js"></script>
-
-    <script src="node_modules/zone.js/dist/zone.min.js"></script>
-    <script src="node_modules/systemjs/dist/system.src.js"></script>
-    <script src="node_modules/hammerjs/hammer.js"></script>
-    <script src="systemjs.config.js"></script>
-
-    <script src="node_modules/rxjs/bundles/Rx.js"></script>
-    <script src="node_modules/@angular/core/bundles/core.umd.js"></script>
-    <script src="node_modules/@angular/common/bundles/common.umd.js"></script>
-    <script src="node_modules/@angular/compiler/bundles/compiler.umd.js"></script>
-    <script src="node_modules/@angular/platform-browser/bundles/platform-browser.umd.js"></script>
-
-    <!-- 2. Load our 'modules' -->
-    <script>
-        System.import("main.js").catch(function (err) {
-            console.error(err);
-        });
-    </script>
+    <link rel="stylesheet" href="assets/app.css">
+    <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
+      <%= htmlWebpackPlugin.files.webpackManifest %>
 </head>
 <body>
-<main-app/>
+<main-app>
+    <h1><i class="fa fa-2x fa-spinner fa-spin"></i> Loading...</h1>
+</main-app>
+<% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
+<!-- Webpack Dev Server reload -->
+<script src="/webpack-dev-server.js"></script>
+<% } %>
+
 </body>
 </html>

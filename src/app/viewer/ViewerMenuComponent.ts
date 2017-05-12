@@ -4,7 +4,7 @@ import {Component} from "@angular/core";
  */
 @Component({
     selector: "viewer-menu",
-    templateUrl: "/templates/viewer/ViewerMenu.html"
+    templateUrl: "../../templates/viewer/ViewerMenu.html"
 })
 export default class ViewerMenuComponent {
 }

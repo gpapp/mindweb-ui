@@ -4,6 +4,7 @@ import {Injectable, resolveForwardRef} from "@angular/core";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/toPromise";
+import OpenMapService from "./OpenMapService";
 
 /**
  * Created by gpapp on 2015.05.15..
@@ -19,7 +20,8 @@ export class UserService {
 
     private _currentUser: User;
 
-    constructor(private http: Http) {
+    constructor(private http: Http,
+                private openMapService:OpenMapService) {
     }
 
     lookupPromise(): Promise<User> {
@@ -34,6 +36,7 @@ export class UserService {
 
     logoutPromise(): Promise<null> {
         return new Promise<null>((resolve, reject) => {
+            this.openMapService.closeAll();
             this.http.get(UserService.logoutURL).toPromise().then(
                 data => {
                     delete this._currentUser;

@@ -1,9 +1,17 @@
 <div class="panel">
     <div class="panel-body">
         <div class="list-group">
-            <tree-root [nodes]="treeModel|async">
-                <template #treeNodeTemplate let-curnode="node.data.data" let-index="index">
-                    <div class="list-group-item nodeList" ng-class="{active : currentNode===node}">
+            <tree-root #tree
+                       [nodes]="treeModel"
+                       [options]='treeOptions'
+                       (onEvent)="onTreeEvent($event)"
+            >
+                <template #loadingTemplate>
+                    <i class="fa fa-2x fa-spinner fa-spin"></i> Loading file, please wait...
+                </template>
+                <template #treeNodeTemplate let-curnode="node.data" let-index="index">
+                    {{curnode.open}}
+                    <div class="list-group-item nodeList">
                         <div class="list-group-item-heading">
                             <div class="handle">
                                 <i class="fa fa-bars"></i>
@@ -11,38 +19,52 @@
                             <div class="icons">
                                 <div class="icon-block">
                                 <span *ngFor="let attr of curnode.icon">
-                                    <img class="icon-block" src="/images/icons/{{attr.$['BUILTIN']}}.png"/>
+                                    <img class="icon-block" src="assets/icons/{{attr.$['BUILTIN']}}.png"/>
+                                </span>
+                                    <span *ngIf="curnode.$['LINK']">
+                                    <a title="{{curnode.$['LINK']}}"
+                                       (click)="jumptoLink(curnode.$['LINK'])">
+                                <img src="/images/{{curnode.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
+                                    </a>
                                 </span>
                                 </div>
                             </div>
                             <div class="item">
-                                <markdown (click)="selectNode(curnode)"
-                                          [data]="curnode.nodeMarkdown||''"></markdown>
-                                <a *ngIf="curnode.$['LINK']" title="{{curnode.$['LINK']}}"
-                                   (click)="jumptoLink(curnode.$['LINK'])">
-                                    <img src="/images/{{curnode.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
-                                </a>
-
+                                <markdown
+                                        [data]="curnode.nodeMarkdown||''"></markdown>
+                            </div>
+                            <div class="chevron">
+                                <div class="icon-block">
+                                    <span name="editorIcons">
+                                        <i class="fa fa-fw fa-folder-o" tooltip="Add sibling"
+                                           (click)="addNode(curnode.$parent)"></i>
+                                        <i class="fa fa-fw fa-plus-circle" tooltip="Add child"
+                                           (click)="addNode(curnode)"></i>
+                                        <i class="fa fa-fw fa-trash" tooltip="Delete node"
+                                           (click)="deleteNode(curnode)"></i>
+                                    </span>
+                                    <img *ngIf="curnode.attribute" src="/assets/images/AttributesView.png"
+                                         (click)="openDetails(curnode,'properties')"/>
+                                    <img *ngIf="curnode.noteMarkdown" src="/assets/images/knotes.png"
+                                         (click)="openDetails(curnode,'notes')"/>
+                                    <i class="fa"
+                                       (ngClass)="{'fa-chevron-down': node.open, 'fa-chevron-right': !curnode.open}"
+                                       (click)="nodeToggleOpen(curnode)" ng-if="curnode.node"></i>
+                                </div>
                             </div>
                         </div>
                         <div class="list-group-item-text detail" *ngIf="curnode.detailMarkdown">
                             <i class="fa pull-left"
-                               (class)="{'fa-chevron-down':curnode.detailOpen, 'fa-chevron-right':!curnode.detailOpen}"
+                               [ngClass]="{'fa-chevron-down':curnode.detailOpen, 'fa-chevron-right':!curnode.detailOpen}"
                                (click)="detailToggleOpen(curnode)"></i>
-                            <div ngClass="{collapsed: !curnode.detailOpen}">
-                                <markdown (click)="selectNode(curnode)"
-                                          [data]="curnode.detailMarkdown"></markdown>
+                            <div [ngClass]="{collapsed: !curnode.detailOpen}">
+                                <markdown
+                                        [data]="curnode.detailMarkdown"></markdown>
                             </div>
                         </div>
                     </div>
                 </template>
             </tree-root>
         </div>
-    </div>
-    <div class="panel-body"
-         ng-swipe-left='Ui.turnOn("detailPanel")'
-         ng-swipe-right='Ui.turnOff("detailPanel")'
-         *ngIf="!viewerService.currentMapVersion|async">
-        <i class="fa fa-2x fa-spinner fa-spin"></i> Loading file
     </div>
 </div>

@@ -1,33 +1,16 @@
 import {Component, OnInit} from "@angular/core";
 import ViewerService from "../service/ViewerService";
 import {ActivatedRoute, Params} from "@angular/router";
-import MapNode from "mindweb-request-classes/classes/MapNode";
+import EditAction, {ActionNames} from "mindweb-request-classes/classes/EditAction";
 /**
  * Created by gpapp on 2017.03.26..
  */
 @Component({
     selector: "viewer-root",
-    templateUrl: "/templates/viewer/Viewer.html"
+    templateUrl: "../../templates/viewer/Viewer.html"
 })
 export default class ViewerComponent implements OnInit {
-    private _currentNode: MapNode;
-    private _showDetail: boolean = true;
 
-    get currentNode(): MapNode {
-        return this._currentNode;
-    }
-
-    set currentNode(value: MapNode) {
-        this._currentNode = value;
-    }
-
-    get showDetail(): boolean {
-        return this._showDetail;
-    }
-
-    set showDetail(value: boolean) {
-        this._showDetail = value;
-    }
 
     constructor(private route: ActivatedRoute,
                 private viewerService: ViewerService) {
@@ -40,7 +23,6 @@ export default class ViewerComponent implements OnInit {
             }
         });
     }
-
 }
 /**
  angular.module('MindWebUi.viewer', [

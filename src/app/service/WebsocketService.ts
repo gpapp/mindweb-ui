@@ -9,10 +9,15 @@ import {Subject} from "rxjs/Subject";
 import {Observable} from "rxjs/Observable";
 import {Observer} from "rxjs/Observer";
 import {timeout} from "rxjs/operator/timeout";
+import {AbstractBroadcast} from "mindweb-request-classes/response/AbstractBroadcast";
+import {forEach} from "@angular/router/src/utils/collection";
 /**
  * Created by gpapp on 2017.03.15..
  */
 
+export interface BroadcastListener {
+    onMessage(broadcast: AbstractBroadcast): void;
+}
 interface TwoWayMessage {
     data: AbstractRequest,
     callback: (response: AbstractResponse) => void
@@ -20,11 +25,11 @@ interface TwoWayMessage {
 
 @Injectable()
 export default class WebsocketService implements MindwebService {
+    private registeredBroadcastListeners: Set<BroadcastListener> = new Set();
     private registeredCallbacks: Map<string, (response: AbstractResponse) => void> = new Map();
     private handler: Subject<TwoWayMessage>;
 
     constructor() {
-
     }
 
     private connect(url: string): Subject<TwoWayMessage> {
@@ -77,6 +82,15 @@ export default class WebsocketService implements MindwebService {
                         const fn: (response: AbstractResponse) => void = this.registeredCallbacks.get(response.correlationId);
                         this.registeredCallbacks.delete(response.correlationId);
                         return fn(response);
+                    } else {
+                        // If callback is not found try to process as a broadcast
+                        for (let bcl of this.registeredBroadcastListeners) {
+                            bcl.onMessage(msg);
+                        }
+                    }
+                } else if (msg instanceof AbstractBroadcast) {
+                    for (let bcl of this.registeredBroadcastListeners) {
+                        bcl.onMessage(msg);
                     }
                 }
             },
@@ -100,4 +114,17 @@ export default class WebsocketService implements MindwebService {
         this.handler.next({data: request, callback: callback});
     }
 
+    addBroadcastListener(listener: BroadcastListener) {
+        if (this.registeredBroadcastListeners.has(listener)) {
+            return;
+        }
+        this.registeredBroadcastListeners.add(listener);
+    }
+
+    removeBroadcastListener(listener: BroadcastListener) {
+        if (!this.registeredBroadcastListeners.has(listener)) {
+            return;
+        }
+        this.registeredBroadcastListeners.delete(listener);
+    }
 }

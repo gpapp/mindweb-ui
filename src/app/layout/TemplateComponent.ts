@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
 import {Location} from "@angular/common";
 @Component({
     selector: "main-app",
-    templateUrl: "/app/layout/template.html"
+    templateUrl: "../../templates/layout/Root.html"
 })
 export class TemplateComponent implements OnInit {
     get loading(): boolean {

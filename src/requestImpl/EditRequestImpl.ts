@@ -1,12 +1,13 @@
 import WebsocketService from "../app/service/WebsocketService";
-import {SubscribeRequest} from "mindweb-request-classes/request/SubscribeRequest";
 import {AbstractResponse} from "mindweb-request-classes/response/AbstractResponse";
+import EditAction from "mindweb-request-classes/classes/EditAction";
+import {EditRequest} from "mindweb-request-classes/request/EditRequest";
 
-export default class SubscribeRequestImpl extends SubscribeRequest {
+export default class EditRequestImpl extends EditRequest {
 
-    constructor(_fileId: string) {
-        super(_fileId);
-        this['name']=super.constructor.name;
+    constructor(_fileId: string, _action: EditAction) {
+        super(_fileId, _action);
+        this['name'] = super.constructor.name;
     }
 
     internalExecute(userId: string, websocketService: WebsocketService, next: (response: AbstractResponse) => void) {

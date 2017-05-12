@@ -199,25 +199,3 @@ export class MapService {
     }
 
 }
-/*
-
- private _save(id, changes) {
- var deferred = $q.defer();
- $rootScope.getCurrentUser().then(
- function () {
- $http.put('/map/change/' + id, {actions: changes}).
- success(function (response) {
- deferred.resolve({body: response.data, length: changes.length});
- }).
- error(function (err) {
- deferred.reject(err);
- });
- },
- function () {
- deferred.reject(err);
- });
- return deferred.promise;
- }
-
-
- };*/

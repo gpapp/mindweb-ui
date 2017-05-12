@@ -4,7 +4,7 @@ import {Component} from "@angular/core";
  */
 @Component({
     selector: "viewer-mindmap",
-    templateUrl: "/templates/viewer/ViewerMindmap.html"
+    templateUrl: "../../templates/viewer/ViewerMindmap.html"
 })
 export default class ViewerMindmapComponent{
 }

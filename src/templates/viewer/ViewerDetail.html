@@ -1,52 +1,51 @@
-<div class="panel panel-primary">
-    <div class="panel-heading panel-title" (click)="parent.showDetail=false">
-        Hide details <span class="pull-right fa fa-close"></span>
-    </div>
-
-    <div class="panel-body" *ngIf="parent.currentNode">
-       <textarea id="contentID" class="tab-pane form-control" rows="5" [(ngModel)]="parent.currentNode.nodeMarkdown"
-                 *ngIf="editable"></textarea>
-        <markdown class="tab-pane tab-content" [data]="parent.currentNode.$nodeMarkdown" *ngIf="!editable"></markdown>
-
-        <md-tab-group>
-            <md-tab active="selectedTab=='details'" *ngIf="editable||parent.currentNode.detailMarkdown">
-                <template md-tab-label>
-                    <i class='fa fa-fw fa-info'></i>Details
-                </template>
-                <md-tab-body>
-                    <textarea id="detailsID" class="tab-pane form-control" rows="5"
-                              *ngIf="editable"
-                              [(ngModel)]="parent.currentNode.detailMarkdown"></textarea>
-                    <markdown class="tab-pane tab-content" [data]="parent.currentNode.detailMarkdown"
-                              *ngIf="!editable"></markdown>
-                </md-tab-body>
-            </md-tab>
-            <md-tab active="selectedTab=='notes'" *ngIf="editable||parent.currentNode.noteMarkdown">
-                <template md-tab-label>
-                    Notes
-                </template>
-                <md-tab-body>
-                    <textarea id="notesID" class="tab-pane form-control" rows="5"
-                              *ngIf="editable"
-                              [(ngModel)]="parent.currentNode.noteMarkdown"></textarea>
-                    <markdown class="tab-pane tab-content" [data]="parent.currentNode.noteMarkdown"
-                              *ngIf="!editable"></markdown>
-                </md-tab-body>
-            </md-tab>
-            <md-tab active="selectedTab=='icons'" *ngIf="editable||currentNode.icon">
-                <template md-tab-label>
-                    <i class='fa fa-stack fa-picture-o'></i>Icons
-                </template>
-                <md-tab-body>
-                    <div class="panel">
-                        <div id='detail-icon' class="panel-body ">
-                            <div class="icon"
-                                 *ngFor="let attr of parent.currentNode.icon; let index = index; let first=first;let last=last"
-                                 (mouseover)="iconEditor=true"
-                                 (mouseleave)="iconEditor=false">
-                                <div ui-state="iconEditor">
-                                    <img class=" mw-detail-icon" src="/images/icons/{{attr.$['BUILTIN']}}.png"/>
-                                    <span *ngIf="editable">
+<div class="panel mat-active">
+    <div class="panel-body" *ngIf="showDetail&&viewerService.currentNode">
+        <md-list id="detailPaneContent">
+            <md-list-item>
+                <md-input-container md-line *ngIf="editable">
+                    <template placeholder>
+                        <i class='fa fa-fw fa-info'></i><span class="hidden-md-down">Details</span>
+                    </template>
+                    <textarea mdInput placeholder="Node name"
+                              id="nodeText" rows="5"
+                              [(ngModel)]="viewerService.currentNode.nodeMarkdown"
+                              (change)="onChange($event)"></textarea>
+                </md-input-container>
+                <markdown md-line [data]="viewerService.currentNode.$nodeMarkdown"
+                          *ngIf="!editable"></markdown>
+            </md-list-item>
+            <md-list-item>
+                <md-input-container md-line *ngIf="editable">
+                    <textarea mdInput placeholder="Details"
+                              id="detailText" rows="5"
+                              [(ngModel)]="viewerService.currentNode.detailMarkdown"
+                              (change)="onChange($event)"></textarea>
+                </md-input-container>
+                <markdown md-line [data]="viewerService.currentNode.detailMarkdown" *ngIf="!editable"></markdown>
+            </md-list-item>
+            <md-list-item *ngIf="editable||viewerService.currentNode.noteMarkdown">
+                <md-input-container md-line *ngIf="editable">
+                    <textarea mdInput placeholder="Notes"
+                              id="noteText" rows="5"
+                              [(ngModel)]="viewerService.currentNode.noteMarkdown"
+                              (change)="onChange($event)"></textarea>
+                </md-input-container>
+                <markdown md-line [data]="viewerService.currentNode.noteMarkdown"
+                          *ngIf="!editable"></markdown>
+            </md-list-item>
+            <div md-subheader>
+                <i class='fa fa-stack fa-picture-o'></i><span class="hidden-md-down">Icons</span>
+            </div>
+            <md-list-item *ngIf="editable||currentNode.icon">
+                <div md-line class="panel">
+                    <div id='detail-icon' class="panel-body ">
+                        <div class="icon-block"
+                             *ngFor="let attr of viewerService.currentNode.icon; let index = index; let first=first;let last=last"
+                             (mouseover)="iconEditor=true"
+                             (mouseleave)="iconEditor=false">
+                            <div class="icon">
+                                <img class=" mw-detail-icon" src="/assets/icons/{{attr.$['BUILTIN']}}.png"/>
+                                <span *ngIf="editable">
                                 <i class="fa fa-trash" ngClass="{hidden: !iconEditor}"
                                    (click)="deleteIcon(index)"></i>
                                 <i class="fa fa-arrow-left" ngClass="{hidden: !iconEditor||first}"
@@ -54,21 +53,19 @@
                                 <i class="fa fa-arrow-right" ngClass="{hidden: !iconEditor||last}"
                                    (click)="moveIcon(index,'right')"></i>
                                 </span>
-                                </div>
                             </div>
                         </div>
-                        <div class="panel-footer" *ngIf="editable">
-                            <i class="fa fa-2x fa-plus-circle pull-right" ui-turn-on="iconDialog"></i>
-                        </div>
                     </div>
-                </md-tab-body>
-            </md-tab>
-            <md-tab active="selectedTab=='properties'" *ngIf="editable||parent.currentNode.attribute">
-                <template md-tab-label>
-                    <i class='fa fa-fw fa-table'></i>Properties
-                </template>
-                <md-tab-body>
-
+                    <div class="panel-footer" *ngIf="editable">
+                        <i class="fa fa-2x fa-plus-circle pull-right"></i>
+                    </div>
+                </div>
+            </md-list-item>
+            <div md-subheader>
+                <i class='fa fa-fw fa-table'></i><span class="hidden-md-down">Properties</span>
+            </div>
+            <md-list-item *ngIf="editable||viewerService.currentNode.attribute">
+                <div md-line>
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -77,23 +74,20 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let attr of parent.currentNode.attribute">
+                        <tr *ngFor="let attr of viewerService.currentNode.attribute">
                             <td><input [(ngModel)]="attr.$['NAME']"></td>
                             <td><input [(ngModel)]="attr.$['VALUE']"></td>
                         </tr>
                         </tbody>
                     </table>
-                </md-tab-body>
-            </md-tab>
-        </md-tab-group>
-        <div class="debug">
-            <div class="list-item" *ngFor="let msg of msgStac">
-                <pre>{{msg.event}} {{msg.parent}} {{msg.payload}}</pre>
-            </div>
-            <div class="btn" (click)="performSave()">Save</div>
-        </div>
-    </div>
-    <div *ngIf="!parent.currentNode">
-        <i class="fa fa-spin fa-spinner"></i>Loading
+                </div>
+                <div class="panel-footer" *ngIf="editable">
+                    <i class="fa fa-2x fa-plus-circle pull-right"></i>
+                </div>
+            </md-list-item>
+        </md-list>
     </div>
 </div>
+<button id="detailFab" md-fab (click)="toggleShowDetail()">
+    <md-icon>add</md-icon>
+</button>
