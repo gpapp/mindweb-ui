@@ -23,7 +23,7 @@
                             <span class="tags">
                             <div class="tags-display">
                                 <ul class="tag-list">
-                                    <li class="tag-item" ng-repeat="tag in selectedTags">
+                                    <li class="tag-item" *ngFor="tag in selectedTags">
                                         {{tag}}
                                         <i class="fa fa-trash" (click)="removeSelected(tag)"></i>
                                     </li>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="list-group file-list">
                             <div class="list-group-item file-list-item"
-                                 ng-repeat="item in files | orderBy:'name'"
+                                 *ngFor="item in files | orderBy:'name'"
                                  ng-include="'file_item_renderer'">
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="list-group tagcloud">
-                                <span class="tagcloud-item" ng-repeat="(key,value) in publicTags">
+                                <span class="tagcloud-item" *ngFor="(key,value) in publicTags">
                                     <span class="tag" (click)="selectTag(key)">{{key}} ({{value}})</span>
                                 </span>
                         </div>
@@ -115,7 +115,7 @@
         <div class="tags">
             <div class="tags-display">
                 <ul class="tag-list">
-                    <li class="tag-item" ng-repeat="tag in item.tags">{{tag}}</li>
+                    <li class="tag-item" *ngFor="tag in item.tags">{{tag}}</li>
                 </ul>
             </div>
             <div class="actions">
@@ -149,7 +149,7 @@
                     </ngf-drop>
                 </div>
                 <div id="uploads" class="col-sm-8">
-                    <div class="file" ng-repeat="upload in uploads">
+                    <div class="file" *ngFor="upload in uploads">
                                     <span class="status">
                                         <uib-progressbar max="upload.max" value="upload.value"
                                                      type="{{upload.error?'danger':(upload.done?'success':'info')}}">
@@ -158,7 +158,7 @@
                                     </span>
                         <span class="name">{{upload.name}}</span>
                                     <span class="error label-danger" ng-bind="upload.errorMsg"
-                                          ng-if="upload.errorMsg"></span>
+                                          *ngIf="upload.errorMsg"></span>
                     </div>
                 </div>
             </div>

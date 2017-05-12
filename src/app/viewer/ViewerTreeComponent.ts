@@ -1,39 +1,50 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import ViewerService from "../service/ViewerService";
 import ViewerComponent from "./ViewerComponent";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Observable} from "rxjs";
 import MapNode from "mindweb-request-classes/classes/MapNode";
+import {ActionNames} from "mindweb-request-classes/classes/EditAction";
+import {ITreeOptions, TreeComponent} from "angular-tree-component";
+import {ITreeModel, ITreeNode} from "angular-tree-component/dist/defs/api";
 /**
  * Created by gpapp on 2017.03.26..
  */
 
-export class MyTreeNode {
+export class MyTreeNode extends MapNode {
+    get id(): string {
+        return this.$['ID'];
+    }
 
-    public id: string;
-    public name: string;
-    public isExpanded: boolean;
-    public children: MyTreeNode[] = [];
+    set id(newId: string) {
+        this.$['ID'] = newId;
+    }
 
-    constructor(public data: MapNode) {
-        this.id = data.$['ID'];
-        this.name = data.nodeMarkdown;
-        this.isExpanded = data.open;
-        this.data = data;
-        this.children = [];
-        if (data.node) {
-            for (let n of data.node) {
-                this.children.push(new MyTreeNode(n));
+    constructor(data: MapNode) {
+        super(data);
+        if (this.node) {
+            const newNodes: MyTreeNode[] = [];
+            for (let n of this.node) {
+                newNodes.push(new MyTreeNode(n));
             }
+            delete this.node;
+            this.node = newNodes;
         }
     }
 }
 @Component({
     selector: "viewer-tree",
-    templateUrl: "/templates/viewer/ViewerTree.html"
+    templateUrl: "../../templates/viewer/ViewerTree.html"
 })
 export default class ViewerTreeComponent implements OnInit {
-    private _treeModel: BehaviorSubject<MyTreeNode[]> = new BehaviorSubject([]);
+    @ViewChild(TreeComponent)
+    private tree: TreeComponent;
+
+    private _treeModel: MapNode[] = [];
+    private _treeOptions: ITreeOptions = {
+        displayField: "nodeMarkdown",
+        childrenField: "node",
+        isExpandedField: "open",
+        allowDrag: true
+    };
 
     constructor(private parent: ViewerComponent,
                 private viewerService: ViewerService) {
@@ -58,17 +69,76 @@ export default class ViewerTreeComponent implements OnInit {
                         attribute: []
                     }))];
                 }
-                this._treeModel.next(myTreeModel);
+                this._treeModel = myTreeModel;
+
             }
         );
     }
 
-    get treeModel(): Observable<MyTreeNode[]> {
-        return this._treeModel.asObservable();
+    get treeModel(): MapNode[] {
+        return this._treeModel;
     }
 
-    selectNode(node: MapNode) {
-        this.parent.currentNode = node;
+    get treeOptions(): ITreeOptions {
+        return this._treeOptions;
     }
 
+    onTreeEvent(event: any) {
+        const treeModel: ITreeModel = event.treeModel;
+        const node: ITreeNode = event.node;
+        switch (event.eventName) {
+            case 'onInitialized':
+                break;
+            case 'onUpdateData':
+                if (this.viewerService.currentNode) {
+                } else {
+                    treeModel.getVisibleRoots()[0].toggleActivated({multi: false});
+                }
+                // TODO MAKE IT RECURSIVE!
+                for (let n of this.tree.treeModel.roots) {
+                    this.checkExpanded(n, this.checkExpanded);
+                }
+                break;
+            case 'onToggleExpanded':
+                if (event.isExpanded == !node.data.open) {
+                    this.viewerService.sendEditAction(ActionNames.nodeFold, node.data.id, event.isExpanded);
+                }
+                break;
+            case 'onFocus':
+                break;
+            case 'onBlur':
+                break;
+            case 'onActivate':
+                this.viewerService.currentNode = node.data as MyTreeNode;
+                break;
+            case 'onDeactivate':
+                break;
+            default:
+                console.log(event);
+        }
+    }
+
+    private checkExpanded(n: ITreeNode, fn: any): void {
+        if (!n || !n.data) {
+            return;
+        }
+        if (typeof n.isExpanded != 'undefined') {
+            if (n.isExpanded == !n.data.open) {
+                if (!n.isExpanded) {
+                    n.expand();
+                } else {
+                    n.collapse();
+                }
+            }
+        }
+        if (n.hasChildren) {
+            for (let sn of n.children) {
+                fn(sn, fn);
+            }
+        }
+    }
+
+    detailToggleOpen(node: MyTreeNode) {
+        this.viewerService.sendEditAction(ActionNames.nodeDetailFold, node.id, !node.detailOpen);
+    }
 }

@@ -1,19 +1,19 @@
 import {Component, OnInit, TemplateRef} from "@angular/core";
-import {Routes} from "@angular/router";
-import ViewComponent from "../viewer/viewer";
+import {Routes, Router} from "@angular/router";
 import {UserService} from "../service/UserService";
 import {MapService} from "../service/MapService";
 import MapContainer from "mindweb-request-classes/classes/MapContainer";
 import {TemplateComponent} from "../layout/TemplateComponent";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import OpenFileModule from "../service/OpenMapService";
+import ViewerComponent from "../viewer/ViewerComponent";
 
 const appRoutes: Routes = [
-    {path: 'file', component: ViewComponent},
+    {path: 'map', component: ViewerComponent},
 ];
 @Component({
     providers: [UserService, MapService],
-    templateUrl: "/app/maps/MapListTemplate.html"
+    templateUrl: "../../templates/maps/MapList.html"
 })
 export class MapListComponent implements OnInit {
 
@@ -55,7 +55,8 @@ export class MapListComponent implements OnInit {
     constructor(private modalService: NgbModal,
                 private fileService: MapService,
                 private openfileModule: OpenFileModule,
-                private root: TemplateComponent) {
+                private root: TemplateComponent,
+                private router: Router) {
     }
 
     open(dialog: TemplateRef<any>) {
@@ -75,7 +76,8 @@ export class MapListComponent implements OnInit {
                 }
             } while (!done);
         }
-        this.target = new MapContainer(null, newFileName, null, [], [], true, true, [], []);
+        this.target = new MapContainer();
+        this.target.name = newFileName;
         this.modalService.open(dialog, {size: 'lg'}).result.then((result: File) => {
             for (let i in this._files) {
                 if (this._files[i].name === result['newName'] + '.mm') {
@@ -113,10 +115,6 @@ export class MapListComponent implements OnInit {
             },
             error => this.root.errorMsg = error);
     }
-
-    openMap(map: MapContainer) {
-        this.openfileModule.openMap(map.id);
-    }
 }
 /**
  .config(['$stateProvider',
@@ -132,7 +130,7 @@ export class MapListComponent implements OnInit {
                 })
                 .state('maps.list', {
                     url: '',
-                    templateUrl: 'app/maps/MapListTemplate.html',
+                    templateUrl: 'app/maps/MapList.html',
                     controller: 'fileController'
                 })
         }

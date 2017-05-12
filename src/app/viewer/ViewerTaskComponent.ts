@@ -7,7 +7,7 @@ import ViewerComponent from "./ViewerComponent";
  */
 @Component({
     selector: "viewer-task",
-    templateUrl: "/templates/viewer/ViewerTask.html"
+    templateUrl: "../../templates/viewer/ViewerTask.html"
 })
 export default class ViewerTaskComponent {
     constructor(private parent: ViewerComponent,

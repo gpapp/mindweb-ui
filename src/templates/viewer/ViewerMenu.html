@@ -35,19 +35,19 @@
             <button class="btn btn-default" (click)="parseTasks()">
                 <i class="fa fa-fw fa-tasks"></i>Parse tasks
             </button>
-            <button class="btn btn-default" (click)="markProject(currentNode)" (hide)="isProject(currentNode)">
-                <i class="fa fa-fw fa-list" *ngIf="currentNode"></i>Mark as project
+            <button class="btn btn-default" (click)="markProject(currentNodePromise)" (hide)="isProject(currentNodePromise)">
+                <i class="fa fa-fw fa-list" *ngIf="currentNodePromise"></i>Mark as project
             </button>
-            <button class="btn btn-default" (click)="markTask(currentNode)" (hide)="isTask(currentNode)">
-                <i class="fa fa-fw fa-thumb-tack" *ngIf="currentNode"></i>Mark as task
+            <button class="btn btn-default" (click)="markTask(currentNodePromise)" (hide)="isTask(currentNodePromise)">
+                <i class="fa fa-fw fa-thumb-tack" *ngIf="currentNodePromise"></i>Mark as task
             </button>
-            <button class="btn btn-default" (click)="markDone(currentNode,true)"
-                    (hide)="!isTask(currentNode)||isDone(currentNode)">
-                <i class="fa fa-fw fa-check" *ngIf="currentNode"></i>Mark as done
+            <button class="btn btn-default" (click)="markDone(currentNodePromise,true)"
+                    (hide)="!isTask(currentNodePromise)||isDone(currentNodePromise)">
+                <i class="fa fa-fw fa-check" *ngIf="currentNodePromise"></i>Mark as done
             </button>
-            <button class="btn btn-default" (click)="markDone(currentNode,false)"
-                    (hide)="!isTask(currentNode)||!isDone(currentNode)">
-                <i class="fa fa-fw fa-check" *ngIf="currentNode"></i>Unmark as done
+            <button class="btn btn-default" (click)="markDone(currentNodePromise,false)"
+                    (hide)="!isTask(currentNodePromise)||!isDone(currentNodePromise)">
+                <i class="fa fa-fw fa-check" *ngIf="currentNodePromise"></i>Unmark as done
             </button>
         </div>
     </div>

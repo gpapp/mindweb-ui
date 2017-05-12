@@ -17,7 +17,10 @@ module.exports = function (grunt) {
             },
             ts: {
                 default: {
-                    tsconfig: true
+                    cwd: 'src',
+                    tsconfig: "src/tsconfig.json",
+                    dest: "release"
+
                 }
             },
             copy: {

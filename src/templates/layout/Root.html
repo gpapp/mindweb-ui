@@ -1,18 +1,18 @@
 <!-- Navbars -->
-<div class="navbar navbar-app navbar-absolute-top md-elevation-z0">
+<div class="navbar navbar-app navbar-absolute-top mat-primary md-elevation-z0">
     <md-card-title-group class="navbar-brand navbar-brand-center ">
         MindWeb
     </md-card-title-group>
     <div class="btn-group pull-left">
-        <div (click)="sidenav.toggle()" class="btn sidebar-toggle hidden-md hidden-lg" ng-animate="'slide'">
+        <div (click)="sidenav.toggle()" class="btn sidebar-toggle hidden-lg-up" ng-animate="'slide'">
             <i class="fa fa-bars"></i> Menu
         </div>
     </div>
     <div class="btn-group pull-right">
-        <div class="btn-group hidden-xs" *ngIf="currentUser!==undefined">
+        <div class="btn-group hidden-xs-down" *ngIf="currentUser!==undefined">
             <a routerLinkActive="options" class="btn btn-navbar">
                 <img class="img-avatar" src="{{currentUser.avatarUrl}}"/>
-                <span class="hidden-sm">{{currentUser.name}}</span></a>
+                <span class="hidden-sm-down">{{currentUser.name}}</span></a>
             <div class="btn btn-navbar" (click)="logout()"><i class="fa fa-2x fa-fw fa-sign-out"></i>Logout
             </div>
         </div>
