@@ -1,6 +1,6 @@
 /release
-src/app/**/*.js
-src/app/**/*.js.map
+src/**/*.js
+src/**/*.js.map
 logs/*
 !.gitkeep
 node_modules/
