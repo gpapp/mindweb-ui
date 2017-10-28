@@ -1,12 +1,11 @@
-import {NgModule} from "@angular/core";
-import {FriendService} from "../service/FriendService";
+import {NgModule} from '@angular/core';
+import {FriendService} from '../service/FriendService';
 @NgModule({
     imports: [FriendService]
 })
 export class MWUFriends{
 }
-/**
-
+/*
 angular.module('MindWebUi.friends', [
         'MindWebUi.friend.service',
         'ui.bootstrap',

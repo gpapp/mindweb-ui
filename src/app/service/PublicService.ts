@@ -1,6 +1,6 @@
-import {Http, Headers} from "@angular/http";
-import {MapService} from "./MapService";
-import {Injectable} from "@angular/core";
+import { Http, Headers, RequestOptions } from '@angular/http';
+import {MapService} from './MapService';
+import {Injectable} from '@angular/core';
 /**
  * Created by gpapp on 2015.05.15..
  */
@@ -13,7 +13,7 @@ export class PublicService {
 
     queryPublicTags(query: string): Promise< string[]> {
         return new Promise((resolve, reject) => {
-            this.http.get("/public/fileTags/" + query).subscribe(
+            this.http.get('/public/fileTags/' + query).subscribe(
                 data => resolve(data.json()),
                 err => {
                     console.error(err);
@@ -25,10 +25,10 @@ export class PublicService {
 
     listPublicFilesForTags(query: string, tags: string[]): Promise< string[]> {
         return new Promise((resolve, reject) => {
-            const headers = new Headers();
-            headers.append('Content-Type', 'application/x-www-form-urlencoded');
+            const options = new RequestOptions();
+            options.headers.append('Content-Type', 'application/x-www-form-urlencoded');
             const body = JSON.stringify({query: query, tags: tags});
-            this.http.post("/public/fileTags/", body, headers).subscribe(
+            this.http.post('/public/fileTags/', body, options).subscribe(
                 data => resolve(data.json()),
                 err => {
                     console.error(err);
@@ -41,7 +41,7 @@ export class PublicService {
     load(fileId: string): Promise< File> {
         return new Promise((resolve, reject) => {
 
-            this.http.get("/public/file/" + fileId).subscribe(
+            this.http.get('/public/file/' + fileId).subscribe(
                 data => {
                     resolve(data.json())
                 },

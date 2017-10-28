@@ -276,6 +276,8 @@ module.exports = function (options) {
                 {from: 'node_modules/bootstrap/dist/css', to: 'assets/bootstrap'},
                 {from: 'node_modules/font-awesome', to: 'assets/font-awesome'},
                 {from: 'node_modules/@angular/material/prebuilt-themes', to: 'assets/angular-material'},
+                {from: 'node_modules/angular-tree-component/dist/angular-tree-component.css', to: 'assets/angular-tree-component/angular-tree-component.css'},
+                {from: 'node_modules/hammerjs/hammer.js', to: 'assets/hammerjs/hammer.js'},
                 {from: 'src/assets', to: 'assets'},
                 {from: 'src/meta'}
             ]),

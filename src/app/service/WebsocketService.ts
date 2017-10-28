@@ -1,16 +1,15 @@
-import {Injectable} from "@angular/core";
-import {UUID} from "angular2-uuid";
-import {MindwebService} from "mindweb-request-classes/service/MindwebService";
-import ResponseFactory from "mindweb-request-classes/service/ResponseFactory";
-import {AbstractRequest} from "mindweb-request-classes/request/AbstractRequest";
-import {AbstractResponse} from "mindweb-request-classes/response/AbstractResponse";
-import {AbstractMessage} from "mindweb-request-classes/classes/AbstractMessage";
-import {Subject} from "rxjs/Subject";
-import {Observable} from "rxjs/Observable";
-import {Observer} from "rxjs/Observer";
-import {timeout} from "rxjs/operator/timeout";
-import {AbstractBroadcast} from "mindweb-request-classes/response/AbstractBroadcast";
-import {forEach} from "@angular/router/src/utils/collection";
+import { Injectable } from '@angular/core';
+import { UUID } from 'angular2-uuid';
+import { MindwebService } from 'mindweb-request-classes/service/MindwebService';
+import ResponseFactory from 'mindweb-request-classes/service/ResponseFactory';
+import { AbstractRequest } from 'mindweb-request-classes/request/AbstractRequest';
+import { AbstractResponse } from 'mindweb-request-classes/response/AbstractResponse';
+import { AbstractMessage } from 'mindweb-request-classes/classes/AbstractMessage';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { AbstractBroadcast } from 'mindweb-request-classes/response/AbstractBroadcast';
+
 /**
  * Created by gpapp on 2017.03.15..
  */
@@ -18,6 +17,7 @@ import {forEach} from "@angular/router/src/utils/collection";
 export interface BroadcastListener {
     onMessage(broadcast: AbstractBroadcast): void;
 }
+
 interface TwoWayMessage {
     data: AbstractRequest,
     callback: (response: AbstractResponse) => void
@@ -71,7 +71,7 @@ export default class WebsocketService implements MindwebService {
                 delete this.handler;
             }
         };
-        //Receive response
+        // Receive response
         observable.map((msg: MessageEvent) => {
             return ResponseFactory.create(msg.data)
         }).subscribe({
@@ -79,7 +79,8 @@ export default class WebsocketService implements MindwebService {
                 if (msg instanceof AbstractResponse) {
                     const response: AbstractResponse = msg as AbstractResponse;
                     if (this.registeredCallbacks.has(response.correlationId)) {
-                        const fn: (response: AbstractResponse) => void = this.registeredCallbacks.get(response.correlationId);
+                        const fn: (response: AbstractResponse) => void =
+                            this.registeredCallbacks.get(response.correlationId);
                         this.registeredCallbacks.delete(response.correlationId);
                         return fn(response);
                     } else {

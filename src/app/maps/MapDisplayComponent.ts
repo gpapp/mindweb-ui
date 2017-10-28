@@ -1,12 +1,13 @@
-import {Component, Input, TemplateRef, ElementRef} from "@angular/core";
-import MapContainer from "mindweb-request-classes/classes/MapContainer";
-import {MapListComponent} from "./MapListComponent";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {MapService} from "../service/MapService";
-import {TemplateComponent} from "../layout/TemplateComponent";
+import { Component, ElementRef, Input, TemplateRef } from '@angular/core';
+import MapContainer from 'mindweb-request-classes/classes/MapContainer';
+import { MapListComponent } from './MapListComponent';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MapService } from '../service/MapService';
+import { TemplateComponent } from '../layout/TemplateComponent';
+
 @Component({
     selector: 'file-item',
-    templateUrl: "../../templates/maps/MapDisplay.html"
+    templateUrl: '../../templates/maps/MapDisplay.html'
 })
 export class MapDisplayComponent {
     infoPopup: boolean = false;
@@ -37,7 +38,7 @@ export class MapDisplayComponent {
                 document.body.removeChild(tempLink);
             },
             function (error) {
-                alert("Cannot save file:" + error);
+                alert('Cannot save file:' + error);
             }
         )
     }

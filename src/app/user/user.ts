@@ -1,5 +1,5 @@
-import {NgModule} from "@angular/core";
-import {UserService} from "../service/UserService";
+import {NgModule} from '@angular/core';
+import {UserService} from '../service/UserService';
 @NgModule({
     imports: [UserService]
 })

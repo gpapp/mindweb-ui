@@ -1,6 +1,6 @@
-import {Observer} from "rxjs/Observer";
-import {Observable} from "rxjs/Observable";
-import {Injectable} from "@angular/core";
+import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class UploadService {
@@ -19,7 +19,7 @@ export class UploadService {
     constructor() {
         this._progress = Observable.create((observer: any) => {
             this._progressObserver = observer
-        }).share();
+        });
     }
 
     public makeFileRequest(url: string, files: FileList): Observable<any> {
@@ -29,7 +29,7 @@ export class UploadService {
 
 
             for (let i = 0; i < files.length; i++) {
-                formData.append("files", files[i], files[i].name);
+                formData.append('files', files[i], files[i].name);
             }
 
             xhr.onreadystatechange = () => {

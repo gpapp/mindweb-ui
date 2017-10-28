@@ -175,8 +175,10 @@ module.exports = function (options) {
                         '@angular/forms',
                         '@angular/http',
                         '@angular/material',
+                        '@angular/cdk',
                         '@angular/router',
                         '@angularclass/hmr',
+                        'angular-tree-component',
                         'bootstrap',
                         'rxjs',
                     ]

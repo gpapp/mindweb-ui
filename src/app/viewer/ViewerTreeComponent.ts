@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import ViewerService from "../service/ViewerService";
-import ViewerComponent from "./ViewerComponent";
-import MapNode from "mindweb-request-classes/classes/MapNode";
-import {ActionNames} from "mindweb-request-classes/classes/EditAction";
-import {ITreeOptions, TreeComponent} from "angular-tree-component";
-import {ITreeModel, ITreeNode} from "angular-tree-component/dist/defs/api";
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import ViewerService from '../service/ViewerService';
+import ViewerComponent from './ViewerComponent';
+import MapNode from 'mindweb-request-classes/classes/MapNode';
+import { ActionNames } from 'mindweb-request-classes/classes/EditAction';
+import { ITreeOptions, TreeComponent } from 'angular-tree-component';
+import { ITreeModel, ITreeNode } from 'angular-tree-component/dist/defs/api';
+
 /**
  * Created by gpapp on 2017.03.26..
  */
@@ -30,28 +31,41 @@ export class MyTreeNode extends MapNode {
         }
     }
 }
+
 @Component({
-    selector: "viewer-tree",
-    templateUrl: "../../templates/viewer/ViewerTree.html"
+    selector: 'viewer-tree',
+    templateUrl: '../../templates/viewer/ViewerTree.html'
 })
-export default class ViewerTreeComponent implements OnInit {
+export default class ViewerTreeComponent implements AfterViewInit {
     @ViewChild(TreeComponent)
     private tree: TreeComponent;
+    private _mapModel: MapNode[] = [];
 
-    private _treeModel: MapNode[] = [];
     private _treeOptions: ITreeOptions = {
-        displayField: "nodeMarkdown",
-        childrenField: "node",
-        isExpandedField: "open",
-        allowDrag: true
+        displayField: 'nodeMarkdown',
+        childrenField: 'node',
+        isExpandedField: 'open',
+        scrollOnSelect: true,
+        allowDrag: true,
+        useVirtualScroll: false,
     };
+
+    get mapModel(): MapNode[] {
+        return this._mapModel;
+    }
+
+    get treeOptions(): ITreeOptions {
+        return this._treeOptions;
+    }
 
     constructor(private parent: ViewerComponent,
                 private viewerService: ViewerService) {
     }
 
-    ngOnInit(): void {
-        this.viewerService.currentMapVersion.subscribe((mapContent) => {
+    public ngAfterViewInit(): void {
+
+        //Workaround using setTimeout for bug https://github.com/angular/angular/issues/17572
+        this.viewerService.currentMapVersion.subscribe((mapContent) => setTimeout(() => {
                 let myTreeModel: MyTreeNode[];
 
                 if (mapContent) {
@@ -59,31 +73,23 @@ export default class ViewerTreeComponent implements OnInit {
                 } else {
                     myTreeModel = [new MyTreeNode(new MapNode({
                         node: [],
-                        $: {ID: "0"},
+                        $: {ID: '0'},
                         open: false,
-                        icon: [{$: {NAME: "loading"}}],
-                        nodeMarkdown: "Loading...",
-                        noteMarkdown: "",
-                        detailMarkdown: "",
+                        icon: [{$: {NAME: 'loading'}}],
+                        nodeMarkdown: 'Loading...',
+                        noteMarkdown: '',
+                        detailMarkdown: '',
                         detailOpen: false,
                         attribute: []
                     }))];
                 }
-                this._treeModel = myTreeModel;
-
-            }
+                this._mapModel = myTreeModel;
+                this.tree.treeModel.update();
+            }, 0)
         );
     }
 
-    get treeModel(): MapNode[] {
-        return this._treeModel;
-    }
-
-    get treeOptions(): ITreeOptions {
-        return this._treeOptions;
-    }
-
-    onTreeEvent(event: any) {
+    public onTreeEvent(event: any) {
         const treeModel: ITreeModel = event.treeModel;
         const node: ITreeNode = event.node;
         switch (event.eventName) {
@@ -138,7 +144,7 @@ export default class ViewerTreeComponent implements OnInit {
         }
     }
 
-    detailToggleOpen(node: MyTreeNode) {
+    public detailToggleOpen(node: MyTreeNode) {
         this.viewerService.sendEditAction(ActionNames.nodeDetailFold, node.id, !node.detailOpen);
     }
 }

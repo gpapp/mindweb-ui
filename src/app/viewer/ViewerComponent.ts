@@ -1,22 +1,21 @@
-import {Component, OnInit} from "@angular/core";
-import ViewerService from "../service/ViewerService";
-import {ActivatedRoute, Params} from "@angular/router";
-import EditAction, {ActionNames} from "mindweb-request-classes/classes/EditAction";
+import { Component, OnInit } from '@angular/core';
+import ViewerService from '../service/ViewerService';
+import { ActivatedRoute, Params } from '@angular/router';
+
 /**
  * Created by gpapp on 2017.03.26..
  */
 @Component({
-    selector: "viewer-root",
-    templateUrl: "../../templates/viewer/Viewer.html"
+    selector: 'viewer-root',
+    templateUrl: '../../templates/viewer/Viewer.html'
 })
 export default class ViewerComponent implements OnInit {
-
 
     constructor(private route: ActivatedRoute,
                 private viewerService: ViewerService) {
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.route.params.subscribe((params: Params) => {
             if (params['mapId']) {
                 this.viewerService.loadMap(params['mapId']);
@@ -24,7 +23,7 @@ export default class ViewerComponent implements OnInit {
         });
     }
 }
-/**
+/*
  angular.module('MindWebUi.viewer', [
  'ui.router',
  'MindWebUi.viewer.mainController',

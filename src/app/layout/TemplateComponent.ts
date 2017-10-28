@@ -1,17 +1,22 @@
 /**
  * Created by gpapp on 2017.02.20..
  */
-import {Component, OnInit, TemplateRef} from "@angular/core";
-import {UserService} from "../service/UserService";
-import {User} from "mindweb-request-classes";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {Router} from "@angular/router";
-import {Location} from "@angular/common";
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { UserService } from '../service/UserService';
+import { User } from 'mindweb-request-classes';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+
 @Component({
-    selector: "main-app",
-    templateUrl: "../../templates/layout/Root.html"
+    selector: 'main-app',
+    templateUrl: '../../templates/layout/Root.html'
 })
 export class TemplateComponent implements OnInit {
+    private _infoMsg: string;
+    private _errorMsg: string;
+    private _loading: boolean = true;
+
     get loading(): boolean {
         return this._loading;
     }
@@ -36,10 +41,6 @@ export class TemplateComponent implements OnInit {
         return this.userService.currentUser;
     }
 
-    private _infoMsg: string;
-    private _errorMsg: string;
-    private _loading: boolean = true;
-
     constructor(private userService: UserService,
                 private modalService: NgbModal,
                 private router: Router,
@@ -47,35 +48,38 @@ export class TemplateComponent implements OnInit {
 
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.userService.lookupPromise().then(
-            user => {
+            (user) => {
                 this._loading = false;
             },
-            error => {
+            (error) => {
                 this._loading = false;
                 this._errorMsg = error;
             });
     }
 
-    open(dialog: TemplateRef<any>) {
-        this.modalService.open(dialog).result.then((result) => {
-        }, (reason) => {
-        });
+    public open(dialog: TemplateRef<any>) {
+        this.modalService.open(dialog).result.then(
+            (result) => {
+                // TODO: do what?
+            },
+            (reason) => {
+                // TODO: do what?
+            });
     }
 
-    logout() {
+    public logout() {
         this._loading = true;
         this.userService.logoutPromise().then(
-            user => {
+            (user) => {
                 this._loading = false;
-                this.location.replaceState("/");
+                this.location.replaceState('/');
                 this.router.navigate(['']);
             },
-            error => {
+            (error) => {
                 this._loading = false;
                 this._errorMsg = error;
             });
     }
-
 }

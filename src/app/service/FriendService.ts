@@ -1,7 +1,7 @@
-import {Friend} from "mindweb-request-classes";
-import {Http, Headers} from "@angular/http";
-import {UserService} from "./UserService";
-import {Injectable} from "@angular/core";
+import {Friend} from 'mindweb-request-classes';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import {UserService} from './UserService';
+import {Injectable} from '@angular/core';
 /**
  * Created by gpapp on 2015.05.15..
  */
@@ -14,7 +14,7 @@ export class FriendService {
 
     list(): Friend[] {
         this.userService.lookupPromise().then(() => {
-            this.http.get("/friend/list").subscribe(
+            this.http.get('/friend/list').subscribe(
                 data => this.friends = data.json(),
                 err => console.error(err)
             )
@@ -25,7 +25,7 @@ export class FriendService {
     load(id: string, newName: string): Promise<Friend> {
         return new Promise((resolve, reject) => {
                 this.userService.lookupPromise().then(() => {
-                    this.http.get("/friend/get/" + id).subscribe(
+                    this.http.get('/friend/get/' + id).subscribe(
                         data => {
                             //todo: Close maps in rootscope
                             resolve(data.json())
@@ -44,10 +44,10 @@ export class FriendService {
     create(alias: string, linkedUserId: string): Promise<Friend> {
         return new Promise((resolve, reject) => {
                 this.userService.lookupPromise().then(() => {
-                    const headers = new Headers();
-                    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+                    const options = new RequestOptions();
+                    options.headers.append('Content-Type', 'application/x-www-form-urlencoded');
                     const body = JSON.stringify({alias: alias, linkedUserId: linkedUserId});
-                    this.http.post("/friend/create", body, headers).subscribe(
+                    this.http.post('/friend/create', body, options).subscribe(
                         data => {
                             //todo: Close maps in rootscope
                             resolve(data.json())
@@ -64,8 +64,8 @@ export class FriendService {
     }
 
 }
-/**
 
+/*
  function _update(id, alias, tags) {
             var defer = $q.defer();
             var authURL = '/friend/update';

@@ -1,19 +1,19 @@
-import {Component, OnInit, TemplateRef} from "@angular/core";
-import {Routes, Router} from "@angular/router";
-import {UserService} from "../service/UserService";
-import {MapService} from "../service/MapService";
-import MapContainer from "mindweb-request-classes/classes/MapContainer";
-import {TemplateComponent} from "../layout/TemplateComponent";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import OpenFileModule from "../service/OpenMapService";
-import ViewerComponent from "../viewer/ViewerComponent";
+import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Routes, Router} from '@angular/router';
+import {UserService} from '../service/UserService';
+import {MapService} from '../service/MapService';
+import MapContainer from 'mindweb-request-classes/classes/MapContainer';
+import {TemplateComponent} from '../layout/TemplateComponent';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import OpenFileModule from '../service/OpenMapService';
+import ViewerComponent from '../viewer/ViewerComponent';
 
 const appRoutes: Routes = [
     {path: 'map', component: ViewerComponent},
 ];
 @Component({
     providers: [UserService, MapService],
-    templateUrl: "../../templates/maps/MapList.html"
+    templateUrl: '../../templates/maps/MapList.html'
 })
 export class MapListComponent implements OnInit {
 
@@ -81,7 +81,7 @@ export class MapListComponent implements OnInit {
         this.modalService.open(dialog, {size: 'lg'}).result.then((result: File) => {
             for (let i in this._files) {
                 if (this._files[i].name === result['newName'] + '.mm') {
-                    this.root.errorMsg = "File name '" + newFileName + "' already exists";
+                    this.root.errorMsg = 'File name \'' + newFileName + '\' already exists';
                     return;
                 }
             }
@@ -116,7 +116,7 @@ export class MapListComponent implements OnInit {
             error => this.root.errorMsg = error);
     }
 }
-/**
+/*
  .config(['$stateProvider',
  function ($stateProvider) {
             $stateProvider
@@ -180,8 +180,8 @@ export class MapListComponent implements OnInit {
         $scope.openCreateModal = function () {
             var modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: "file_create_modal.html",
-                controller: "fileActionController",
+                templateUrl: 'file_create_modal.html',
+                controller: 'fileActionController',
                 resolve: {
                     target: function () {
                         return {
@@ -210,7 +210,7 @@ export class MapListComponent implements OnInit {
                     saveAs(blob, target.name);
                 },
                 function (error) {
-                    alert("Cannot save file:" + error);
+                    alert('Cannot save file:' + error);
                 }
             )
         };
@@ -218,8 +218,8 @@ export class MapListComponent implements OnInit {
         $scope.openShareModal = function (target) {
             var modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: "file_share_modal.html",
-                controller: "fileActionController",
+                templateUrl: 'file_share_modal.html',
+                controller: 'fileActionController',
                 resolve: {
                     target: function () {
                         return target;
@@ -245,8 +245,8 @@ export class MapListComponent implements OnInit {
         $scope.openRenameModal = function (target) {
             var modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: "file_rename_modal.html",
-                controller: "fileActionController",
+                templateUrl: 'file_rename_modal.html',
+                controller: 'fileActionController',
                 resolve: {
                     target: function () {
                         return target;
@@ -263,8 +263,8 @@ export class MapListComponent implements OnInit {
         $scope.openDeleteModal = function (target) {
             var modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: "file_delete_modal.html",
-                controller: "fileActionController",
+                templateUrl: 'file_delete_modal.html',
+                controller: 'fileActionController',
                 resolve: {
                     target: function () {
                         return target;
@@ -320,7 +320,7 @@ export class MapListComponent implements OnInit {
                             $scope.loadingFiles = false;
                         },
                         function (data) {
-                            $rootScope.$emit("$applicationError", "Cannot load file list");
+                            $rootScope.$emit('$applicationError', 'Cannot load file list');
                         });
                     $scope.loadingSharedFiles = true;
                     MapService.listShared().then(function (data) {
@@ -328,7 +328,7 @@ export class MapListComponent implements OnInit {
                             $scope.loadingSharedFiles = false;
                         },
                         function () {
-                            $rootScope.$emit("$applicationError", "Cannot load shared file list");
+                            $rootScope.$emit('$applicationError', 'Cannot load shared file list');
                         });
                 }
             );
@@ -336,7 +336,7 @@ export class MapListComponent implements OnInit {
     })
  .controller('fileActionController', function ($scope, $uibModalInstance, target) {
         $scope.target = target;
-        $scope.target.newName = $scope.target.name.replace(new RegExp("^(.*)\.mm$"), "$1");
+        $scope.target.newName = $scope.target.name.replace(new RegExp('^(.*)\.mm$'), '$1');
         $scope.target.newIsShareable = $scope.target.isShareable;
         $scope.target.newIsPublic = $scope.target.isPublic;
         $scope.target.newViewers = $scope.target.viewers;

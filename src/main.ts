@@ -1,7 +1,7 @@
-import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
-import {decorateModuleRef} from './app/environment';
-import {bootloader} from '@angularclass/hmr';
-import {AppModule} from "./app/app";
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { decorateModuleRef } from './app/environment';
+import { bootloader } from '@angularclass/hmr';
+import { AppModule } from './app/app';
 /*
  * Bootstrap our Angular app with a top level NgModule
  */

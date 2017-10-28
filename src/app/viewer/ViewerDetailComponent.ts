@@ -1,26 +1,19 @@
-import {Component, OnInit} from "@angular/core";
-import ViewerComponent from "./ViewerComponent";
-import ViewerService from "../service/ViewerService";
-import {UserService} from "../service/UserService";
-import MapNodeCore from "mindweb-request-classes/classes/MapNodeCore";
-import {ActionNames} from "mindweb-request-classes/classes/EditAction";
-import MapNode from "mindweb-request-classes/classes/MapNode";
+import { Component, OnInit } from '@angular/core';
+import ViewerComponent from './ViewerComponent';
+import ViewerService from '../service/ViewerService';
+import { UserService } from '../service/UserService';
+import MapNodeCore from 'mindweb-request-classes/classes/MapNodeCore';
+import { ActionNames } from 'mindweb-request-classes/classes/EditAction';
+import MapNode from 'mindweb-request-classes/classes/MapNode';
+
 /**
  * Created by gpapp on 2017.03.26..
  */
 @Component({
-    selector: "viewer-detail",
-    templateUrl: "../../templates/viewer/ViewerDetail.html"
+    selector: 'viewer-detail',
+    templateUrl: '../../templates/viewer/ViewerDetail.html'
 })
 export default class ViewerDetailComponent implements OnInit {
-    get showDetail(): boolean {
-        return this._showDetail;
-    }
-
-    toggleShowDetail() {
-        this._showDetail = !this._showDetail;
-    }
-
     private _showDetail: boolean = true;
 
     private _editable: boolean = false;
@@ -30,19 +23,28 @@ export default class ViewerDetailComponent implements OnInit {
                 private userService: UserService) {
     }
 
-    ngOnInit(): void {
+    public get showDetail(): boolean {
+        return this._showDetail;
+    }
+
+    public toggleShowDetail() {
+        this._showDetail = !this._showDetail;
+    }
+
+    public ngOnInit(): void {
         this.viewerService.currentMapVersion.subscribe(map => {
-            if (map)
+            if (map) {
                 this._editable = map.container.canEdit(this.userService.currentUser.id)
+            }
         });
     }
 
-    get editable(): boolean {
+    public get editable(): boolean {
         return this._editable;
 
     }
 
-    onChange(event: any) {
+    public onChange(event: any) {
         const node: MapNode = this.viewerService.currentNode as MapNode;
 
         let actionName: ActionNames;
@@ -60,35 +62,34 @@ export default class ViewerDetailComponent implements OnInit {
         this.viewerService.sendEditAction(actionName, node.$['ID'], event.target.value);
     }
 
-    moveIcon(index: number, direction: string) {
+    public moveIcon(index: number, direction: string) {
         const icons: MapNodeCore[] = Array.from(this.viewerService.currentNode.icon);
         switch (direction) {
             case 'left':
-                if (!index) return;
-            {
-                const tmp = icons[index - 1];
-                icons[index - 1] = icons[index];
-                icons[index] = tmp;
-            }
+                if (!index) {
+                    return;
+                }
+                this.swap(icons, index, index - 1);
                 break;
             case 'right':
-                if (index == icons.length - 1) return;
-            {
-                const tmp = icons[index + 1];
-                icons[index + 1] = icons[index];
-                icons[index] = tmp;
-
-            }
+                if (index == icons.length - 1) {
+                    return;
+                }
+                this.swap(icons, index, index + 1);
                 break;
         }
         this.viewerService.sendEditAction(ActionNames.nodeModifyIcons, this.viewerService.currentNode.$['ID'], icons);
     }
 
-    deleteIcon(index: number) {
+    private swap(icons: MapNodeCore[], index1: number, index2: number) {
+        const tmpl = icons[index1];
+        icons[index1] = icons[index2];
+        icons[index2] = tmpl;
+    }
+
+    public deleteIcon(index: number) {
         const icons: MapNodeCore[] = Array.from(this.viewerService.currentNode.icon);
         icons.splice(index, 1);
         this.viewerService.sendEditAction(ActionNames.nodeModifyIcons, this.viewerService.currentNode.$['ID'], icons);
     }
-
-
 }

@@ -1,85 +1,85 @@
-<div ui-content-for="title">
+<div ui-content-for='title'>
     <span>MindWeb - Publicly shared maps</span>
 </div>
 
-<div class="scrollable">
-    <div class="scrollable-content">
-        <div class="section">
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">
+<div class='scrollable'>
+    <div class='scrollable-content'>
+        <div class='section'>
+            <div class='panel-group'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <div class='panel-title'>
                             Maps for tags
-                            <span (show)="loadingFiles">
-                              <i class="fa fa-spinner fa-spin"></i>
+                            <span (show)='loadingFiles'>
+                              <i class='fa fa-spinner fa-spin'></i>
                             </span>
-                            <span (show)="!loadingFiles">
+                            <span (show)='!loadingFiles'>
                               ({{files.length}})
                             </span>
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class='panel-body'>
                         <div>
-                            <span class="tags">
-                            <div class="tags-display">
-                                <ul class="tag-list">
-                                    <li class="tag-item" *ngFor="tag in selectedTags">
+                            <span class='tags'>
+                            <div class='tags-display'>
+                                <ul class='tag-list'>
+                                    <li class='tag-item' *ngFor='tag in selectedTags'>
                                         {{tag}}
-                                        <i class="fa fa-trash" (click)="removeSelected(tag)"></i>
+                                        <i class='fa fa-trash' (click)='removeSelected(tag)'></i>
                                     </li>
                                 </ul>
                             </div>
                             </span>
 
-                            <div class="btn btn-default" (click)="clearSelection()">Clear
+                            <div class='btn btn-default' (click)='clearSelection()'>Clear
                             selection</div>
                         </div>
-                        <div class="list-group file-list">
-                            <div class="list-group-item file-list-item"
+                        <div class='list-group file-list'>
+                            <div class='list-group-item file-list-item'
                                  *ngFor="item in files | orderBy:'name'"
                                  ng-include="'file_item_renderer'">
                             </div>
                         </div>
                     </div>
-                    <div class="panel-footer">
+                    <div class='panel-footer'>
                         <input
-                                type="search"
-                                placeholder="Search.."
-                                ng-model="filesearch"
-                                ng-model-options="{debounce:500}"
-                                ng-change="reloadFiles()"
+                                type='search'
+                                placeholder='Search..'
+                                ng-model='filesearch'
+                                ng-model-options='{debounce:500}'
+                                ng-change='reloadFiles()'
                         />
-                        <span (show)="loadingFiles">
-                          <i class="fa fa-spinner fa-spin"></i>
+                        <span (show)='loadingFiles'>
+                          <i class='fa fa-spinner fa-spin'></i>
                         </span>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h4 class='panel-title'>
                             Tagcloud
-                            <span (show)="loadingTags">
-                              <i class="fa fa-spinner fa-spin"></i>
+                            <span (show)='loadingTags'>
+                              <i class='fa fa-spinner fa-spin'></i>
                             </span>
                         </h4>
                     </div>
-                    <div class="panel-body">
-                        <div class="list-group tagcloud">
-                                <span class="tagcloud-item" *ngFor="(key,value) in publicTags">
-                                    <span class="tag" (click)="selectTag(key)">{{key}} ({{value}})</span>
+                    <div class='panel-body'>
+                        <div class='list-group tagcloud'>
+                                <span class='tagcloud-item' *ngFor='(key,value) in publicTags'>
+                                    <span class='tag' (click)='selectTag(key)'>{{key}} ({{value}})</span>
                                 </span>
                         </div>
                     </div>
-                    <div class="panel-footer">
+                    <div class='panel-footer'>
                         <input
-                                type="search"
-                                placeholder="Search.."
-                                ng-model="tagsearch"
-                                ng-model-options="{debounce:500}"
-                                ng-change="reloadTags()"
+                                type='search'
+                                placeholder='Search..'
+                                ng-model='tagsearch'
+                                ng-model-options='{debounce:500}'
+                                ng-change='reloadTags()'
                         />
-                        <span (show)="loadingTags">
-                          <i class="fa fa-spinner fa-spin"></i>
+                        <span (show)='loadingTags'>
+                          <i class='fa fa-spinner fa-spin'></i>
                         </span>
                     </div>
                 </div>
@@ -87,90 +87,90 @@
         </div>
     </div>
 </div>
-<script type="text/ng-template" id="file_item_renderer">
-    <div class="file-list-item-content"
-         ui-state="hovered"
-         ngClass="{selected : hovered}"
-         (mouseover)="hovered=true"
-         (mouseleave)="hovered=false">
-        <div class="name" (click)="fileOpen(item)" ui-state="infoPopup">
-            <i class="fa pull-right fa-globe"></i>
-            <i class="fa fa-info-circle pull-right"
-               (mouseover)="infoPopup=true"
-               (mouseleave)="infoPopup=false"></i>
+<script type='text/ng-template' id='file_item_renderer'>
+    <div class='file-list-item-content'
+         ui-state='hovered'
+         ngClass='{selected : hovered}'
+         (mouseover)='hovered=true'
+         (mouseleave)='hovered=false'>
+        <div class='name' (click)='fileOpen(item)' ui-state='infoPopup'>
+            <i class='fa pull-right fa-globe'></i>
+            <i class='fa fa-info-circle pull-right'
+               (mouseover)='infoPopup=true'
+               (mouseleave)='infoPopup=false'></i>
 
-            <div class="infoPopup" ngClass="{hidden : !infoPopup}">
-                <div class="title">{{item.name}}</div>
-                <div class="version">Version: {{ item.versions.length }}</div>
-                <div class="isPublic">Visibility: {{
+            <div class='infoPopup' ngClass='{hidden : !infoPopup}'>
+                <div class='title'>{{item.name}}</div>
+                <div class='version'>Version: {{ item.versions.length }}</div>
+                <div class='isPublic'>Visibility: {{
                     item.isPublic?'Public':(item.viewers||item.editors)?'Shared':'Private'}}
                 </div>
-                <div class="fileDate">Created: {{ item.created}}</div>
-                <div class="fileDate">Last modification:{{ item.modified}}</div>
+                <div class='fileDate'>Created: {{ item.created}}</div>
+                <div class='fileDate'>Last modification:{{ item.modified}}</div>
             </div>
-            <i class="fa fa-file"></i>
+            <i class='fa fa-file'></i>
 
-            <div class="fileName">{{ item.name }}</div>
+            <div class='fileName'>{{ item.name }}</div>
         </div>
-        <div class="tags">
-            <div class="tags-display">
-                <ul class="tag-list">
-                    <li class="tag-item" *ngFor="tag in item.tags">{{tag}}</li>
+        <div class='tags'>
+            <div class='tags-display'>
+                <ul class='tag-list'>
+                    <li class='tag-item' *ngFor='tag in item.tags'>{{tag}}</li>
                 </ul>
             </div>
-            <div class="actions">
-                <i class="fa fa-download" title="Download in Freeplane format" (click)="downloadFreeplane(item)"></i>
+            <div class='actions'>
+                <i class='fa fa-download' title='Download in Freeplane format' (click)='downloadFreeplane(item)'></i>
             </div>
         </div>
     </div>
 </script>
-<script type="text/ng-template" id="freeplane_view_modal.html">
-    <div role="dialog">
-        <div class="modal-header">
-            <h4 class="modal-title">View Freeplane file</h4>
+<script type='text/ng-template' id='freeplane_view_modal.html'>
+    <div role='dialog'>
+        <div class='modal-header'>
+            <h4 class='modal-title'>View Freeplane file</h4>
         </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-sm-4">
+        <div class='modal-body'>
+            <div class='row'>
+                <div class='col-sm-4'>
                     <ngf-drop
-                            ngf-drop=""
-                            ngf-select=""
-                            ng-model="uploadedFiles"
-                            ng-model-rejected="rejFiles"
+                            ngf-drop=''
+                            ngf-select=''
+                            ng-model='uploadedFiles'
+                            ng-model-rejected='rejFiles'
                             ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}"
-                            class="drop-box"
-                            ngf-multiple="false"
-                            ngf-allow-dir="false"
+                            class='drop-box'
+                            ngf-multiple='false'
+                            ngf-allow-dir='false'
                             ngf-accept="'.mm'"
-                            ngf-drop-available="dropAvailable">
-                        <span (hide)="dropAvailable">File Drop not available</span>
-                        <span (show)="dropAvailable">Drop Files</span>
-                        <div><span class="fa fa-upload">&nbsp;</span>Upload files</div>
+                            ngf-drop-available='dropAvailable'>
+                        <span (hide)='dropAvailable'>File Drop not available</span>
+                        <span (show)='dropAvailable'>Drop Files</span>
+                        <div><span class='fa fa-upload'>&nbsp;</span>Upload files</div>
                     </ngf-drop>
                 </div>
-                <div id="uploads" class="col-sm-8">
-                    <div class="file" *ngFor="upload in uploads">
-                                    <span class="status">
-                                        <uib-progressbar max="upload.max" value="upload.value"
+                <div id='uploads' class='col-sm-8'>
+                    <div class='file' *ngFor='upload in uploads'>
+                                    <span class='status'>
+                                        <uib-progressbar max='upload.max' value='upload.value'
                                                      type="{{upload.error?'danger':(upload.done?'success':'info')}}">
-                                            <span style="color:black; white-space:nowrap;">{{upload.value}} / {{upload.max}}</span>
+                                            <span style='color:black; white-space:nowrap;'>{{upload.value}} / {{upload.max}}</span>
                                         </uib-progressbar>
                                     </span>
-                        <span class="name">{{upload.name}}</span>
-                                    <span class="error label-danger" ng-bind="upload.errorMsg"
-                                          *ngIf="upload.errorMsg"></span>
+                        <span class='name'>{{upload.name}}</span>
+                                    <span class='error label-danger' ng-bind='upload.errorMsg'
+                                          *ngIf='upload.errorMsg'></span>
                     </div>
                 </div>
             </div>
-            <div class="row text-danger">
-                <span class="col-xs-12">
+            <div class='row text-danger'>
+                <span class='col-xs-12'>
                 This function is ONLY for display purposes. The uploaded file will not be stored or used in any way on the Mindweb site!
                 </span>
             </div>
         </div>
-        <div class="modal-footer">
-            <div type="button" class="btn btn-primary" (click)="ok()">Submit</div>
-            <div type="button" class="btn" (click)="cancel()">Cancel</div>
+        <div class='modal-footer'>
+            <div type='button' class='btn btn-primary' (click)='ok()'>Submit</div>
+            <div type='button' class='btn' (click)='cancel()'>Cancel</div>
         </div>
     </div>
 </script>

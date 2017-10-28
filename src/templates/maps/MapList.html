@@ -118,8 +118,7 @@
 
                                     </span>
                                     <span class="name">{{upload.name}}</span>
-                                    <span class="error label-danger" ng-bind="upload.errorMsg"
-                                          *ngIf="upload.errorMsg"></span>
+                                    <span class="error label-danger" *ngIf="upload.errorMsg">{{upload.errorMsg}}</span>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +135,7 @@
     </a>
 </div>
 
-<template #createFileDialog class="modal" role="dialog" let-c="close" let-d="dismiss">
+<ng-template #createFileDialog class="modal" role="dialog" let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Create file</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -171,9 +170,9 @@
         <div type="button" class="btn btn-primary" (click)="c(target)">Submit</div>
         <div type="button" class="btn" (click)="d()">Cancel</div>
     </div>
-</template>
+</ng-template>
 
-<template #shareFileDialog class="modal" role="dialog" let-c="close" let-d="dismiss">
+<ng-template #shareFileDialog class="modal" role="dialog" let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">share file</h4>
         <h5 class="modal-title">{{target.name}}</h5>
@@ -218,9 +217,9 @@
         <div type="button" class="btn btn-primary" (click)="c(target)">Submit</div>
         <div type="button" class="btn" (click)="d()">Cancel</div>
     </div>
-</template>
+</ng-template>
 
-<template #renameFileDialog class="modal modal-lg" role="dialog" let-c="close" let-d="dismiss">
+<ng-template #renameFileDialog class="modal modal-lg" role="dialog" let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Rename file</h4>
         <h5 class="modal-title">{{target.name}}</h5>
@@ -243,9 +242,9 @@
         <div type="button" class="btn btn-primary" (click)="c(target)">Submit</div>
         <div type="button" class="btn" (click)="d()">Cancel</div>
     </div>
-</template>
+</ng-template>
 
-<template #deleteFileDialog let-c="close" let-d="dismiss">
+<ng-template #deleteFileDialog let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Delete file</h4>
         <h5 class="modal-title">{{target.name}}</h5>
@@ -269,4 +268,4 @@
         <div type="button" class="btn btn-primary" (click)="c(target)">Submit</div>
         <div type="button" class="btn" (click)="d()">Cancel</div>
     </div>
-</template>
+</ng-template>

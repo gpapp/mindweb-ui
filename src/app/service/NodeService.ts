@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 /**
  * Created by gpapp on 2015.05.15..
  */
@@ -8,9 +8,9 @@ export class NodeService {
     static defaultIconConfig = {project: 'list', task: 'yes', nextaction: 'bookmark', done: 'button_ok'};
     static iconConfig = {project: 'list', task: 'yes', nextaction: 'bookmark', done: 'button_ok'};
 }
-/**
+/*
  angular.module('MindWebUi.node.service', [])
- .factory("NodeService", ["$rootScope", function ($rootScope) {
+ .factory('NodeService', ['$rootScope', function ($rootScope) {
             const IconRegExp = /^Icon:\s*(.*)/;
             var defaultIconConfig = {project: 'list', task: 'yes', nextaction: 'bookmark', done: 'button_ok'};
             var iconConfig = {project: 'list', task: 'yes', nextaction: 'bookmark', done: 'button_ok'};
@@ -19,7 +19,7 @@ export class NodeService {
                 _walknodes(rootNode, function (node) {
                         if (IconRegExp.test(node.nodeMarkdown)) {
                             if (!node.icon) {
-                                $rootScope.$emit("$applicationError", "Icon not specified for node:" + node.nodeMarkdown);
+                                $rootScope.$emit('$applicationError', 'Icon not specified for node:' + node.nodeMarkdown);
                             } else {
                                 _setConfigIcon(node.nodeMarkdown.replace(IconRegExp, '$1').toLowerCase(), node.icon[0].$['BUILTIN']);
                             }
@@ -197,7 +197,7 @@ export class NodeService {
                 }
                 if (!done) {
 
-                    node.attribute.push({$: {"NAME": name, "VALUE": value}});
+                    node.attribute.push({$: {'NAME': name, 'VALUE': value}});
                 }
                 editScope.$emit('fileModified', {
                     event: 'nodeSetAttribute',

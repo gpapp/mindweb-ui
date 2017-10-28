@@ -2,69 +2,68 @@
     <div class="panel-body">
         <div class="list-group">
             <tree-root #tree
-                       [nodes]="treeModel"
+                       [nodes]="mapModel"
                        [options]='treeOptions'
-                       (onEvent)="onTreeEvent($event)"
+                       (onFocus)="onTreeEvent($event)"
             >
-                <template #loadingTemplate>
-                    <i class="fa fa-2x fa-spinner fa-spin"></i> Loading file, please wait...
-                </template>
-                <template #treeNodeTemplate let-curnode="node.data" let-index="index">
-                    {{curnode.open}}
-                    <div class="list-group-item nodeList">
+                <ng-template #treeNodeTemplate let-node let-index="index">
+                    <div class="list-group-item nodeList" (click)="node.mouseAction('click',$event)">
                         <div class="list-group-item-heading">
                             <div class="handle">
                                 <i class="fa fa-bars"></i>
                             </div>
                             <div class="icons">
                                 <div class="icon-block">
-                                <span *ngFor="let attr of curnode.icon">
+                                <span *ngFor="let attr of node.data.icon">
                                     <img class="icon-block" src="assets/icons/{{attr.$['BUILTIN']}}.png"/>
                                 </span>
-                                    <span *ngIf="curnode.$['LINK']">
-                                    <a title="{{curnode.$['LINK']}}"
-                                       (click)="jumptoLink(curnode.$['LINK'])">
-                                <img src="/images/{{curnode.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
+                                    <span *ngIf="node.data.$['LINK']">
+                                    <a title="{{node.data.$['LINK']}}"
+                                       (click)="jumptoLink(node.data.$['LINK'])">
+                                <img src="/images/{{node.data.$['LINK'][0]=='#' ? 'LinkLocal' : 'Link'}}.png">
                                     </a>
                                 </span>
                                 </div>
                             </div>
                             <div class="item">
                                 <markdown
-                                        [data]="curnode.nodeMarkdown||''"></markdown>
+                                        [data]="node.data.nodeMarkdown||''"></markdown>
                             </div>
                             <div class="chevron">
                                 <div class="icon-block">
                                     <span name="editorIcons">
                                         <i class="fa fa-fw fa-folder-o" tooltip="Add sibling"
-                                           (click)="addNode(curnode.$parent)"></i>
+                                           (click)="addNode(node.data.$parent)"></i>
                                         <i class="fa fa-fw fa-plus-circle" tooltip="Add child"
-                                           (click)="addNode(curnode)"></i>
+                                           (click)="addNode(node.data)"></i>
                                         <i class="fa fa-fw fa-trash" tooltip="Delete node"
-                                           (click)="deleteNode(curnode)"></i>
+                                           (click)="deleteNode(node.data)"></i>
                                     </span>
-                                    <img *ngIf="curnode.attribute" src="/assets/images/AttributesView.png"
-                                         (click)="openDetails(curnode,'properties')"/>
-                                    <img *ngIf="curnode.noteMarkdown" src="/assets/images/knotes.png"
-                                         (click)="openDetails(curnode,'notes')"/>
+                                    <img *ngIf="node.data.attribute" src="/assets/images/AttributesView.png"
+                                         (click)="openDetails(node.data,'properties')"/>
+                                    <img *ngIf="node.data.noteMarkdown" src="/assets/images/knotes.png"
+                                         (click)="openDetails(node.data,'notes')"/>
                                     <i class="fa"
-                                       (ngClass)="{'fa-chevron-down': node.open, 'fa-chevron-right': !curnode.open}"
-                                       (click)="nodeToggleOpen(curnode)" ng-if="curnode.node"></i>
+                                       (ngClass)="{'fa-chevron-down': node.open, 'fa-chevron-right': !node.data.open}"
+                                       (click)="nodeToggleOpen(node.data)" ng-if="node.data.node"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="list-group-item-text detail" *ngIf="curnode.detailMarkdown">
+                        <div class="list-group-item-text detail" *ngIf="node.data.detailMarkdown">
                             <i class="fa pull-left"
-                               [ngClass]="{'fa-chevron-down':curnode.detailOpen, 'fa-chevron-right':!curnode.detailOpen}"
-                               (click)="detailToggleOpen(curnode)"></i>
-                            <div [ngClass]="{collapsed: !curnode.detailOpen}">
+                               [ngClass]="{'fa-chevron-down':node.data.detailOpen, 'fa-chevron-right':!node.data.detailOpen}"
+                               (click)="detailToggleOpen(node.data)"></i>
+                            <div [ngClass]="{collapsed: !node.data.detailOpen}">
                                 <markdown
-                                        [data]="curnode.detailMarkdown"></markdown>
+                                        [data]="node.data.detailMarkdown"></markdown>
                             </div>
                         </div>
                     </div>
-                </template>
+                </ng-template>
             </tree-root>
         </div>
     </div>
 </div>
+<!--
+
+-->

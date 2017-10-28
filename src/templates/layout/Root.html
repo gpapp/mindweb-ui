@@ -1,8 +1,8 @@
 <!-- Navbars -->
-<div class="navbar navbar-app navbar-absolute-top mat-primary md-elevation-z0">
-    <md-card-title-group class="navbar-brand navbar-brand-center ">
+<div class="navbar navbar-app navbar-absolute-top mat-primary mat-elevation-z0">
+    <mat-card-title-group class="navbar-brand navbar-brand-center ">
         MindWeb
-    </md-card-title-group>
+    </mat-card-title-group>
     <div class="btn-group pull-left">
         <div (click)="sidenav.toggle()" class="btn sidebar-toggle hidden-lg-up" ng-animate="'slide'">
             <i class="fa fa-bars"></i> Menu
@@ -23,9 +23,9 @@
         </div>
     </div>
 </div>
-<md-sidenav-container>
-    <md-sidenav #sidenav mode="side" opened="sidebarDisplay">
-        <md-nav-list>
+<mat-sidenav-container>
+    <mat-sidenav #sidenav #start mode="side" opened="sidebarDisplay">
+        <mat-nav-list>
             <nav routerLink="/">
                 <fa name="home" size="2" fw="true"></fa>
                 Home
@@ -74,9 +74,8 @@
                 Login
                 <span class="pull-right"><fa name="chevron-right" pull="right"></fa></span>
             </nav>
-        </md-nav-list>
-        <router-outlet name="local-menu"></router-outlet>
-    </md-sidenav>
+        </mat-nav-list>
+    </mat-sidenav>
     <div class="main-content">
         <!-- App Body -->
         <div class="app-body" ngClass="{loading: loading, error: error}">
@@ -102,9 +101,9 @@
             </div>
         </div>
     </div>
-</md-sidenav-container>
+</mat-sidenav-container>
 
-<template #loginDialog class="modal fade" let-c="close" let-d="dismiss">
+<ng-template #loginDialog class="modal fade" let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Login</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -134,4 +133,4 @@
     <div class="modal-footer">
         <button (click)="d()" class="btn btn-default">Close</button>
     </div>
-</template>
+</ng-template>

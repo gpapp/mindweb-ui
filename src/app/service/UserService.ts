@@ -1,10 +1,10 @@
-import {User} from "mindweb-request-classes";
-import {Http} from "@angular/http";
-import {Injectable, resolveForwardRef} from "@angular/core";
-import "rxjs/add/operator/catch";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/toPromise";
-import OpenMapService from "./OpenMapService";
+import {User} from 'mindweb-request-classes';
+import {Http} from '@angular/http';
+import {Injectable, resolveForwardRef} from '@angular/core';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+import OpenMapService from './OpenMapService';
 
 /**
  * Created by gpapp on 2015.05.15..
@@ -12,7 +12,7 @@ import OpenMapService from "./OpenMapService";
 @Injectable()
 export class UserService {
     static authURL: string = '/auth/authenticated';
-    static logoutURL: string = "/auth/logout";
+    static logoutURL: string = '/auth/logout';
 
     get currentUser(): User {
         return this._currentUser;

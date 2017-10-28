@@ -1,43 +1,43 @@
 <div class="panel mat-active">
     <div class="panel-body" *ngIf="showDetail&&viewerService.currentNode">
-        <md-list id="detailPaneContent">
-            <md-list-item>
-                <md-input-container md-line *ngIf="editable">
-                    <template placeholder>
-                        <i class='fa fa-fw fa-info'></i><span class="hidden-md-down">Details</span>
-                    </template>
-                    <textarea mdInput placeholder="Node name"
+        <mat-list id="detailPaneContent">
+            <mat-list-item>
+                <mat-input-container mat-line *ngIf="editable">
+                    <ng-template placeholder>
+                        <i class='fa fa-fw fa-info'></i><span class="hidden-mat-down">Details</span>
+                    </ng-template>
+                    <textarea matInput placeholder="Node name"
                               id="nodeText" rows="5"
                               [(ngModel)]="viewerService.currentNode.nodeMarkdown"
                               (change)="onChange($event)"></textarea>
-                </md-input-container>
-                <markdown md-line [data]="viewerService.currentNode.$nodeMarkdown"
+                </mat-input-container>
+                <markdown mat-line [data]="viewerService.currentNode.$nodeMarkdown"
                           *ngIf="!editable"></markdown>
-            </md-list-item>
-            <md-list-item>
-                <md-input-container md-line *ngIf="editable">
-                    <textarea mdInput placeholder="Details"
+            </mat-list-item>
+            <mat-list-item>
+                <mat-input-container mat-line *ngIf="editable">
+                    <textarea matInput placeholder="Details"
                               id="detailText" rows="5"
                               [(ngModel)]="viewerService.currentNode.detailMarkdown"
                               (change)="onChange($event)"></textarea>
-                </md-input-container>
-                <markdown md-line [data]="viewerService.currentNode.detailMarkdown" *ngIf="!editable"></markdown>
-            </md-list-item>
-            <md-list-item *ngIf="editable||viewerService.currentNode.noteMarkdown">
-                <md-input-container md-line *ngIf="editable">
-                    <textarea mdInput placeholder="Notes"
+                </mat-input-container>
+                <markdown mat-line [data]="viewerService.currentNode.detailMarkdown" *ngIf="!editable"></markdown>
+            </mat-list-item>
+            <mat-list-item *ngIf="editable||viewerService.currentNode.noteMarkdown">
+                <mat-input-container mat-line *ngIf="editable">
+                    <textarea matInput placeholder="Notes"
                               id="noteText" rows="5"
                               [(ngModel)]="viewerService.currentNode.noteMarkdown"
                               (change)="onChange($event)"></textarea>
-                </md-input-container>
-                <markdown md-line [data]="viewerService.currentNode.noteMarkdown"
+                </mat-input-container>
+                <markdown mat-line [data]="viewerService.currentNode.noteMarkdown"
                           *ngIf="!editable"></markdown>
-            </md-list-item>
-            <div md-subheader>
-                <i class='fa fa-stack fa-picture-o'></i><span class="hidden-md-down">Icons</span>
+            </mat-list-item>
+            <div mat-subheader>
+                <i class='fa fa-stack fa-picture-o'></i><span class="hidden-mat-down">Icons</span>
             </div>
-            <md-list-item *ngIf="editable||currentNode.icon">
-                <div md-line class="panel">
+            <mat-list-item *ngIf="editable||currentNode.icon">
+                <div mat-line class="panel">
                     <div id='detail-icon' class="panel-body ">
                         <div class="icon-block"
                              *ngFor="let attr of viewerService.currentNode.icon; let index = index; let first=first;let last=last"
@@ -60,12 +60,12 @@
                         <i class="fa fa-2x fa-plus-circle pull-right"></i>
                     </div>
                 </div>
-            </md-list-item>
-            <div md-subheader>
-                <i class='fa fa-fw fa-table'></i><span class="hidden-md-down">Properties</span>
+            </mat-list-item>
+            <div mat-subheader>
+                <i class='fa fa-fw fa-table'></i><span class="hidden-mat-down">Properties</span>
             </div>
-            <md-list-item *ngIf="editable||viewerService.currentNode.attribute">
-                <div md-line>
+            <mat-list-item *ngIf="editable||viewerService.currentNode.attribute">
+                <div mat-line>
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -84,10 +84,10 @@
                 <div class="panel-footer" *ngIf="editable">
                     <i class="fa fa-2x fa-plus-circle pull-right"></i>
                 </div>
-            </md-list-item>
-        </md-list>
+            </mat-list-item>
+        </mat-list>
     </div>
 </div>
-<button id="detailFab" md-fab (click)="toggleShowDetail()">
-    <md-icon>add</md-icon>
+<button id="detailFab" mat-fab (click)="toggleShowDetail()">
+    <mat-icon>add</mat-icon>
 </button>

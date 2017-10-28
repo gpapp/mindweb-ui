@@ -5,10 +5,12 @@ main-app{
     width: 100%;
 }
 
-md-sidenav-container {
+mat-sidenav-container {
     margin: 0;
     min-width: 200px;
+    position: fixed;
     height: 100%;
+    width: 100%;
 }
 
 .main-content {

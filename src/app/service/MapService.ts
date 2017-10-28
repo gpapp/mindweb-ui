@@ -1,10 +1,11 @@
-import MapContainer from "mindweb-request-classes/classes/MapContainer";
-import {Friend} from "mindweb-request-classes";
-import {Http, Headers, Response, RequestOptions} from "@angular/http";
-import {UserService} from "./UserService";
-import {Injectable} from "@angular/core";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/toPromise";
+import MapContainer from 'mindweb-request-classes/classes/MapContainer';
+import { Friend } from 'mindweb-request-classes';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { UserService } from './UserService';
+import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+
 /**
  * Created by gpapp on 2015.05.15..
  */
@@ -22,7 +23,7 @@ export class MapService {
     list(): Promise<MapContainer[]> {
         return new Promise((resolve, reject) => {
             this.userService.lookupPromise().then(() => {
-                this.http.get("/map/maps").map(data => data.json()).toPromise().then((files) => {
+                this.http.get('/map/maps').map(data => data.json()).toPromise().then((files) => {
                     resolve(files);
                 });
             });
@@ -33,7 +34,7 @@ export class MapService {
     listShared(): Promise<MapContainer[]> {
         return new Promise((resolve, reject) => {
             this.userService.lookupPromise().then(() => {
-                this.http.get("/map/sharedMaps").map(data => data.json()).toPromise().then((files) => {
+                this.http.get('/map/sharedMaps').map(data => data.json()).toPromise().then((files) => {
                     resolve(files);
                 });
             });
@@ -56,7 +57,7 @@ export class MapService {
                     viewers: viewers,
                     editors: editors
                 });
-                this.http.post("/map/create", body, options).subscribe(
+                this.http.post('/map/create', body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);
@@ -83,7 +84,7 @@ export class MapService {
                     viewers: viewers,
                     editors: editors
                 });
-                this.http.post("/map/share", body, options).subscribe(
+                this.http.post('/map/share', body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);
@@ -104,7 +105,7 @@ export class MapService {
                     })
                 });
                 const body = JSON.stringify({newName: newName});
-                this.http.post("/map/rename/" + id, body, options).subscribe(
+                this.http.post('/map/rename/' + id, body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);
@@ -118,7 +119,7 @@ export class MapService {
     deleteFile(fileId: string): Promise<MapContainer> {
         return new Promise((resolve, reject) => {
                 this.userService.lookupPromise().then(() => {
-                    this.http.delete("/map/map/" + fileId).subscribe(
+                    this.http.delete('/map/map/' + fileId).subscribe(
                         data => {
                             this.unRegisterMap(fileId);
                             resolve(data.json())
@@ -144,7 +145,7 @@ export class MapService {
                     })
                 });
                 const body = JSON.stringify({id: id, query: query});
-                this.http.post("/map/tagQuery", body, options).subscribe(
+                this.http.post('/map/tagQuery', body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);
@@ -165,7 +166,7 @@ export class MapService {
                     })
                 });
                 const body = JSON.stringify({id: id, tag: tag});
-                this.http.post("/map/tag", body, options).subscribe(
+                this.http.post('/map/tag', body, options).subscribe(
                     data => resolve(data.json()),
                     err => {
                         console.error(err);

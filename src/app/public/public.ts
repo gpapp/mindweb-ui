@@ -1,5 +1,4 @@
-
-/**
+/*
 
  angular.module('MindWebUi.public', [
  '
@@ -74,8 +73,8 @@
         $scope.openDisplayModal = function () {
             var modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: "freeplane_view_modal.html",
-                controller: "displayUploadController",
+                templateUrl: 'freeplane_view_modal.html',
+                controller: 'displayUploadController',
                 self: modalInstance
             });
         };
@@ -92,7 +91,7 @@
                     $scope.loadingTags = false;
                 },
                 function (data) {
-                    $rootScope.$emit("$applicationError", "Cannot load tag list");
+                    $rootScope.$emit('$applicationError', 'Cannot load tag list');
                 });
         }
 
@@ -103,7 +102,7 @@
                     $scope.loadingFiles = false;
                 },
                 function (data) {
-                    $rootScope.$emit("$applicationError", "Cannot load file list");
+                    $rootScope.$emit('$applicationError', 'Cannot load file list');
                 });
         }
     }).controller('displayUploadController', function ($scope, $state, Upload, FileService) {

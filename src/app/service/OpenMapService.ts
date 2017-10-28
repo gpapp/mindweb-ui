@@ -1,13 +1,13 @@
-import {Injectable} from "@angular/core";
-import {AbstractResponse, MapContainer} from "mindweb-request-classes";
-import WebsocketService from "./WebsocketService";
-import SubscribeRequestImpl from "../../requestImpl/SubscribeRequestImpl";
-import UnsubscribeRequestImpl from "../../requestImpl/UnsubscribeRequestImpl";
-import SubscribeResponse from "mindweb-request-classes/response/SubscribeResponse";
-import UnsubscribeResponse from "mindweb-request-classes/response/UnsubscribeResponse";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Observable} from "rxjs/Observable";
-import MapVersion from "mindweb-request-classes/classes/MapVersion";
+import {Injectable} from '@angular/core';
+import {AbstractResponse, MapContainer} from 'mindweb-request-classes';
+import WebsocketService from './WebsocketService';
+import SubscribeRequestImpl from '../../requestImpl/SubscribeRequestImpl';
+import UnsubscribeRequestImpl from '../../requestImpl/UnsubscribeRequestImpl';
+import SubscribeResponse from 'mindweb-request-classes/response/SubscribeResponse';
+import UnsubscribeResponse from 'mindweb-request-classes/response/UnsubscribeResponse';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import MapVersion from 'mindweb-request-classes/classes/MapVersion';
 /**
  * Created by gpapp on 2017.03.15..
  */

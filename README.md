@@ -2,12 +2,16 @@
 
 This project provides the user interface and controllers to the MindWeb application.
 
-## Components
-The project is created using [Mobile Angular UI](http://mobileangularui.com/)
-and is packaged using [PhoneGap](http://phonegap.com/)
+## How to start
 
-## Communication
-The application 
+### Create configuration
+
+Start the server using `npm start` and cross your fingers.
+
+### Create container
+Please use the [docker project](https://github.com/gpapp/mindweb-docker) to create your environment! 
+
+
 
 ## License
 
